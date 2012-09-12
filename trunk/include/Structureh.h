@@ -13,7 +13,7 @@ char fileSystemLabel[20];
 struct fileDescriptors fd[20];
 long int maxNoOfFileDescriptor;
 long int fileDescriptorsUsed;
-struct freeList fl;
+struct freeList *fl;
 };
 
 struct freeList{
