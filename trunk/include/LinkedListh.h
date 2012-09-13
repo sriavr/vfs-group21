@@ -5,9 +5,9 @@ int data;
 struct linkedlist *next;
 };
 
-void fetch(FILE *fp);
-void delete(FILE *fp);
+struct linkedlist* fetch(FILE *fp);
+//void delete();
 void update(FILE *fp);
-void display();
+void display(struct linkedlist *);
 
 
