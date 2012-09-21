@@ -17,16 +17,16 @@ void main(){
 			switch(operation)
 			{
 			case 1:
-			fetch(fp);
+			fetch(start,fp);
 			break;
-			//case 2:
-			//delete(start,fp);
-			//break;
+			case 2:
+			delete(start,fp);
+			break;
 			case 3:
-			update(fp);
+			update(start,fp);
 			break;
 			case 4:
-			display();
+			display(start);
 			break;
 
 		    	
@@ -39,31 +39,31 @@ void main(){
 }
 
 //FETCHING DATA FROM FILE IN ORDER TO BE DISPLAYED IN LIST
-void fetch(FILE *fp){
+void fetch(struct linkedlist *start,FILE *fp){
 	struct linkedlist *store=NULL,*new=NULL;	
 	int choice=0;
 	int output=0;
-
-	while(fread(&output,sizeof(int),1,fp)){
-		
+	while(choice!=-1){
+		fread(&output,sizeof(int),1,fp);
 		new=(struct linkedlist*)malloc(sizeof(struct linkedlist));		
 		new->data=output;
-	   	new->next=NULL;
+		new->next=NULL;
 		if(start==NULL)
 			start=new;
 		else{
 			store=start;
-			while(start->next!=NULL)
-			start=start->next;
+			while(store->next!=NULL)
+			store=store->next;
 
-			start->next=new;
+			store->next=new;
 		    }
-
+		printf("do you want to continue");
+		scanf("%d",&choice);
 		}
 }
 
 //DISPLAYING DATA FETCH FROM FILE
-void display(){
+void display(struct linkedlist *start){
 
 
 	struct linkedlist *display=NULL;
@@ -76,7 +76,7 @@ void display(){
 
 
 //UPDATING DATA 
-void update(FILE *fp){
+void update(struct linkedlist *start,FILE *fp){
 	struct linkedlist *update=NULL;
 	int notmatch=0,scanvalue=0,updatedvalue=0;
 	update=start;
@@ -98,22 +98,22 @@ void update(FILE *fp){
 
 
 //REMOVING ANY DATA FROM FILE
-//void delete(struct linkedlist *start,FILE *fp){
-//	struct linkedlist *delete=NULL;
-//	int del=0,notmatch;
-//	delete=start;
-//	printf("enter a value you want to delete");
-//	scanf("%d",&del);
-//	while(delete!=NULL){
-//		if(del==delete->next->data){
-//		delete->next=delete->next->next;
-//		fseek(fp,notmatch+1,SEEK_SET);//notmatch+1 th location mein data has to del
-//		//CREATE FREE LIST TO INSERT THIS BLOCK IN FREE LIST
-//		}
-//		delete=delete->next;
-//		notmatch++;
-//	}
-//}
+void delete(struct linkedlist *start,FILE *fp){
+	struct linkedlist *delete=NULL;
+	int del=0,notmatch;
+	delete=start;
+	printf("enter a value you want to delete");
+	scanf("%d",&del);
+	while(delete!=NULL){
+		if(del==delete->next->data){
+		delete->next=delete->next->next;
+		fseek(fp,notmatch+1,SEEK_SET);//notmatch+1 th location mein data has to del
+		//CREATE FREE LIST TO INSERT THIS BLOCK IN FREE LIST
+		}
+		delete=delete->next;
+		notmatch++;
+	}
+}
 		
 			
 
