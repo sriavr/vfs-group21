@@ -2,15 +2,16 @@
 #include<stdlib.h>
 #include<stddef.h>
 #include<string.h>
-#include "../include/LinkedListh.h"
+#include "../include/LinkedList.h"
+#include "../include/Commons.h"
 
-struct linkedlist *insertlinkedlist(struct linkedlist *start, const char* key, int value)
+struct node *insertlinkedlist(struct node *start, const char* key, int value)
 {
     int len = strlen(key);
-    struct linkedlist *fresh=NULL,*temp=NULL;
+    struct node *fresh=NULL,*temp=NULL;
 
     //allocate memory for fresh node
-    fresh=(struct linkedlist*)malloc(sizeof(struct linkedlist));
+    fresh=(struct node*)malloc(sizeof(struct node));
 
     //allocate memory for the node string
     fresh->name = (char *) malloc(sizeof(char)*len);
@@ -43,22 +44,22 @@ struct linkedlist *insertlinkedlist(struct linkedlist *start, const char* key, i
     return start;
 }
 
-void displaylinkedlist(struct linkedlist *print)
+void displaylinkedlist(struct node *print)
 {
-    struct linkedlist *temp=NULL;
+    struct node *temp=NULL;
     temp=print;
     //iterate to the last node
     while(temp)
     {
-        printf("key:%s value:%s",temp->name,temp->value);
+        printf("key:%s value:%d\n",temp->name,temp->value);
         temp=temp->next;
     }
 }
 
-struct linkedlist * searchlinkedlist(struct linkedlist *first, const char *key)
+struct node * searchlinkedlist(struct node *first, const char *key)
 {
     int len = strlen(key);
-    struct linkedlist *temp=NULL,*matched_node=NULL;
+    struct node *temp=NULL,*matched_node=NULL;
     int i, found=0;
 
     //iterate till the last node
@@ -90,16 +91,21 @@ struct linkedlist * searchlinkedlist(struct linkedlist *first, const char *key)
     return NULL;
 }
 
-void test_linked_list()
+void test_simple_linkedlist()
 {
-    struct linkedlist *start = NULL;
+    struct node *start = NULL;
     start = insertlinkedlist(start, "ruchi",23);
     insertlinkedlist(start, "priya",34);
     insertlinkedlist(start, "sridhar",35);
     insertlinkedlist(start, "pavan",53);
+
+    //print the entire list
     displaylinkedlist(start);
-    struct linkedlist *temp = NULL;
+
+    struct node * temp;
+    //search for a node
     temp = searchlinkedlist(start, "priya");
+
     if(temp!=NULL)
     {
         printf("\nFound match: %s",temp->name);
@@ -110,8 +116,42 @@ void test_linked_list()
     }
 }
 
-/*int main()
+void test_complex_linkedlist()
 {
-    test_linked_list();
+    struct node *start = NULL;
+    start = insertlinkedlist(start, "FIRST NODE",23);
+
+    int i;
+    //Insert 1000 random nodes
+    generate_rand_string(); //STRANGE BUG, has to be called at least once
+    for(i =0; i< 10000; i++)
+    {
+        insertlinkedlist(start, generate_rand_string(), rand()%1000);
+    }
+    insertlinkedlist(start, "LAST NODE",25);
+
+    struct node *temp = NULL, *matched_node = NULL;
+    temp = start;
+    //Iterating till the last node and searching all the nodes
+    while(temp->next!=NULL)
+    {
+        matched_node = searchlinkedlist(start, temp -> name);
+        if(matched_node == NULL)
+        {
+            printf("\nProblem in the linked list implementation or search function\n");
+            return;
+        }
+        temp = temp -> next;
+    }
+
+    printf("\nLinkedlist implementation, search function OK\n");
+    //displaylinkedlist(start);
+}
+
+/*
+int main()
+{
+    test_complex_linkedlist();
     return 0;
-}*/
+}
+*/
