@@ -1,13 +1,13 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include "../include/LinkedListh.h"
-#include "../include/Hashh.h"
-
+#include "../include/LinkedList.h"
+#include "../include/Hashtable.h"
+#include "../include/Commons.h"
 
 //By default a local variable of hashtable[] has junk values
 //This function clears junk and allocates NULL
-void init_hash(struct linkedlist * hashtable[])
+void init_hash(struct node * hashtable[])
 {
     int i=0;
     for(i=0; i<HASHSIZE; i++)
@@ -18,19 +18,18 @@ void init_hash(struct linkedlist * hashtable[])
 
 //Insert a string of length len into the HashTable,
 // and return node where it was inserted
-struct linkedlist * insert_hashtable(
-    struct linkedlist * hashtable[], const char* key, int value)
+struct node * insert_hashtable(
+    struct node * hashtable[], const char* key, int value)
 {
     int index = 0;
-    int len = strlen(key);
     // Makes sure the key is not already present in the hashtable.
-    int hash_code = hashCode(key);
+    int hash_code = get_hash_code(key);
     index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
-    struct linkedlist *temp = NULL;
+    struct node *temp = NULL;
     temp = hashtable[index];
     while(temp!= NULL)
     {
-        if((hashCode(temp -> name)) == hash_code
+        if((get_hash_code(temp -> name)) == hash_code
                 && (strcmp(temp -> name, key)==0))
         {
             return temp;
@@ -57,7 +56,7 @@ struct linkedlist * insert_hashtable(
  * @return  a hash code value for this object.
  */
 
-int hashCode(const char *str)
+int get_hash_code(const char *str)
 {
     int len = strlen(str);
     int hash = 0, i = 0;
@@ -73,15 +72,15 @@ int hashCode(const char *str)
     return hash;
 }
 
-struct linkedlist * search(struct linkedlist * hashtable[], char * key)
+struct node * search(struct node * hashtable[], char * key)
 {
-    int hash_code = hashCode(key);
+    int hash_code = get_hash_code(key);
     int index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
-    struct linkedlist *temp = NULL;
+    struct node *temp = NULL;
     temp = hashtable[index];
     while(temp!= NULL)
     {
-        if((hashCode(temp -> name)) == hash_code
+        if((get_hash_code(temp -> name)) == hash_code
                 && (strcmp(temp -> name, key)==0))
         {
             return temp;
@@ -91,7 +90,7 @@ struct linkedlist * search(struct linkedlist * hashtable[], char * key)
     return NULL;
 }
 
-void display(struct linkedlist * hashtable[])
+void display(struct node * hashtable[])
 {
     int i;
     for(i=0; i<HASHSIZE; i++)
@@ -101,37 +100,38 @@ void display(struct linkedlist * hashtable[])
     }
 }
 
-void displayhashlist(struct linkedlist *print)
+void displayhashlist(struct node *print)
 {
-    struct linkedlist *temp=NULL;
+    struct node *temp=NULL;
     temp=print;
     //iterate to the last node
-    while(temp)
+    while(temp != NULL)
     {
         printf("key:%s  value:%d\t",temp->name, temp->value);
         temp=temp->next;
     }
 }
 
-void test_hash_table()
+void test_complex_hashtable()
 {
-    struct linkedlist * hashtable[HASHSIZE];
+    struct node * hashtable[HASHSIZE];
     init_hash(hashtable);
-    insert_hashtable(hashtable, "Sridhar", 138);
-    insert_hashtable(hashtable, "Priya", 42);
-    insert_hashtable(hashtable, "Ruchi", 55);
-    insert_hashtable(hashtable, "Pavan", 63);
-    insert_hashtable(hashtable, "Lakshya", 72);
+    char * tempStr;
+    tempStr = generate_rand_string();
+    free(tempStr);
     int i;
-    for(i=0; i<100; i++)
+    for(i=0; i<50; i++)
     {
-        insert_hashtable(hashtable, generate_rand_string(), rand()%300);
+        tempStr = generate_rand_string();
+        insert_hashtable(hashtable, tempStr, rand()%300);
+        free(tempStr);
     }
     display(hashtable);
 }
 
-void test_hash_search(){
-    struct linkedlist * hashtable[HASHSIZE];
+void test_simple_hashtable()
+{
+    struct node * hashtable[HASHSIZE];
     init_hash(hashtable);
     insert_hashtable(hashtable, "Sridhar", 138);
     insert_hashtable(hashtable, "Priya", 42);
@@ -139,37 +139,26 @@ void test_hash_search(){
     insert_hashtable(hashtable, "Pavan", 63);
     insert_hashtable(hashtable, "Lakshya", 72);
     display(hashtable);
-    struct linkedlist * temp;
+
+    struct node * temp;
     temp = search(hashtable, "Sridhar");
-    if(temp!=NULL){
+
+    if(temp!=NULL)
+    {
         printf("Match found. Key:%s, Value:%d",temp->name, temp->value);
     }
-    else{
+    else
+    {
         printf("No Match found");
     }
 }
 
-const char * generate_rand_string()
-{
-    int length = rand()%15;
-    char * str = (char *) malloc(sizeof(char)*length);
-    int i;
-    for(i=0; i<length -1; i++)
-    {
-        str[i] = 'a' + rand()%26;
-    }
-    str[i] = '\0';
-    return str;
-}
-
-
 int main()
 {
-    //test_hash_table();
-    test_hash_search();
+    test_complex_hashtable();
+    //test_simple_hashtable();
     return 0;
 }
-
 
 /*
 
@@ -177,7 +166,7 @@ void delete()                                                           // DELET
 {
     char *filename=NULL,*temp=NULL;
     int h=0;
-    struct linkedlist *found=NULL,*first=NULL;
+    struct node *found=NULL,*first=NULL;
     printf("enter the filename that you want to delete");
     scanf("%s",filename);
 //	for(i=0;i<HASHSIZE;i++){
@@ -205,7 +194,7 @@ void delete()                                                           // DELET
         else
         {
             first=hashtable[h].next;
-            found=searchlinkedlist(first,filename);
+            found=searchnode(first,filename);
             found->next=found->next->next;
             free(found);
         }
