@@ -66,6 +66,7 @@ int get_hash_code(const char *str)
 
         for (i = 0; i < len; i++)
         {
+            //hash = 31*hash + str[off++];
             hash = 31*hash + str[off++];
         }
     }
@@ -114,19 +115,35 @@ void displayhashlist(struct node *print)
 
 void test_complex_hashtable()
 {
-    struct node * hashtable[HASHSIZE];
+    struct node * hashtable[HASHSIZE], *temp = NULL;
     init_hash(hashtable);
     char * tempStr;
     tempStr = generate_rand_string();
     free(tempStr);
     int i;
-    for(i=0; i<50; i++)
+    for(i=0; i<5000; i++)
     {
         tempStr = generate_rand_string();
-        insert_hashtable(hashtable, tempStr, rand()%300);
+        insert_hashtable(hashtable, tempStr, rand());
         free(tempStr);
     }
-    display(hashtable);
+    //display(hashtable);
+
+    for(i=0; i<HASHSIZE; i++)
+    {
+        temp = hashtable[i];
+        while(temp != NULL)
+        {
+            if(search(hashtable, temp -> name) == NULL)
+            {
+                //If the element is not found
+                printf("There is a problem in the search function or creation of node");
+                return;
+            }
+            temp = temp -> next;
+        }
+    }
+    printf("Search function and creation of node working fine");
 }
 
 void test_simple_hashtable()
@@ -208,31 +225,3 @@ void delete()                                                           // DELET
 
 }
 */
-
-
-/*void usermenu()
-{
-    int choice=0;
-    while(1)
-    {
-        printf("which operation you want to don in hash table \n Enter choice \n 1)Insert \n2)Delete \n 3)Search");
-
-        scanf("%d",&choice);
-        switch(choice)
-        {
-
-        case 1:
-            insert();
-            break;
-
-        case 2:
-            delete();
-            break;
-
-        case 3:
-            search();
-            break;
-
-        }
-    }
-}*/
