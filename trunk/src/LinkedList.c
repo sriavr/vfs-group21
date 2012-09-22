@@ -14,7 +14,7 @@ struct node *insertlinkedlist(struct node *start, const char* key, int value)
     fresh=(struct node*)malloc(sizeof(struct node));
 
     //allocate memory for the node string
-    fresh->name = (char *) malloc(sizeof(char)*len);
+    fresh->name = (char *) malloc(sizeof(char)* (len+1));
     fresh->value = 0;
     //copy the input string into the newly created node
     strcpy(fresh->name,key);
