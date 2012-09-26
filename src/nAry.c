@@ -5,6 +5,11 @@
 #define MAX_LEVELS 20
 #define MAX_LENGTH 10 
 
+/**
+     1) Change char name[] to char *
+     2) Add an additional field int value to nAryNode
+     3) Write unit test cases adding 1000 random test nodes
+**/
 
 typedef struct nAryNode{
 	char name[ MAX_LENGTH ];
