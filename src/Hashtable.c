@@ -118,12 +118,12 @@ void test_complex_hashtable()
     struct node * hashtable[HASHSIZE], *temp = NULL;
     init_hash(hashtable);
     char * tempStr;
-    tempStr = generate_rand_string();
+    tempStr = (char *) generate_rand_string();
     free(tempStr);
     int i;
     for(i=0; i<5000; i++)
     {
-        tempStr = generate_rand_string();
+        tempStr = (char *) generate_rand_string();
         insert_hashtable(hashtable, tempStr, rand());
         free(tempStr);
     }
@@ -169,13 +169,14 @@ void test_simple_hashtable()
         printf("No Match found");
     }
 }
-
+/*
 int main()
 {
     test_complex_hashtable();
     //test_simple_hashtable();
     return 0;
 }
+*/
 
 /*
 
