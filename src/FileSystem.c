@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+
 typedef struct fileDescriptor
 {
 	char fileName[50];
@@ -9,11 +10,13 @@ typedef struct fileDescriptor
 	long int fileSize;
 	int locationBlockNo;
 }fDes;
+
 typedef struct freeList
 {
 	int blockNo;
 	struct freeList *nextFreeBlockNo;
 }fLst;
+
 typedef struct mainHeader{
 	char fileSystemLabel[60];
 //	struct fileDescriptors fd[20];
@@ -21,17 +24,21 @@ typedef struct mainHeader{
 	int fileDescriptorsUsed;
 //	struct freeList *fl;
 }mHdr;
+
 typedef struct header
 {
 	fDes desc[1000000];
 	fLst list[500000];
 }head;
+
 typedef struct maxBlockSize
 {
 	int blockSize;
 }mBsz;
+
 int createFsystem(char *,int );
-void main()
+
+void testFsystem()
 {
 	char fileName[10];
 	int fileLength,ret=0;
@@ -42,8 +49,9 @@ void main()
 	ret=createFsystem(fileName,fileLength);
 	if(ret==0)
 		printf("file created...");
-		
+
 }
+
 int createFsystem(char fileName[10],int fileLength)
 {
 	FILE *fp,*cpos;
@@ -51,7 +59,7 @@ int createFsystem(char fileName[10],int fileLength)
 	head *hdr;
 	int pLen,fpLen,i=0,j=0;
 	char fullpath[60],path[21]="/home/pawan/Desktop/";//giving the path to where the file will be created
-	
+
 	mBsz mb ;
 	mb.blockSize=1024;
 	for(i=0;path[i]!='\0';i++)
@@ -97,9 +105,6 @@ int createFsystem(char fileName[10],int fileLength)
 //	fp = fp + cpos;
 	fwrite(hdr,sizeof(hdr),1,fp);
 	fclose(fp);
-	
+
 	return(0);
 }
-	
-	
-	
