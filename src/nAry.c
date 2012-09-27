@@ -1,33 +1,20 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include "../include/nAry.h"
 
-#define MAX_LEVELS 20
-#define MAX_LENGTH 10 
+void display_nary( nNode * root , int level );
 
-/**
-     1) Change char name[] to char *
-     2) Add an additional field int value to nAryNode
-     3) Write unit test cases adding 1000 random test nodes
-**/
-
-typedef struct nAryNode{
-	char name[ MAX_LENGTH ];
-	struct nAryNode *child;
-	struct nAryNode *sibling;
-}nNode;
-
-
-/* 
+/*
 * Creates a node and returns a pointer to it.
 * name -  Name to be set as the node name.
 * return - Returns a pointer to the created node.
 */
 nNode* createNode(char name[]) {
 	int i=0;
-	
+
 	nNode *node=(nNode *)malloc(sizeof(nNode));
-	
+
 	if(node == NULL) {
 	   fprintf(stderr,"Cannot allocate memory please free some amount of memory if possible");
 	   return NULL;
@@ -36,7 +23,7 @@ nNode* createNode(char name[]) {
 	strcpy( node->name, name );
         node->child = NULL;
 	node->sibling = NULL;
-	
+
 	return node;
 }
 
@@ -56,18 +43,18 @@ char * substring( char * str , int startIndex , int endIndex ) {
     if( length <= 0 )
          return NULL;
     copy = (char *)malloc(sizeof(char) * (length+1) );
-    
+
     for( index = startIndex ; index < endIndex ; index++ ) {
           copy[k] = str[index];
           k++;
     }
     copy[k] = '\0';
-    return copy; 
+    return copy;
 }
 
 
-/* 
- Note: Path should start with / 
+/*
+ Note: Path should start with /
  e.g. "/" or "/home"
 */
 int splitPath(  char nPath[] , char nName[][MAX_LENGTH] ) {
@@ -79,47 +66,47 @@ int splitPath(  char nPath[] , char nName[][MAX_LENGTH] ) {
         endIndex = indexOf( nPath , '/' , startIndex + 1 );
         if( endIndex == -1 )
             endIndex = length;
-        
-        char * substr = substring( nPath, startIndex + 1 , endIndex );     
+
+        char * substr = substring( nPath, startIndex + 1 , endIndex );
         if( substr != NULL ) {
            strcpy( nName[count] , substr );
            count++;
-	}        
-        
+	}
+
         startIndex = endIndex ;
      }while( endIndex != length );
-     
+
      return count;
 }
 
 nNode * searchForNodeInAllSiblings( nNode * t , char name[] ) {
-   
+
    if( t == NULL )
    	return NULL;
-   	
+
    while( t != NULL ) {
    	if( strcmp( t->name , name ) == 0 )
    		return t;
    	t = t->sibling;
    }
-   
+
 }
 
 nNode * insertAtEnd( nNode * t , char name[] ) {
-   
+
    if( t == NULL ) {
    	t = createNode( name );
    	return t;
    }
-   
+
    nNode * q = t; // save root pointer
-   
+
    // child node exists
    while( t->sibling != NULL )  //move to last child.
   	   t = t->sibling;
-	    	   
+
    t->sibling = createNode( name );
-   
+
    return q;
 }
 
@@ -133,15 +120,15 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
 {
 	nNode *ins;
 	char nName[MAX_LEVELS][MAX_LENGTH];
-	int count = splitPath( nPath, nName );	
+	int count = splitPath( nPath, nName );
 	int i;
 	nNode * t, * matchedNode = NULL;
-	
+
 	if( count != 0 && root == NULL ) {
 	  	fprintf(stderr,"Invalid Path");
 	  	return NULL;
 	}
-	
+
 	// When root is null then create node as root.
 	if( count == 0 && root == NULL ) {
 		ins = createNode( name ); // expecting root node name is "/"
@@ -150,32 +137,32 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
 
 	// Path is empty then node should be created under root.
 	if( count == 0 && root != NULL ) {
-    	
+
 	    	// should be last child under root.
 	    	root->child = insertAtEnd( root->child , name );
-	    		
-	    	return root;	    		
+
+	    	return root;
 	}
-	
+
 	// Must be inserted in the given path.
 	t = root;
 	for( i = 0; i < count ; i++ ) {
 	    // Identify the matching node in all the siblings
-	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] ); 	
+	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
 	    if( matchedNode == NULL ) {
 	    	fprintf( stderr, "Invalid path");
 	    	return root;
-	    }		
+	    }
 	    t = matchedNode;
-	} 
-	
+	}
+
 	// condition check not required.
 	if( matchedNode != NULL ) {
 		matchedNode->child = insertAtEnd( matchedNode->child , name );
 	}
-	
-	return root;		
-			
+
+	return root;
+
 }
 
 void changeLevel( int level ) {
@@ -185,23 +172,23 @@ void changeLevel( int level ) {
 }
 
 /* Initial call
-   display( root , 1 );
+   display_nary( root , 1 );
  */
-void display( nNode * root , int level ) {
-  
+void display_nary( nNode * root , int level ) {
+
   nNode * t;
-  
+
   if( root == NULL ) {
      return;
   }
-  
+
   changeLevel( level );
   printf("%s \n", root->name );
-  
+
   if( root->child != NULL ) { // condition not required.
     // for each child node
-    for( t = root->child ; t != NULL ; t = t->sibling ) 
-        display( t , level + 1 );  
+    for( t = root->child ; t != NULL ; t = t->sibling )
+        display_nary( t , level + 1 );
   }
 }
 
@@ -220,22 +207,22 @@ void testSplit() {
    char path3[] = "";
    char path4[] = "/home/abc/xyz/";
    char path5[] = "/home//abc";
-   
+
    char names[MAX_LEVELS][MAX_LENGTH];
    int count;
-   
+
    count = splitPath( path1 , names );
    print( names , count );
-   
+
    count = splitPath( path2 , names );
    print( names , count );
-   
+
    count = splitPath( path3 , names );
    print( names , count );
-   
+
    count = splitPath( path4 , names );
    print( names , count );
-   
+
    count = splitPath( path5 , names );
    print( names , count );
 }
@@ -252,6 +239,6 @@ int main( char * args[], int argc ) {
    root = insertNode(root,"/","otherInRoot");
    root = insertNode(root,"/home/demo","test"); // expecting invalid path
    printf("\n");
-   display( root , 1 );
+   display_nary( root , 1 );
    return 0;
 }

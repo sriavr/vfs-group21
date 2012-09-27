@@ -7,7 +7,7 @@
 
 //By default a local variable of hashtable[] has junk values
 //This function clears junk and allocates NULL
-void init_hash(struct node * hashtable[])
+void init_hashtable(struct node * hashtable[])
 {
     int i=0;
     for(i=0; i<HASHSIZE; i++)
@@ -40,7 +40,7 @@ struct node * insert_hashtable(
     //Go to the index calculated
     temp = hashtable[index];
     //Add the node to linked list
-    hashtable[index] = insertlinkedlist(temp, key, value);
+    hashtable[index] = insert_linkedlist(temp, key, value);
     return temp;
 }
 
@@ -73,7 +73,7 @@ int get_hash_code(const char *str)
     return hash;
 }
 
-struct node * search(struct node * hashtable[], char * key)
+struct node * search_hashtable(struct node * hashtable[], char * key)
 {
     int hash_code = get_hash_code(key);
     int index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
@@ -91,16 +91,17 @@ struct node * search(struct node * hashtable[], char * key)
     return NULL;
 }
 
-void display(struct node * hashtable[])
+void display_hashtable(struct node * hashtable[])
 {
     int i;
     for(i=0; i<HASHSIZE; i++)
     {
-        displayhashlist(hashtable[i]);
+        display_linkedlist(hashtable[i]);
         printf("\n");
     }
 }
 
+/*
 void displayhashlist(struct node *print)
 {
     struct node *temp=NULL;
@@ -111,12 +112,12 @@ void displayhashlist(struct node *print)
         printf("key:%s  value:%d\t",temp->name, temp->value);
         temp=temp->next;
     }
-}
+}*/
 
 void test_complex_hashtable()
 {
     struct node * hashtable[HASHSIZE], *temp = NULL;
-    init_hash(hashtable);
+    init_hashtable(hashtable);
     char * tempStr;
     tempStr = (char *) generate_rand_string();
     free(tempStr);
@@ -127,46 +128,46 @@ void test_complex_hashtable()
         insert_hashtable(hashtable, tempStr, rand());
         free(tempStr);
     }
-    //display(hashtable);
+    //display_hashtable(hashtable);
 
     for(i=0; i<HASHSIZE; i++)
     {
         temp = hashtable[i];
         while(temp != NULL)
         {
-            if(search(hashtable, temp -> name) == NULL)
+            if(search_hashtable(hashtable, temp -> name) == NULL)
             {
                 //If the element is not found
-                printf("There is a problem in the search function or creation of node");
+                printf("\nThere is a problem in the search function or creation of node\n");
                 return;
             }
             temp = temp -> next;
         }
     }
-    printf("Search function and creation of node working fine");
+    printf("\nSearch function and creation of node working fine\n");
 }
 
 void test_simple_hashtable()
 {
     struct node * hashtable[HASHSIZE];
-    init_hash(hashtable);
+    init_hashtable(hashtable);
     insert_hashtable(hashtable, "Sridhar", 138);
     insert_hashtable(hashtable, "Priya", 42);
     insert_hashtable(hashtable, "Ruchi", 55);
     insert_hashtable(hashtable, "Pavan", 63);
     insert_hashtable(hashtable, "Lakshya", 72);
-    display(hashtable);
+    display_hashtable(hashtable);
 
     struct node * temp;
-    temp = search(hashtable, "Sridhar");
+    temp = search_hashtable(hashtable, "Sridhar");
 
     if(temp!=NULL)
     {
-        printf("Match found. Key:%s, Value:%d",temp->name, temp->value);
+        printf("\nMatch found. Key:%s, Value:%d\n",temp->name, temp->value);
     }
     else
     {
-        printf("No Match found");
+        printf("\nNo Match found\n");
     }
 }
 /*
@@ -221,8 +222,5 @@ void delete()                                                           // DELET
         //	deletion(start);
 
     }
-
-
-
 }
 */
