@@ -27,7 +27,7 @@ int create_vfs(char file_name[50],int file_length)
     meta_header *mh;
     header *hdr;
     int pLen,fpLen,i=0,j=0;
-    char fullpath[60],path[21]="/home/pawan/Desktop/";//giving the path to where the file will be created
+    char fullpath[60],path[21]="/home/sridhar/Desktop/";//giving the path to where the file will be created
 
     mBsz mb ;
     mb.block_size=1024;
