@@ -3,6 +3,6 @@
 
 int main()
 {
-    test_fsystem();
+    fsystem_ui();
     return 0;
 }

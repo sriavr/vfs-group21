@@ -47,6 +47,7 @@ typedef struct head
 {
     file_descriptor desc[1000000];
     free_list list[500000];
+    char HEADER_TEST_FIELD[50]; //only for testing purpose, should be deleted in release time
 } header;
 
 typedef struct max_block_size
@@ -58,4 +59,26 @@ typedef struct max_block_size
 //create a Virtual File System. <vfs_label> is the name of VFS
 int create_vfs(char *,int );
 
-void test_fsystem();
+//does a quick test by reading the header and meta header info from vfs
+void test_vfs(char fullpath[150]);
+
+//returns the meta header structure from the vfs
+meta_header * read_meta_header(char fullpath[150]);
+
+//returns the header structure from the vfs
+header * read_header(char fullpath[150]);
+
+//prints information of given meta header structure
+void print_meta_header_info(meta_header * mh);
+
+//prints information of given header structure
+void print_header_info(header * hdr);
+
+//script for user interaction
+void fsystem_ui();
+
+//test case for read_meta_header() function
+void test_read_meta_header(char fullpath[150]);
+
+//test case for read_header() function
+void test_read_header(char fullpath[150]);
