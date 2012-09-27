@@ -57,3 +57,5 @@ typedef struct max_block_size
 
 //create a Virtual File System. <vfs_label> is the name of VFS
 int create_vfs(char *,int );
+
+void test_fsystem();

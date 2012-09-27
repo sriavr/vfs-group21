@@ -225,7 +225,7 @@ void testSplit() {
    print( names , count );
 }
 
-int main(int argc , char * args[]) {
+void test_nary(){
    //testSplit();
    nNode * root = NULL;
    root = insertNode(root,"","/");
@@ -238,5 +238,4 @@ int main(int argc , char * args[]) {
    root = insertNode(root,"/home/demo","test"); // expecting invalid path
    printf("\n");
    display_nary( root , 1 );
-   return 0;
 }
