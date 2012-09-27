@@ -4,7 +4,7 @@
 struct linkedlist *start=NULL;
 void main(){
 	FILE *fp;
-	
+
 	int operation=0;
 	fp=fopen("../DATFILE/data1.dat","rb");
 		if(fp==NULL)
@@ -29,23 +29,23 @@ void main(){
 			display(start);
 			break;
 
-		    	
+
 			}
 		    }
-	
 
-		     }	
+
+		     }
 
 }
 
 //FETCHING DATA FROM FILE IN ORDER TO BE DISPLAYED IN LIST
 void fetch(struct linkedlist *start,FILE *fp){
-	struct linkedlist *store=NULL,*new=NULL;	
+	struct linkedlist *store=NULL,*new=NULL;
 	int choice=0;
 	int output=0;
 	while(choice!=-1){
 		fread(&output,sizeof(int),1,fp);
-		new=(struct linkedlist*)malloc(sizeof(struct linkedlist));		
+		new=(struct linkedlist*)malloc(sizeof(struct linkedlist));
 		new->data=output;
 		new->next=NULL;
 		if(start==NULL)
@@ -75,14 +75,14 @@ void display(struct linkedlist *start){
 }
 
 
-//UPDATING DATA 
+//UPDATING DATA
 void update(struct linkedlist *start,FILE *fp){
 	struct linkedlist *update=NULL;
 	int notmatch=0,scanvalue=0,updatedvalue=0;
 	update=start;
 	printf("enter the value you want to update  n  value");
 	scanf("%d %d",&scanvalue,&updatedvalue);
-	
+
 	while(update!=NULL){
 		if(scanvalue==update->data){
 		update->data=updatedvalue;
@@ -93,7 +93,7 @@ void update(struct linkedlist *start,FILE *fp){
 		update=update->next;
 		notmatch++;
 	}
-}	
+}
 
 
 
@@ -114,11 +114,11 @@ void delete(struct linkedlist *start,FILE *fp){
 		notmatch++;
 	}
 }
-		
-			
 
-	
 
-		
+
+
+
+
 
 

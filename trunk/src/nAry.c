@@ -11,8 +11,6 @@ void display_nary( nNode * root , int level );
 * return - Returns a pointer to the created node.
 */
 nNode* createNode(char name[]) {
-	int i=0;
-
 	nNode *node=(nNode *)malloc(sizeof(nNode));
 
 	if(node == NULL) {
@@ -89,7 +87,7 @@ nNode * searchForNodeInAllSiblings( nNode * t , char name[] ) {
    		return t;
    	t = t->sibling;
    }
-
+    return NULL;
 }
 
 nNode * insertAtEnd( nNode * t , char name[] ) {
@@ -227,7 +225,7 @@ void testSplit() {
    print( names , count );
 }
 
-int main( char * args[], int argc ) {
+int main(int argc , char * args[]) {
    //testSplit();
    nNode * root = NULL;
    root = insertNode(root,"","/");
