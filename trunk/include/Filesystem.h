@@ -1,35 +1,59 @@
-typedef struct fileDescriptor
+/*
+## structure for File descriptor##
+ * File name
+ * Location of the file
+ * Type of file (directory/file)
+ * Size of file
+ * Location block number of the file
+*/
+typedef struct fDes
 {
-	char fileName[50];
-	char locationFullPath[50];
-	char fileType[10];
-	long int fileSize;
-	int locationBlockNo;
-}fDes;
+    char file_name[50];
+    char location_full_path[150];
+    char file_type[10];
+    long int file_size;
+    int location_block_num;
+} file_descriptor;
 
-typedef struct freeList
+
+/*
+## structure for storing the free list ##
+ * Contains the pointer to the next free block
+*/
+typedef struct fLst
 {
-	int blockNo;
-	struct freeList *nextFreeBlockNo;
-}fLst;
+    int block_num;
+    struct fLst *next_free_block;
+} free_list;
 
-typedef struct mainHeader{
-	char fileSystemLabel[60];
-//	struct fileDescriptors fd[20];
-	long int maxNoOfFileDescriptors;
-	int fileDescriptorsUsed;
-//	struct freeList *fl;
-}mHdr;
-
-typedef struct header
+/*
+## structure for meta header ##
+ * Name of file system
+ * Number of used file descriptors
+*/
+typedef struct mHdr
 {
-	fDes desc[1000000];
-	fLst list[500000];
-}head;
+    char file_system_label[60];
+    long int max_num_file_descriptors;
+    int file_descriptors_used;
+} meta_header;
 
-typedef struct maxBlockSize
+/*
+## structure for header ##
+ * File descriptor list
+ * Free list
+*/
+typedef struct head
 {
-	int blockSize;
-}mBsz;
+    file_descriptor desc[1000000];
+    free_list list[500000];
+} header;
 
-int createFsystem(char *,int );
+typedef struct max_block_size
+{
+    int block_size;
+} mBsz;
+
+
+//create a Virtual File System. <vfs_label> is the name of VFS
+int create_vfs(char *,int );
