@@ -105,9 +105,10 @@ void postorder_traversal(struct bst* bst_node,
     {
         return;
     }
-    process_node(bst_node);
+
     postorder_traversal( bst_node -> left, process_node);
     postorder_traversal( bst_node -> right, process_node );
+    process_node(bst_node);
 }
 
 void displaybst(struct bst *bst_node)
@@ -161,8 +162,8 @@ void test_complex_bst()
 
 int main()
 {
-    //test_simple_bst();
-    test_complex_bst();
+    test_simple_bst();
+    //test_complex_bst();
     return 0;
 }
 
