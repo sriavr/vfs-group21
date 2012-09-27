@@ -5,7 +5,7 @@
 #include "../include/LinkedList.h"
 #include "../include/Commons.h"
 
-struct node *insertlinkedlist(struct node *start, const char* key, int value)
+struct node *insert_linkedlist(struct node *start, const char* key, int value)
 {
     int len = strlen(key);
     struct node *fresh=NULL,*temp=NULL;
@@ -44,7 +44,7 @@ struct node *insertlinkedlist(struct node *start, const char* key, int value)
     return start;
 }
 
-void displaylinkedlist(struct node *print)
+void display_linkedlist(struct node *print)
 {
     struct node *temp=NULL;
     temp=print;
@@ -54,9 +54,10 @@ void displaylinkedlist(struct node *print)
         printf("key:%s value:%d\n",temp->name,temp->value);
         temp=temp->next;
     }
+
 }
 
-struct node * searchlinkedlist(struct node *first, const char *key)
+struct node * search_linkedlist(struct node *first, const char *key)
 {
     int len = strlen(key);
     struct node *temp=NULL,*matched_node=NULL;
@@ -94,17 +95,17 @@ struct node * searchlinkedlist(struct node *first, const char *key)
 void test_simple_linkedlist()
 {
     struct node *start = NULL;
-    start = insertlinkedlist(start, "ruchi",23);
-    insertlinkedlist(start, "priya",34);
-    insertlinkedlist(start, "sridhar",35);
-    insertlinkedlist(start, "pavan",53);
+    start = insert_linkedlist(start, "ruchi",23);
+    insert_linkedlist(start, "priya",34);
+    insert_linkedlist(start, "sridhar",35);
+    insert_linkedlist(start, "pavan",53);
 
     //print the entire list
-    displaylinkedlist(start);
+    display_linkedlist(start);
 
     struct node * temp;
     //search for a node
-    temp = searchlinkedlist(start, "priya");
+    temp = search_linkedlist(start, "priya");
 
     if(temp!=NULL)
     {
@@ -119,23 +120,23 @@ void test_simple_linkedlist()
 void test_complex_linkedlist()
 {
     struct node *start = NULL;
-    start = insertlinkedlist(start, "FIRST NODE",23);
+    start = insert_linkedlist(start, "FIRST NODE",23);
 
     int i;
     //Insert 1000 random nodes
     generate_rand_string(); //STRANGE BUG, has to be called at least once
     for(i =0; i< 10000; i++)
     {
-        insertlinkedlist(start, generate_rand_string(), rand()%1000);
+        insert_linkedlist(start, generate_rand_string(), rand()%1000);
     }
-    insertlinkedlist(start, "LAST NODE",25);
+    insert_linkedlist(start, "LAST NODE",25);
 
     struct node *temp = NULL, *matched_node = NULL;
     temp = start;
     //Iterating till the last node and searching all the nodes
     while(temp->next!=NULL)
     {
-        matched_node = searchlinkedlist(start, temp -> name);
+        matched_node = search_linkedlist(start, temp -> name);
         if(matched_node == NULL)
         {
             printf("\nProblem in the linked list implementation or search function\n");
@@ -145,7 +146,7 @@ void test_complex_linkedlist()
     }
 
     printf("\nLinkedlist implementation, search function OK\n");
-    //displaylinkedlist(start);
+    //display_linkedlist(start);
 }
 
 /*

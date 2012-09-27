@@ -26,7 +26,7 @@ void postorder_traversal(struct bst* bst_root,
 void inorder_traversal(struct bst* bst_root,
                          void (*process_node)(struct bst* bst_node));
 
+//Test cases for bst
 void test_complex_bst();
-
 void test_simple_bst();
 
