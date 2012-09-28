@@ -1,3 +1,9 @@
+#define FILE_DESCRIPTOR_MAX_LIMIT 1000000
+#define FREE_LIST_MAX_LIMIT 500000
+#define FILE_SYSTEM_LABEL_MAX_SIZE 150
+#define FILENAME_MAX_SIZE 50
+#define FULLPATH_WITH_FILENAME_MAX_SIZE 150
+
 /*
 ## structure for File descriptor##
  * File name
@@ -8,8 +14,8 @@
 */
 typedef struct fDes
 {
-    char file_name[50];
-    char location_full_path[150];
+    char file_name[FILENAME_MAX_SIZE];
+    char location_full_path[FULLPATH_WITH_FILENAME_MAX_SIZE];
     char file_type[10];
     long int file_size;
     int location_block_num;
@@ -33,9 +39,8 @@ typedef struct fLst
 */
 typedef struct mHdr
 {
-    char file_system_label[60];
-    long int max_num_file_descriptors;
-    int file_descriptors_used;
+    char file_system_label[FILE_SYSTEM_LABEL_MAX_SIZE];
+    long unsigned int file_descriptors_used;
 } meta_header;
 
 /*
@@ -45,8 +50,8 @@ typedef struct mHdr
 */
 typedef struct head
 {
-    file_descriptor desc[1000000];
-    free_list list[500000];
+    file_descriptor desc[FILE_DESCRIPTOR_MAX_LIMIT];
+    free_list list[FREE_LIST_MAX_LIMIT];
     char HEADER_TEST_FIELD[50]; //only for testing purpose, should be deleted in release time
 } header;
 
@@ -58,6 +63,9 @@ typedef struct max_block_size
 
 //create a Virtual File System. <vfs_label> is the name of VFS
 int create_vfs(char *,int );
+
+//Mount a Virtual File System. <vfs_label> is the name of VFS
+int mount_vfs(char *);
 
 //does a quick test by reading the header and meta header info from vfs
 void test_vfs(char fullpath[150]);
