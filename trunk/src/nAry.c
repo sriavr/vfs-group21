@@ -232,8 +232,8 @@ void test_nary(){
    root = insertNode(root,"/","a");
    root = insertNode(root,"/","home");
    root = insertNode(root,"/home","b");
-   root = insertNode(root,"/home","pavan");
-   root = insertNode(root,"/home/pavan","doc");
+   root = insertNode(root,"/home","xyz");
+   root = insertNode(root,"/home/xyz","doc");
    root = insertNode(root,"/","otherInRoot");
    root = insertNode(root,"/home/demo","test"); // expecting invalid path
    printf("\n");
