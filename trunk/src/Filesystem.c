@@ -5,6 +5,9 @@
 #include "../include/LinkedList.h"
 #include "../include/Hashtable.h"
 #include "../include/nAry.h"
+#include "../include/Bst.h"
+#include "../include/dsCreator.h"
+#include "../include/Commons.h"
 
 void fsystem_ui()
 {
@@ -37,6 +40,9 @@ void fsystem_ui()
 
     //test case for read_header() function
     test_read_header(full_path_file_name);
+
+    //check if mount is working
+    mount_vfs(full_path_file_name);
 }
 
 int create_vfs(char fullpath[150], int file_length)
@@ -67,7 +73,9 @@ int create_vfs(char fullpath[150], int file_length)
 
     //copy filesystem label with full path to the meta header field
     strcpy(mh->file_system_label, fullpath);
-    mh->file_descriptors_used=0;
+
+    long int size = 100;//HARDCODING
+    mh->file_descriptors_used=size;
     //mh->max_num_file_descriptors=1000000;
     //write meta header to the file
     fwrite(mh,sizeof(meta_header),1,fp);
@@ -76,6 +84,9 @@ int create_vfs(char fullpath[150], int file_length)
     //allocate memory for header
     hdr=(header*) malloc(sizeof(header));
     strcpy(hdr -> HEADER_TEST_FIELD, "TEST HEADER OK");
+
+    create_test_fd_data(hdr -> fd_array, size);
+
     //write header to the files
     fwrite(hdr,sizeof(header),1,fp);
     fclose(fp);
@@ -91,7 +102,7 @@ int mount_vfs(char fullpath[150])
     header *hdr = NULL;
     hdr = read_header(fullpath);
 
-    file_descriptor *file_descriptor_list = hdr -> desc;
+    file_descriptor *file_descriptor_list = hdr -> fd_array;
     long int file_descriptor_list_size = mh -> file_descriptors_used;
 
     /*
@@ -111,7 +122,7 @@ int mount_vfs(char fullpath[150])
 
     //Create nAry Tree representing directory structure
     nNode * nAry_tree = NULL;
-    nAry_tree = create_nAry_tree(file_descriptor_list, file_descriptor_list_size);
+    nAry_tree = (nNode *) create_nAry_tree(file_descriptor_list, file_descriptor_list_size);
 
     //Create Hashtable storing all the file names without path (for search based on file name without path)
     struct node * hashtable[HASHSIZE];
@@ -121,12 +132,14 @@ int mount_vfs(char fullpath[150])
     //Linkedlist storing list of the free blocks into which new files can be written
     struct node *free_blocks_llist = NULL;
     //DOUBTFUL SHOULD GET FREE LIST
-    free_blocks_llist = create_linkedlist(file_descriptor_list, file_descriptor_list_size);
+    free_blocks_llist = (struct node *) create_linkedlist(file_descriptor_list, file_descriptor_list_size);
 
     //BST storing all the file names with absolute path of file (for search based on absolute path of file)
-    struct bst * tree = NULL;
-    tree = create_bst(file_descriptor_list, file_descriptor_list_size);
+    struct bst * bst_tree = NULL;
+    bst_tree = create_bst(file_descriptor_list, file_descriptor_list_size);
 
+    printf("\nInorder traversal\n");
+    inorder_traversal(bst_tree, &displaybst);
 
     return 0;
 }
@@ -253,3 +266,35 @@ void print_header_info(header * hdr)
     printf("\nHEADER_TEST_FIELD: %s", hdr -> HEADER_TEST_FIELD);
 }
 
+file_descriptor * create_test_fd_data(file_descriptor * fd_array, long int size)
+{
+    if(fd_array == NULL)
+    {
+        fd_array = calloc(size, sizeof(file_descriptor));
+    }
+    char *temp_file_path;
+    temp_file_path = calloc(150, sizeof(char));
+
+    char * file_type[2] = {"file","dir"};
+    long int i;
+    for(i =0; i < size; i++)
+    {
+        temp_file_path = calloc(150, sizeof(char));
+
+        strcpy(fd_array[i].file_name, generate_rand_string());
+
+        strcat(temp_file_path, "/");
+        strcat(temp_file_path, generate_rand_string());
+        strcat(temp_file_path, "/");
+        strcat(temp_file_path, generate_rand_string());
+        strcat(temp_file_path, "/");
+        strcat(temp_file_path, generate_rand_string());
+        strcpy(fd_array[i].location_full_path, temp_file_path);
+
+        strcpy(fd_array[i].file_type, file_type[rand()%2]);
+        fd_array[i].file_size = rand();
+        fd_array[i].location_block_num = rand();
+    }
+
+    return fd_array;
+}

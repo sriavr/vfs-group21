@@ -1,8 +1,11 @@
+//TODO make the node in LinkedList generic
+//so that we can reuse code for FreeList and HashTable of file descriptors
 struct node
 {
     char * name;
     int value;
     struct node *next;
+    file_descriptor filedescriptor;
 };
 
 //Insert a new node (with key, value) into the linked list
