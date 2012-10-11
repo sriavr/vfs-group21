@@ -14,6 +14,7 @@
 */
 typedef struct fDes
 {
+    //ensure that strings are ending with '\0'
     char file_name[FILENAME_MAX_SIZE];
     char location_full_path[FULLPATH_WITH_FILENAME_MAX_SIZE];
     char file_type[10];
@@ -50,7 +51,7 @@ typedef struct mHdr
 */
 typedef struct head
 {
-    file_descriptor desc[FILE_DESCRIPTOR_MAX_LIMIT];
+    file_descriptor fd_array[FILE_DESCRIPTOR_MAX_LIMIT];
     free_list list[FREE_LIST_MAX_LIMIT];
     char HEADER_TEST_FIELD[50]; //only for testing purpose, should be deleted in release time
 } header;
@@ -90,3 +91,5 @@ void test_read_meta_header(char fullpath[150]);
 
 //test case for read_header() function
 void test_read_header(char fullpath[150]);
+//generate test file descriptor array of given size
+file_descriptor * create_test_fd_data(file_descriptor * fd_array, long int size);

@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include "../include/Filesystem.h"
 #include "../include/LinkedList.h"
 #include "../include/Hashtable.h"
 #include "../include/Commons.h"
@@ -183,28 +184,28 @@ int main()
 
 void delete()                                                           // DELETING SOME VALUE FROM HASH TABLE AT A PARTICULAR LOCATION
 {
-    char *filename=NULL,*temp=NULL;
+    char *file_name=NULL,*temp=NULL;
     int h=0;
     struct node *found=NULL,*first=NULL;
-    printf("enter the filename that you want to delete");
-    scanf("%s",filename);
+    printf("enter the file_name that you want to delete");
+    scanf("%s",file_name);
 //	for(i=0;i<HASHSIZE;i++){
-//		if(*filename==hash[i].*name){
+//		if(*file_name==hash[i].*name){
 //			break;
 //		}
 //		}
 
 
-    h=hash(filename);
-//	if(hash[i].*name==*filename){
+    h=hash(file_name);
+//	if(hash[i].*name==*file_name){
 //	temp=hash[i].*name;
-    for(; *filename; filename++)
+    for(; *file_name; file_name++)
     {
-        if((hashtable[h].(*name))==*filename)
+        if((hashtable[h].(*name))==*file_name)
             (hashtable[h].name)++;
     }
 
-    if(((hashtable[h].(*name)) != *filename)|| ((hashtable[h].(*name)) =='\0'&& *filename!='\0')  ||  ((hashtable[h].(*name)) !='\0'&& *filename=='\0'))
+    if(((hashtable[h].(*name)) != *file_name)|| ((hashtable[h].(*name)) =='\0'&& *file_name!='\0')  ||  ((hashtable[h].(*name)) !='\0'&& *file_name=='\0'))
     {
         if(hashtable[h].next==NULL)
         {
@@ -213,7 +214,7 @@ void delete()                                                           // DELET
         else
         {
             first=hashtable[h].next;
-            found=searchnode(first,filename);
+            found=searchnode(first,file_name);
             found->next=found->next->next;
             free(found);
         }

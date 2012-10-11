@@ -1,18 +1,20 @@
+
 struct bst{
     char * key;
-    int value;
+    //int value;
     struct bst * left;
     struct bst * right;
+    file_descriptor filedescriptor;
 };
 
 //Initialize the basic bst tree
-struct bst* init_bst(struct bst*, const char *, int value);
+struct bst* init_bst(struct bst*, file_descriptor filedescriptor);
 
 //insert a tree node in appropriate place and return root
-struct bst * insert_bst(struct bst* bst_root, const char * key, int value);
+struct bst * insert_bst(struct bst* bst_root, file_descriptor filedescriptor);
 
 //delete a tree node and return root
-struct bst * delete_bst(struct bst* bst_root, const char * key);
+struct bst * delete_bst(struct bst* bst_root, file_descriptor filedescriptor);
 
 //perform preorder traversal
 void preorder_traversal(struct bst* bst_root,
@@ -30,5 +32,5 @@ void inorder_traversal(struct bst* bst_root,
 void test_complex_bst();
 void test_simple_bst();
 
-
+void displaybst(struct bst *bst_node);
 

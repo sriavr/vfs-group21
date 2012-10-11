@@ -1,10 +1,12 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include "../include/Bst.h"
+#include "../include/Filesystem.h"
 #include "../include/Commons.h"
+#include "../include/Bst.h"
 
-struct bst* init_bst(struct bst* bst_root, const char *key_string, int value)
+
+struct bst* init_bst(struct bst* bst_root, file_descriptor filedescriptor)
 {
     bst_root = malloc(sizeof(struct bst));
     if(bst_root == NULL)
@@ -15,30 +17,40 @@ struct bst* init_bst(struct bst* bst_root, const char *key_string, int value)
     bst_root -> right = NULL;
     bst_root -> left = NULL;
 
-    int length = strlen(key_string);
-    bst_root -> key = malloc((length+1)*sizeof(char));
-    strcpy(bst_root -> key, key_string);
-    bst_root -> value = value;
+    // /root/home/sridhar + '/' + abc.dat + '\0'
+    int length = strlen(filedescriptor.location_full_path) + strlen(filedescriptor.file_name);
+    bst_root -> key = calloc((length+2),sizeof(char));
+    strcat(bst_root -> key, filedescriptor.location_full_path);
+    strcat(bst_root -> key, "/");
+    strcat(bst_root -> key, filedescriptor.file_name);
+
+    bst_root -> filedescriptor = filedescriptor;
+
     return bst_root;
 }
 
-struct bst * insert_bst(struct bst* bst_node, const char * key, int value)
+struct bst * insert_bst(struct bst* bst_root, file_descriptor filedescriptor)
 {
-    struct bst * temp  = bst_node;
-    int length = strlen(key);
+    struct bst * temp = bst_root;
+    //create a new_node
+    struct bst * new_node  = malloc(sizeof(struct bst));
+    new_node -> right = NULL;
+    new_node -> left = NULL;
+
+    int length = strlen(filedescriptor.location_full_path) + strlen(filedescriptor.file_name);
+    new_node -> key = calloc((length+2),sizeof(char));
+    strcat(new_node -> key, filedescriptor.location_full_path);
+    strcat(new_node -> key, "/");
+    strcat(new_node -> key, filedescriptor.file_name);
+    new_node -> filedescriptor = filedescriptor;
+
     while(1)
     {
-        if(strcmp(key, temp -> key) < 0)
+        if(strcmp(new_node -> key, temp -> key) < 0)
         {
             if(temp -> left == NULL)
             {
-                temp -> left = (struct bst *) malloc(sizeof(struct bst));
-                temp = temp -> left;
-                temp -> right = NULL;
-                temp -> left = NULL;
-                temp -> key = (char *) malloc((length+1)*sizeof(char));
-                strcpy(temp -> key, key);
-                temp -> value = value;
+                temp -> left = new_node;
                 break;
             }
             else
@@ -46,17 +58,11 @@ struct bst * insert_bst(struct bst* bst_node, const char * key, int value)
                 temp = temp -> left;
             }
         }
-        else if(strcmp(key, temp -> key) > 0)
+        else if(strcmp(new_node -> key, temp -> key) > 0)
         {
             if(temp -> right == NULL)
             {
-                temp -> right = (struct bst *) malloc(sizeof(struct bst));
-                temp = temp -> right;
-                temp -> right = NULL;
-                temp -> left = NULL;
-                temp -> key = (char *) malloc((length+1)*sizeof(char));
-                strcpy(temp -> key, key);
-                temp -> value = value;
+                temp -> right = new_node;
                 break;
             }
             else
@@ -64,14 +70,14 @@ struct bst * insert_bst(struct bst* bst_node, const char * key, int value)
                 temp = temp -> right;
             }
         }
-        else if(strcmp(key, temp -> key) == 0)
+        else if(strcmp(new_node -> key, temp -> key) == 0)
         {
-            fprintf(stderr, "Duplicate key insertion is not allowed");
+            fprintf(stderr, "Duplicate key insertion is not allowed.");
             break;
         }
     }
 
-    return bst_node;
+    return bst_root;
 }
 
 void inorder_traversal(struct bst* bst_node,
@@ -113,18 +119,53 @@ void postorder_traversal(struct bst* bst_node,
 
 void displaybst(struct bst *bst_node)
 {
-    printf("%s\n", bst_node -> key);
+    printf("Key: %s\t Filetype: %s\t Block No: %d\n", bst_node -> key, bst_node -> filedescriptor.file_type, bst_node -> filedescriptor.location_block_num);
 }
 
 void test_simple_bst()
 {
     struct bst * tree = NULL;
-    tree = init_bst(tree, "Sridhar", 100);
 
-    insert_bst(tree, "Pavan", 50);
-    insert_bst(tree, "Lakshya", 500);
-    insert_bst(tree, "Ruchi", 520);
-    insert_bst(tree, "Priya", 620);
+    file_descriptor temp_fd;
+    strcpy(temp_fd.file_name , "Sridhar.jpeg");
+    strcpy(temp_fd.location_full_path, "/home/iiitb/Desktop");
+    temp_fd.file_size = 10000;
+    strcpy(temp_fd.file_type, "file");
+    temp_fd.location_block_num = 5100;
+
+    tree = init_bst(tree, temp_fd);
+
+    strcpy(temp_fd.file_name, "Pavan.jpeg");
+    strcpy(temp_fd.location_full_path, "/home/iiitb/Documents");
+    temp_fd.file_size = 1200;
+    strcpy(temp_fd.file_type, "file");
+    temp_fd.location_block_num = 5200;
+
+    insert_bst(tree, temp_fd);
+
+    strcpy(temp_fd.file_name, "Lakshya.jpeg");
+    strcpy(temp_fd.location_full_path, "/home/iiitb/Documents");
+    temp_fd.file_size = 2200;
+    strcpy(temp_fd.file_type, "file");
+    temp_fd.location_block_num = 5300;
+
+    insert_bst(tree, temp_fd);
+
+    strcpy(temp_fd.file_name, "Ruchi.jpeg");
+    strcpy(temp_fd.location_full_path, "/home/iiitb/Documents");
+    temp_fd.file_size = 4200;
+    strcpy(temp_fd.file_type, "file");
+    temp_fd.location_block_num = 5400;
+
+    insert_bst(tree, temp_fd);
+
+    strcpy(temp_fd.file_name, "Priya.jpeg");
+    strcpy(temp_fd.location_full_path, "/home/iiitb/Documents");
+    temp_fd.file_size = 7200;
+    strcpy(temp_fd.file_type, "file");
+    temp_fd.location_block_num = 5700;
+
+    insert_bst(tree, temp_fd);
 
     printf("\nInorder traversal\n");
     inorder_traversal(tree, &displaybst);
@@ -136,6 +177,8 @@ void test_simple_bst()
     postorder_traversal(tree, &displaybst);
 
 }
+
+/*
 void test_complex_bst()
 {
     struct bst * tree = NULL;
@@ -159,6 +202,7 @@ void test_complex_bst()
     postorder_traversal(tree, &displaybst);
 
 }
+*/
 
 /*
 int main()
