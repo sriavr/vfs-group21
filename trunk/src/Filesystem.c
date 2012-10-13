@@ -41,6 +41,9 @@ void fsystem_ui()
     //test case for read_header() function
     test_read_header(full_path_file_name);
 
+    //test case for read_block_array
+    test_read_block_array(full_path_file_name);
+
     //check if mount is working
     mount_vfs(full_path_file_name);
 }
@@ -50,6 +53,7 @@ int create_vfs(char fullpath[150], int file_length)
     FILE *fp;
     meta_header *mh;
     header *hdr;
+    block *block_array;
 
     // creates the fileSystem file
     fp=fopen(fullpath,"w+b");
@@ -89,6 +93,13 @@ int create_vfs(char fullpath[150], int file_length)
 
     //write header to the files
     fwrite(hdr,sizeof(header),1,fp);
+
+    //allocate memory for block_array
+    block_array = calloc(MAX_NUM_OF_BLOCKS, sizeof(block));
+
+    //write the block_array into disk
+    fwrite(block_array,sizeof(MAX_NUM_OF_BLOCKS),1,fp);
+
     fclose(fp);
 
     return(0);
@@ -101,6 +112,9 @@ int mount_vfs(char fullpath[150])
 
     header *hdr = NULL;
     hdr = read_header(fullpath);
+
+    block* block_array = NULL;
+    block_array = read_block_array(fullpath);
 
     file_descriptor *file_descriptor_list = hdr -> fd_array;
     long int file_descriptor_list_size = mh -> file_descriptors_used;
@@ -226,6 +240,36 @@ header * read_header(char fullpath[150])
     return hdr;
 }
 
+block *read_block_array(char fullpath[150])
+{
+    FILE *fp;
+    block *block_array;
+
+    //allocate memory for header
+    block_array = calloc(MAX_NUM_OF_BLOCKS, sizeof(block));
+
+    fp = fopen(fullpath,"r+b");
+
+    //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
+    if(fseek(fp, (sizeof(meta_header) + sizeof(header)), SEEK_SET) != 0)
+    {
+        printf("\nFailed to read block array");
+        fclose(fp);
+        return NULL;
+    }
+
+    //read and copy the block_array to array
+    if(fread(block_array, sizeof(MAX_NUM_OF_BLOCKS), 1, fp) != 1)
+    {
+        printf("\nFailed to read block_array");
+        fclose(fp);
+        return NULL;
+    }
+
+    fclose(fp);
+    return block_array;
+}
+
 void test_read_meta_header(char fullpath[150])
 {
     meta_header * mh =  read_meta_header(fullpath);
@@ -251,6 +295,36 @@ void test_read_header(char fullpath[150])
         printf("\n read_header() function failed");
     }
 }
+
+void test_read_block_array(char fullpath[150])
+{
+    block * block_array = read_block_array(fullpath);
+    int i;
+    if(block_array !=NULL)
+    {
+        for(i=0; i< MAX_NUM_OF_BLOCKS; i++){
+            print_block(block_array[i]);
+        }
+        printf("\n number of blocks printed: %d", MAX_NUM_OF_BLOCKS);
+    }
+    else
+    {
+        printf("\n read_block_array() function failed");
+    }
+
+}
+
+void print_block(block blk)
+{
+    int i;
+    printf("\nStart of block\n");
+    for(i=0; i< BLOCK_SIZE; i++)
+    {
+        printf("%d",blk.data[i]);
+    }
+    printf("\nEnd of block\n");
+}
+
 
 void print_meta_header_info(meta_header * mh)
 {

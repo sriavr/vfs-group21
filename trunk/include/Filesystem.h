@@ -1,8 +1,10 @@
-#define FILE_DESCRIPTOR_MAX_LIMIT 1000000
+#define FILE_DESCRIPTOR_MAX_LIMIT 10000
+#define MAX_NUM_OF_BLOCKS 10000 //assuming one block has one file
 #define FREE_LIST_MAX_LIMIT 500000
 #define FILE_SYSTEM_LABEL_MAX_SIZE 150
 #define FILENAME_MAX_SIZE 50
 #define FULLPATH_WITH_FILENAME_MAX_SIZE 150
+#define BLOCK_SIZE 10000
 
 /*
 ## structure for File descriptor##
@@ -58,8 +60,9 @@ typedef struct head
 
 typedef struct max_block_size
 {
-    int block_size;
-} mBsz;
+    char data[BLOCK_SIZE];
+    long int next_block_num;
+} block;
 
 
 //create a Virtual File System. <vfs_label> is the name of VFS
@@ -77,6 +80,9 @@ meta_header * read_meta_header(char fullpath[150]);
 //returns the header structure from the vfs
 header * read_header(char fullpath[150]);
 
+//returns the block_array an array of block structures from vfs
+block *read_block_array(char fullpath[150]);
+
 //prints information of given meta header structure
 void print_meta_header_info(meta_header * mh);
 
@@ -91,5 +97,12 @@ void test_read_meta_header(char fullpath[150]);
 
 //test case for read_header() function
 void test_read_header(char fullpath[150]);
+
+//test case for read_block_array() function
+void test_read_block_array(char fullpath[150]);
+
 //generate test file descriptor array of given size
 file_descriptor * create_test_fd_data(file_descriptor * fd_array, long int size);
+
+//print a block
+void print_block(block blk);
