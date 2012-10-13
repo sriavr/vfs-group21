@@ -30,7 +30,8 @@ struct bst* create_bst(file_descriptor * file_descriptor_list, long int file_des
 void test_create_bst()
 {
     long int size = 5;
-    file_descriptor* fd_array = create_test_fd_data(fd_array, size);
+    file_descriptor* fd_array = NULL;
+    fd_array = create_test_fd_data(fd_array, size);
     struct bst * bst_tree = create_bst(fd_array, size);
 
     printf("\nInorder traversal\n");
