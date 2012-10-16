@@ -20,7 +20,7 @@ void init_hashtable(struct node * hashtable[])
 //Insert a string of length len into the HashTable,
 // and return node where it was inserted
 struct node * insert_hashtable(
-    struct node * hashtable[], const char* key, int value)
+    struct node * hashtable[], file_descriptor filedescriptor, int value)
 {
     int index = 0;
     // Makes sure the key is not already present in the hashtable.
@@ -30,7 +30,7 @@ struct node * insert_hashtable(
     temp = hashtable[index];
     while(temp!= NULL)
     {
-        if((get_hash_code(temp -> name)) == hash_code
+        if((get_hash_code(temp -> name)) == hash_code                  //requirement of this???
                 && (strcmp(temp -> name, key)==0))
         {
             return temp;
@@ -41,9 +41,37 @@ struct node * insert_hashtable(
     //Go to the index calculated
     temp = hashtable[index];
     //Add the node to linked list
-    hashtable[index] = insert_linkedlist(temp, key, value);
+    hashtable[index] = insert_linkedlist(temp, filedescriptor, value);
+    
+    
     return temp;
 }
+
+
+
+struct node * delete_hashtable(
+    struct node * hashtable[], file_descriptor filedescriptor, int value)
+{
+    int index = 0;
+    // Makes sure the key is not already present in the hashtable.
+    int hash_code = get_hash_code(key);
+    index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
+    struct node *temp = NULL;
+    temp = hashtable[index];
+    while(temp!= NULL)
+    {
+        if((get_hash_code(temp -> name)) == hash_code                  //requirement of this???
+                && (strcmp(temp -> name, filedescriptor.file_name)==0))
+        {
+            delete_linkedlist(hashtable,index,temp);
+        }
+        temp = temp -> next;
+    }
+
+   
+    return temp;
+}
+
 
 /**
  * Returns a hash code for this string. The hash code for a
@@ -74,7 +102,7 @@ int get_hash_code(const char *str)
     return hash;
 }
 
-struct node * search_hashtable(struct node * hashtable[], char * key)
+struct node * search_hashtable(struct node * hashtable[], file_descriptor filedescriptor )          //pass filedescriptor file_name in this
 {
     int hash_code = get_hash_code(key);
     int index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
@@ -83,7 +111,7 @@ struct node * search_hashtable(struct node * hashtable[], char * key)
     while(temp!= NULL)
     {
         if((get_hash_code(temp -> name)) == hash_code
-                && (strcmp(temp -> name, key)==0))
+                && (strcmp(temp -> name, filedescriptor.file_name)==0))
         {
             return temp;
         }
