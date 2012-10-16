@@ -24,7 +24,7 @@ struct bst* init_bst(struct bst* bst_root, file_descriptor filedescriptor)
     strcat(bst_root -> key, "/");
     strcat(bst_root -> key, filedescriptor.file_name);
 
-    bst_root -> filedescriptor = filedescriptor;
+    bst_root -> filedescriptor = filedescriptor;                      //reqirement of this???????????????/
 
     return bst_root;
 }

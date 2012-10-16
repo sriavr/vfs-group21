@@ -6,9 +6,9 @@
 #include "../include/LinkedList.h"
 #include "../include/Commons.h"
 
-struct node *insert_linkedlist(struct node *start, const char* key, int value)
+struct node *insert_linkedlist(struct node *start, file_descriptor  filedescriptor, int value)
 {
-    int len = strlen(key);
+    int len = strlen(filedescriptor.file_name);
     struct node *fresh=NULL,*temp=NULL;
 
     //allocate memory for fresh node
@@ -18,7 +18,7 @@ struct node *insert_linkedlist(struct node *start, const char* key, int value)
     fresh->name = (char *) malloc(sizeof(char)* (len+1));
     fresh->value = 0;
     //copy the input string into the newly created node
-    strcpy(fresh->name,key);
+    strcpy(fresh->name,filedescriptor.file_name);
     fresh->value = value;
 
     //point newly added node to NULL
@@ -42,6 +42,8 @@ struct node *insert_linkedlist(struct node *start, const char* key, int value)
         //assign the last node as fresh
         temp -> next = fresh;
     }
+    
+    fresh->filedescriptor = filedescriptor;
     return start;
 }
 
@@ -58,9 +60,9 @@ void display_linkedlist(struct node *print)
 
 }
 
-struct node * search_linkedlist(struct node *first, const char *key)
+struct node * search_linkedlist(struct node *first, file_descriptor filedescriptor)
 {
-    int len = strlen(key);
+    int len = strlen(filedescriptor.file_name);
     struct node *temp=NULL,*matched_node=NULL;
     int i, found=0;
 
@@ -71,7 +73,7 @@ struct node * search_linkedlist(struct node *first, const char *key)
         //if a match is not found, continue iteration
         for(i=0; i<len; i++)
         {
-            if(temp->name[i]!=key[i])
+            if(temp->name[i]!=filedescriptor.file_name[i])
             {
                 break;
             }
@@ -92,6 +94,35 @@ struct node * search_linkedlist(struct node *first, const char *key)
     //return NULL if nothing found
     return NULL;
 }
+
+void delete_linkedlist(struct node *hashtable,int index,struct node *temp);
+{
+	
+	struct node *del , *traverse;
+	if(hashtable[index]->next == temp)
+	hashtable[index] ->next = hashtable[index] ->next ->next;
+	else
+	{
+		traverse = hashtable[index] ->next;
+		while(traverse!=NULL)
+		{
+			if(traverse ->next ==temp)
+			{
+				del=traverse->next;
+				traverse->next = traverse->next->next;
+				delete(del);		
+			}
+		}
+	traverse = traverse->next;
+	
+	
+	}
+
+
+
+}
+
+
 
 void test_simple_linkedlist()
 {

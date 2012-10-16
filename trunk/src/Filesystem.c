@@ -8,6 +8,10 @@
 #include "../include/Bst.h"
 #include "../include/dsCreator.h"
 #include "../include/Commons.h"
+header *hdr;
+meta_header *mh;
+block *block_array;
+FILE *fp;
 
 void fsystem_ui()
 {
@@ -46,14 +50,16 @@ void fsystem_ui()
 
     //check if mount is working
     mount_vfs(full_path_file_name);
+    
+    unmount_vfs(full_path_file_name);
 }
 
 int create_vfs(char fullpath[150], int file_length)
 {
-    FILE *fp;
-    meta_header *mh;
-    header *hdr;
-    block *block_array;
+     // FILE *fp;
+     //  meta_header *mh;
+     //  header *hdr;
+     // block *block_array;
 
     // creates the fileSystem file
     fp=fopen(fullpath,"w+b");
@@ -107,13 +113,13 @@ int create_vfs(char fullpath[150], int file_length)
 
 int mount_vfs(char fullpath[150])
 {
-    meta_header *mh = NULL;
+ //   meta_header *mh = NULL;
     mh = read_meta_header(fullpath);
 
-    header *hdr = NULL;
+//    header *hdr = NULL;
     hdr = read_header(fullpath);
 
-    block* block_array = NULL;
+//    block* block_array = NULL;
     block_array = read_block_array(fullpath);
 
     file_descriptor *file_descriptor_list = hdr -> fd_array;
@@ -158,11 +164,42 @@ int mount_vfs(char fullpath[150])
     return 0;
 }
 
+
+int unmount_vfs(char  full_file_path_name[150])
+{
+
+	
+	fp=fopen(full_file_path_name , "r+b");
+	if(fwrite(mh,sizeof(meta_header),1,fp)!=1)
+	{
+		printf("not able to unmount meta_header");
+		return 0;
+	
+	}
+	printf("successfully unmount meta_header");
+	if(fwrite(hdr,sizeof(header),1,fp)!=1)
+	{
+		printf("not able to unmount header");
+		
+		return 0;
+	
+	}
+	printf("successfully unmount header");
+	if(fwrite(block,sizeof(MAX_NUM_OF_BLOCKS),1,fp)!=1)
+	{
+		printf("not able to unmount block of disk");
+		return 0;
+	
+	}
+	printf("successfully unmount blocks of disk");
+	return 1;
+}
+
 void test_vfs(char fullpath[150])
 {
-    FILE *fp;
+  /*  FILE *fp;
     meta_header *mh;
-    header *hdr;
+    header *hdr;*/
 
     //allocate memory for meta header
     mh=(meta_header*) malloc(sizeof(meta_header));
@@ -192,9 +229,9 @@ void test_vfs(char fullpath[150])
 
 meta_header * read_meta_header(char fullpath[150])
 {
-    FILE *fp;
+/*    FILE *fp;
     meta_header *mh;
-
+*/
     //allocate memory for meta header
     mh=(meta_header*) malloc(sizeof(meta_header));
 
@@ -214,9 +251,9 @@ meta_header * read_meta_header(char fullpath[150])
 
 header * read_header(char fullpath[150])
 {
-    FILE *fp;
+  /*  FILE *fp;
     header *hdr;
-
+*/
     //allocate memory for header
     hdr=(header*) malloc(sizeof(header));
     fp = fopen(fullpath,"r+b");
@@ -242,9 +279,9 @@ header * read_header(char fullpath[150])
 
 block *read_block_array(char fullpath[150])
 {
-    FILE *fp;
+  /*  FILE *fp;
     block *block_array;
-
+*/
     //allocate memory for header
     block_array = calloc(MAX_NUM_OF_BLOCKS, sizeof(block));
 
@@ -272,7 +309,7 @@ block *read_block_array(char fullpath[150])
 
 void test_read_meta_header(char fullpath[150])
 {
-    meta_header * mh =  read_meta_header(fullpath);
+     mh =  read_meta_header(fullpath);
     if(mh!=NULL)
     {
         print_meta_header_info(mh);
@@ -285,7 +322,7 @@ void test_read_meta_header(char fullpath[150])
 
 void test_read_header(char fullpath[150])
 {
-    header * hdr = read_header(fullpath);
+    hdr = read_header(fullpath);
     if(hdr!=NULL)
     {
         print_header_info(hdr);
@@ -298,7 +335,7 @@ void test_read_header(char fullpath[150])
 
 void test_read_block_array(char fullpath[150])
 {
-    block * block_array = read_block_array(fullpath);
+    block_array = read_block_array(fullpath);
     int i;
     if(block_array !=NULL)
     {
