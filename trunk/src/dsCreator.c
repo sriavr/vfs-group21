@@ -73,5 +73,18 @@ void fill_hashtable(struct node * hashtable[], file_descriptor * file_descriptor
 nNode * create_nAry_tree(file_descriptor * file_descriptor_list, long int file_descriptor_list_size)
 {
     //TODO
+    if(file_descriptor_list_size <=0)
+        return NULL;
+
+    struct nAryNode * nAryTree = NULL;
+    nAryTree = init_bst(nAryTree, file_descriptor_list[0]);
+
+    long int i;
+    for(i=1; i < file_descriptor_list_size; i ++)
+    {
+        insert_bst(nAryTree, file_descriptor_list[i]);
+    }
+
+    return nAryTree;
     return NULL;
 }
