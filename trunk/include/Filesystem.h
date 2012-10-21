@@ -71,6 +71,9 @@ int create_vfs(char *,int );
 //Mount a Virtual File System. <vfs_label> is the name of VFS
 int mount_vfs(char *);
 
+//unmounts the virtual file system
+int unmount_vfs(char  full_file_path_name[150]);
+
 //does a quick test by reading the header and meta header info from vfs
 void test_vfs(char fullpath[150]);
 
@@ -107,4 +110,4 @@ file_descriptor * create_test_fd_data(file_descriptor * fd_array, long int size)
 //print a block
 void print_block(block blk);
 
-int unmount_vfs(char  full_file_path_name[150]);
+

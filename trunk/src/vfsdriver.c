@@ -16,6 +16,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include "../include/Filesystem.h"
 
 #define BUFSIZE 200
 #define CMDSIZE 30
@@ -122,19 +123,22 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
 void createvfs ( char *P1, int P2 )
 {
 	/* Call the appropriate function with given arguments and display appropriate output on the screen */
-	printf("createvfs_TO_BE_DONE\n");
+//	printf("createvfs_TO_BE_DONE\n");
+	create_vfs(P1, P2);
 }
 
 void mountvfs ( char *P1 )
 {
 	/* Call the appropriate function with given arguments and display appropriate output on the screen */
-	printf("mountvfs_TO_BE_DONE\n");
+//	printf("mountvfs_TO_BE_DONE\n");
+	mount_vfs(P1);
 }
 
 void unmountvfs ( char *P1 )
 {
 	/* Call the appropriate function with given arguments and display appropriate output on the screen */
-	printf("unmountvfs_TO_BE_DONE\n");
+//	printf("unmountvfs_TO_BE_DONE\n");
+	unmount_vfs(P1);
 }
 
 void makedir ( char *P1, char *P2 )
