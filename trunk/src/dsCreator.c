@@ -6,20 +6,20 @@
 #include "../include/nAry.h"
 
 struct node * create_linkedlist(file_descriptor * file_descriptor_list, long int file_descriptor_list_size)
-/*{
-	
-   struct node *start=NULL;	
-   int i;
-   if(file_descriptor_list_size<=0)
-   	return NULL;
-   
-   for(i=0;i<file_descriptor_list_size ;i++)
-   {
-   	start= insert_linkedlist(start , file_descriptor_list[i].file_name , file_descriptor_list[i].location_block_num);	
-   }
-   
-   return start;	
-}*/
+{
+
+    struct node *start=NULL;
+    int i;
+    if(file_descriptor_list_size<=0)
+        return NULL;
+
+    for(i=0; i<file_descriptor_list_size ; i++)
+    {
+        start= insert_linkedlist(start , file_descriptor_list[i]);
+    }
+
+    return start;
+}
 
 struct bst* create_bst(file_descriptor * file_descriptor_list, long int file_descriptor_list_size)
 {
@@ -55,31 +55,23 @@ void test_create_bst()
     postorder_traversal(bst_tree, &displaybst);
 }
 
-void init_hashtable(struct node* hashtable[])
-{
-
-	init_hashtable(hahstable);
-
-
-}
-
 void fill_hashtable(struct node * hashtable[], file_descriptor * file_descriptor_list, long int file_descriptor_list_size)
 {
-	
-	struct node * test=NULL;
-	int i=0;
-	
-	//test=insert_hashtable(hashtable , file_descriptor_list[0].file_name , file_descriptor_list[0].location_block_num); 
-	  
-	for(i=0;i<file_descriptor_list_size ; i++)
-	{
-		test=insert_hashtable(hashtable , file_descriptor_list[i] , file_descriptor_list[i].location_block_num);    
-    
-    	}
-    
+
+    struct node * test=NULL;
+    int i=0;
+
+    //test=insert_hashtable(hashtable , file_descriptor_list[0].file_name , file_descriptor_list[0].location_block_num);
+
+    for(i=0; i<file_descriptor_list_size ; i++)
+    {
+        test=insert_hashtable(hashtable, file_descriptor_list[i]);
+    }
+
 }
 
 nNode * create_nAry_tree(file_descriptor * file_descriptor_list, long int file_descriptor_list_size)
 {
     //TODO
+    return NULL;
 }

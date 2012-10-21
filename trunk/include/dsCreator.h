@@ -8,4 +8,4 @@ struct bst* create_bst(file_descriptor * file_descriptor_list, long int file_des
 void fill_hashtable(struct node * hashtable[], file_descriptor * file_descriptor_list, long int file_descriptor_list_size);
 
 //nAry Tree representing directory structure
-//nNode* create_nAry_tree(file_descriptor * file_descriptor_list, long int file_descriptor_list_size);
+//nNode * create_nAry_tree(file_descriptor * file_descriptor_list, long int file_descriptor_list_size);

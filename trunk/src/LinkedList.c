@@ -6,20 +6,19 @@
 #include "../include/LinkedList.h"
 #include "../include/Commons.h"
 
-struct node *insert_linkedlist(struct node *start, file_descriptor  filedescriptor, int value)
+struct node *insert_linkedlist(struct node *start, file_descriptor new_node)
 {
-    int len = strlen(filedescriptor.file_name);
+    int len = strlen(new_node.file_name);
     struct node *fresh=NULL,*temp=NULL;
 
     //allocate memory for fresh node
     fresh=(struct node*)malloc(sizeof(struct node));
 
-    //allocate memory for the node string
-    fresh->name = (char *) malloc(sizeof(char)* (len+1));
-    fresh->value = 0;
-    //copy the input string into the newly created node
-    strcpy(fresh->name,filedescriptor.file_name);
-    fresh->value = value;
+    //allocate memory for the node string TENTATIVE
+    //fresh->filedescriptor.file_name = (char *) malloc(sizeof(char)* (len+1));
+
+    //copy the input filedescriptor into the newly created filedescriptor
+    fresh->filedescriptor = new_node;
 
     //point newly added node to NULL
     fresh->next=NULL;
@@ -42,8 +41,7 @@ struct node *insert_linkedlist(struct node *start, file_descriptor  filedescript
         //assign the last node as fresh
         temp -> next = fresh;
     }
-    
-    fresh->filedescriptor = filedescriptor;
+
     return start;
 }
 
@@ -54,7 +52,8 @@ void display_linkedlist(struct node *print)
     //iterate to the last node
     while(temp)
     {
-        printf("key:%s value:%d\n",temp->name,temp->value);
+        printf("filename:%s, filepath:%s\n",
+               temp->filedescriptor.file_name, temp->filedescriptor.location_full_path);
         temp=temp->next;
     }
 
@@ -62,7 +61,6 @@ void display_linkedlist(struct node *print)
 
 struct node * search_linkedlist(struct node *first, file_descriptor filedescriptor)
 {
-    int len = strlen(filedescriptor.file_name);
     struct node *temp=NULL,*matched_node=NULL;
     int i, found=0;
 
@@ -70,14 +68,13 @@ struct node * search_linkedlist(struct node *first, file_descriptor filedescript
     temp=first;
     while(temp)
     {
-        //if a match is not found, continue iteration
-        for(i=0; i<len; i++)
+        if(strcmp(temp->filedescriptor.file_name, filedescriptor.file_name) == 0)
         {
-            if(temp->name[i]!=filedescriptor.file_name[i])
-            {
-                break;
-            }
-            found = 1;
+            found =1;
+        }
+        else
+        {
+            found = 0;
         }
 
         //if a match is found, return matched_node
@@ -95,35 +92,39 @@ struct node * search_linkedlist(struct node *first, file_descriptor filedescript
     return NULL;
 }
 
-void delete_linkedlist(struct node *hashtable,int index,struct node *temp);
+struct node *delete_linkedlist(struct node *first, file_descriptor filedescriptor)
 {
-	
-	struct node *del , *traverse;
-	if(hashtable[index]->next == temp)
-	hashtable[index] ->next = hashtable[index] ->next ->next;
-	else
-	{
-		traverse = hashtable[index] ->next;
-		while(traverse!=NULL)
-		{
-			if(traverse ->next ==temp)
-			{
-				del=traverse->next;
-				traverse->next = traverse->next->next;
-				delete(del);		
-			}
-		}
-	traverse = traverse->next;
-	
-	
-	}
+    struct node *temp=NULL,*matched_node=NULL;
+    int i, found=0;
 
+    if(strcmp(first->filedescriptor.file_name, filedescriptor.file_name) == 0)
+    {
+        first = first -> next;
+        return;
+    }
 
+    //iterate till the last node
+    temp=first;
+    while(temp->next)
+    {
+        if(strcmp((temp->next)-> filedescriptor.file_name, filedescriptor.file_name) == 0)
+        {
+            free(temp -> next);
+            temp -> next = temp -> next -> next;
+            return;
+        }
 
+        //traverse to next node
+        temp=temp->next;
+    }
 }
 
 
 
+
+
+
+/*
 void test_simple_linkedlist()
 {
     struct node *start = NULL;
@@ -147,8 +148,9 @@ void test_simple_linkedlist()
     {
         printf("No search found");
     }
-}
+}*/
 
+/*
 void test_complex_linkedlist()
 {
     struct node *start = NULL;
@@ -179,7 +181,7 @@ void test_complex_linkedlist()
 
     printf("\nLinkedlist implementation, search function OK\n");
     //display_linkedlist(start);
-}
+}*/
 
 
 /*
