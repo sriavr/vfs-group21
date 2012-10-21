@@ -148,8 +148,10 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
 	    // Identify the matching node in all the siblings
 	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
 	    if( matchedNode == NULL ) {
-	    	fprintf( stderr, "Invalid path");
-	    	return root;
+	    //	fprintf( stderr, "Invalid path");
+	    	t->child = insertAtEnd( t->child , nName[i] );
+	    	matchedNode = t->child;
+	    	//return root;
 	    }
 	    t = matchedNode;
 	}
@@ -225,7 +227,7 @@ void testSplit() {
    print( names , count );
 }
 
-void test_nary(){
+void main(){
    //testSplit();
    nNode * root = NULL;
    root = insertNode(root,"","/");
@@ -236,6 +238,7 @@ void test_nary(){
    root = insertNode(root,"/home/xyz","doc");
    root = insertNode(root,"/","otherInRoot");
    root = insertNode(root,"/home/demo","test"); // expecting invalid path
+   
    printf("\n");
    display_nary( root , 1 );
 }
