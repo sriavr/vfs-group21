@@ -106,3 +106,5 @@ file_descriptor * create_test_fd_data(file_descriptor * fd_array, long int size)
 
 //print a block
 void print_block(block blk);
+
+int unmount_vfs(char  full_file_path_name[150]);

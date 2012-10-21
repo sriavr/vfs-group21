@@ -46,11 +46,11 @@ void fsystem_ui()
     test_read_header(full_path_file_name);
 
     //test case for read_block_array
-    test_read_block_array(full_path_file_name);
+    //test_read_block_array(full_path_file_name);
 
     //check if mount is working
     mount_vfs(full_path_file_name);
-    
+
     unmount_vfs(full_path_file_name);
 }
 
@@ -168,28 +168,28 @@ int mount_vfs(char fullpath[150])
 int unmount_vfs(char  full_file_path_name[150])
 {
 
-	
+
 	fp=fopen(full_file_path_name , "r+b");
 	if(fwrite(mh,sizeof(meta_header),1,fp)!=1)
 	{
 		printf("not able to unmount meta_header");
 		return 0;
-	
+
 	}
 	printf("successfully unmount meta_header");
 	if(fwrite(hdr,sizeof(header),1,fp)!=1)
 	{
 		printf("not able to unmount header");
-		
+
 		return 0;
-	
+
 	}
 	printf("successfully unmount header");
-	if(fwrite(block,sizeof(MAX_NUM_OF_BLOCKS),1,fp)!=1)
+	if(fwrite(block_array,MAX_NUM_OF_BLOCKS,1,fp)!=1)
 	{
 		printf("not able to unmount block of disk");
 		return 0;
-	
+
 	}
 	printf("successfully unmount blocks of disk");
 	return 1;

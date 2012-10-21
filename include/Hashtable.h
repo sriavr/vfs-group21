@@ -9,13 +9,14 @@ int get_hash_code(const char *str);
 
 //insert a node (key, value pair) into the hash table
 struct node * insert_hashtable(
-        struct node * hashtable[], const char* key, int value);
+    struct node * hashtable[], file_descriptor filedescriptor);
 
 //search for a particular key and return that node
-struct node * search_hashtable(struct node * hashtable[], char * key);
+struct node * search_hashtable(struct node * hashtable[], file_descriptor filedescriptor);
 
 //delete a particular node in a hash table. TODO
-struct node * delete_hashtable(struct node * hashtable[], char * key);
+struct node * delete_hashtable(
+    struct node * hashtable[], file_descriptor filedescriptor);
 
 //print the linkedlist
 //void displayhashlist(struct node *print);
