@@ -16,7 +16,9 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include "../include/DirOpns.h"
 #include "../include/Filesystem.h"
+
 
 #define BUFSIZE 200
 #define CMDSIZE 30
@@ -48,6 +50,7 @@ int main( int argc, char *argv[] )
 	char *token;
 
 	if( argc != 2 ){
+	    printf("%d",argc);
 		fprintf(stderr,"Usage: vfsdriver <scriptfile>\n");
 		return(1);
 	}
@@ -59,22 +62,22 @@ int main( int argc, char *argv[] )
 
 	while( fgets(linebuffer, sizeof(linebuffer), scriptfp) != NULL ){
 		/* This output is for debugging... do not uncomment in final version */
-		/*
+/*
 		printf("==================================================\n");
 		printf("Processing: %s", linebuffer);
 		printf("==================================================\n");
-		*/
-
+*/
 		/* Remove the extra newline character in the end of line */
 		linebuffer[ strlen(linebuffer)-1 ] = '\0';
-		
+
 		/* Get the command and the parameters using tokenizer */
 		strcpy( command, (token = strtok(linebuffer, " ")) == NULL ? "" : token );
-		
+
 		strcpy( par1, (token = strtok(NULL, " ")) == NULL ? "" : token );
 		strcpy( par2, (token = strtok(NULL, " ")) == NULL ? "" : token );
 		strcpy( par3, (token = strtok(NULL, " ")) == NULL ? "" : token );
-		/* printf("Command:%s:p1:%s:p2:%s:p3:%s\n",command, par1, par2, par3); */
+
+//		printf("Command:%s:p1:%s:p2:%s:p3:%s\n",command, par1, par2, par3);
 
 		processcommand( command, par1, par2, par3 );
 	}
@@ -144,19 +147,22 @@ void unmountvfs ( char *P1 )
 void makedir ( char *P1, char *P2 )
 {
 	/* Call the appropriate function with given arguments and display appropriate output on the screen */
-	printf("makedir_TO_BE_DONE\n");
+    //printf("makedir_TO_BE_DONE\n");
+    make_dir(P1, P2);
 }
 
 void deletedir ( char *P1 )
 {
 	/* Call the appropriate function with given arguments and display appropriate output on the screen */
-	printf("deletedir_TO_BE_DONE\n");
+	//printf("deletedir_TO_BE_DONE\n");
+	delete_dir(P1);
 }
 
 void movedir ( char *P1, char *P2 )
 {
 	/* Call the appropriate function with given arguments and display appropriate output on the screen */
-	printf("movedir_TO_BE_DONE\n");
+	//printf("movedir_TO_BE_DONE\n");
+	move_dir(P1, P2);
 }
 
 void listdir ( char *P1, int P2, char *P3 )

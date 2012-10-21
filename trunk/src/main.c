@@ -3,6 +3,7 @@
 #include "../include/Bst.h"
 #include "../include/dsCreator.h"
 
+/*
 int main()
 {
     fsystem_ui();
@@ -10,3 +11,4 @@ int main()
     //test_create_bst();
     return 0;
 }
+*/

@@ -2,3 +2,7 @@ createvfs demo 1024
 mountvfs demo
 unmountvfs demo
 mountvfs demo
+makedir /home/sub1 sub2
+makedir /home/sub1 sub3
+deletedir /home/sub1/sub3
+movedir /home/sub1/sub2 /home/sub1
