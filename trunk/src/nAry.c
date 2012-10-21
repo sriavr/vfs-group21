@@ -238,6 +238,7 @@ void main(){
    root = insertNode(root,"/home/xyz","doc");
    root = insertNode(root,"/","otherInRoot");
    root = insertNode(root,"/home/demo","test"); // expecting invalid path
+   root = insertNode(root,"/home/sdf/jkl","test1"); // expecting invalid path
    
    printf("\n");
    display_nary( root , 1 );
