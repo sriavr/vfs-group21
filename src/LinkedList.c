@@ -248,10 +248,10 @@ void test_complex_linkedlist()
 }*/
 
 
-
+/*
 int main()
 {
     test_simple_linkedlist();
     return 0;
-}
+}*/
 
