@@ -8,10 +8,12 @@
 #include "../include/Bst.h"
 #include "../include/dsCreator.h"
 #include "../include/Commons.h"
+
 header *hdr;
 meta_header *mh;
 block *block_array;
 FILE *fp;
+nNode * nAry_tree = NULL;
 
 void fsystem_ui()
 {
@@ -142,8 +144,7 @@ int mount_vfs(char fullpath[150])
     */
 
     //Create nAry Tree representing directory structure
-   // nNode * nAry_tree = NULL;
-   // nAry_tree = (nNode *) create_nAry_tree(file_descriptor_list, file_descriptor_list_size);
+    //nAry_tree = (nNode *) create_nAry_tree(file_descriptor_list, file_descriptor_list_size);
 
     //Create Hashtable storing all the file names without path (for search based on file name without path)
     struct node * hashtable[HASHSIZE];
@@ -183,7 +184,7 @@ int unmount_vfs(char  full_file_path_name[150])
         return 1;
     }
     //printf("successfully unmount header");
-    if(fwrite(block_array,MAX_NUM_OF_BLOCKS,1,fp)!=1)
+    if(fwrite(block_array,sizeof(BLOCK_SIZE * MAX_NUM_OF_BLOCKS),1,fp)!=1)
     {
         printf("unmountvfs_FAILURE\n");
         return 1;

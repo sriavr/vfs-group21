@@ -229,22 +229,21 @@ void testSplit() {
    print( names , count );
 }
 
-//int main(){
-//   //testSplit();
-//   nNode * root = NULL;
-//   root = insertNode(root,"","/");
-//   root = insertNode(root,"/","a");
-//   root = insertNode(root,"/","home");
-//   root = insertNode(root,"/home","b");
-//   root = insertNode(root,"/home","xyz");
-//   root = insertNode(root,"/home/xyz","doc");
-//   root = insertNode(root,"/","otherInRoot");
-//   root = insertNode(root,"/home/demo","test"); // expecting invalid path
-//   root = insertNode(root,"/home/sdf/jkl","test1"); // expecting invalid path
-//   root = insertNode(root,"/home/sdf/jkl/hjk/iop/mno","test1"); // expecting invalid path
-//
-//   printf("\n");
-//   display_nary( root , 1 );
-//   return 0;
-//}
+void test_nary_main(){
+   //testSplit();
+   nNode * root = NULL;
+   root = insertNode(root,"","/");
+   root = insertNode(root,"/","a");
+   root = insertNode(root,"/","home");
+   root = insertNode(root,"/home","b");
+   root = insertNode(root,"/home","xyz");
+   root = insertNode(root,"/home/xyz","doc");
+   root = insertNode(root,"/","otherInRoot");
+   root = insertNode(root,"/home/demo","test"); // expecting invalid path
+   root = insertNode(root,"/home/sdf/jkl","test1"); // expecting invalid path
+   root = insertNode(root,"/home/sdf/jkl/hjk/iop/mno","test1"); // expecting invalid path
+
+   printf("\n");
+   display_nary( root , 1 );
+}
 

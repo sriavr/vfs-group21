@@ -176,19 +176,19 @@ void displayhashlist(struct node *print)
     printf("\nSearch function and creation of node working fine\n");
 }*/
 
- 
+
 void test_simple_hashtable()
 {
 
-    filedescriptor arr[5];
+    file_descriptor arr[5];
     char *name[2]={"file","dir"};
-
+    int i;
     for(i=0;i<5;i++)
     {
         strcpy(arr[i].file_name , generate_rand_string());
         strcpy(arr[i].location_full_path, generate_rand_string());
-        strcpy(arr[i].file_type , *name[rand()%2]);
-        arr[i].fileSize = rand();
+        strcpy(arr[i].file_type , name[rand()%2]);
+        arr[i].file_size = rand();
         arr[i].location_block_num =rand();
 
     }
@@ -204,14 +204,14 @@ void test_simple_hashtable()
 
     if(temp!=NULL)
     {
-        printf("\nMatch found. Key:%s, Value:%d\n",temp->name);
+        printf("\nMatch found. Key:%s\n",temp->filedescriptor.file_name);
     }
     else
     {
         printf("\nNo Match found\n");
     }
 
-   temp= delete_hashtable(hashtable, filedescriptor);
+   temp= delete_hashtable(hashtable, temp->filedescriptor);
 
     if(temp!=NULL)
     {
@@ -221,18 +221,17 @@ void test_simple_hashtable()
     {
         printf("\nNOT DELETED\n");
     }
-
-
     display_hashtable(hashtable);
 }
 
+/*
 int main()
 {
     //test_complex_hashtable();
     test_simple_hashtable();
     return 0;
 }
-
+*/
 
 /*
 
