@@ -94,27 +94,50 @@ struct node * search_linkedlist(struct node *first, file_descriptor filedescript
 
 struct node *delete_linkedlist(struct node *first, file_descriptor filedescriptor)
 {
-    struct node *temp=NULL,*matched_node=NULL;
+    struct node *temp=NULL,*matched_node=NULL , *previous = NULL ,*del =NULL;
     int i, found=0;
 
     if(strcmp(first->filedescriptor.file_name, filedescriptor.file_name) == 0)
     {
+        del=first;
         first = first -> next;
-        return;
+        free(del);
+        return first;
     }
 
     //iterate till the last node
     temp=first;
-    while(temp->next)
+    while(temp)
     {
-        if(strcmp((temp->next)-> filedescriptor.file_name, filedescriptor.file_name) == 0)
+
+
+        if(temp->next  !=NULL)
         {
-            free(temp -> next);
-            temp -> next = temp -> next -> next;
-            return;
+
+            if(strcmp((temp->next)-> filedescriptor.file_name, filedescriptor.file_name) == 0)
+            {
+                del=temp -> next;
+                temp -> next = temp -> next -> next;
+                free(del);
+                return first;
+            }
+        }
+        else{
+
+             if(strcmp(temp-> filedescriptor.file_name, filedescriptor.file_name) == 0)
+            {
+
+                //temp -> next = temp -> next -> next;
+                free(temp);
+                previous->next=NULL;
+                return first;
+            }
+
+
         }
 
         //traverse to next node
+        previous =temp;
         temp=temp->next;
     }
 }
@@ -122,33 +145,80 @@ struct node *delete_linkedlist(struct node *first, file_descriptor filedescripto
 
 
 
+ile_name[FILENAME_MAX_SIZE];
+    char location_full_path[FULLPATH_WITH_FILENAME_MAX_SIZE];
+    char file_type[10];
+    long int file_size;
+    int location_block_num;
 
 
-/*
 void test_simple_linkedlist()
-{
+    {
+
+    char *a[2]={"file" ,"dir"};
+    char *temp_string =NULL , *string_full_path =NULL;
+    int len=0, length ;
+    struct node * del=NULL;
+    int i=0 , j=0 , k=0;
+    file_descriptor arr[10];
+    for(i=0;i<10;i++)
+    {
+
+        string_full_path = generate_rand_string();
+        for(k=0;k<length;k++)
+        arr[i].location_full_path[k] =string_full_path[k];
+        temp_string=*a[rand()%2];
+        len=strlen(temp_string);
+        for(j=0;j<len;j++)
+        arr[i].file_type[j]= a[j];
+        arr[i].file_size =rand();
+        arr[i].location_block_num=rand();
+
+
+    }
     struct node *start = NULL;
-    start = insert_linkedlist(start, "ruchi",23);
-    insert_linkedlist(start, "priya",34);
-    insert_linkedlist(start, "sridhar",35);
-    insert_linkedlist(start, "pavan",53);
+    start = insert_linkedlist(start, arr[0]);
+    insert_linkedlist(start, arr[1]);
+    insert_linkedlist(start, arr[2]);
+    insert_linkedlist(start, arr[3]);
+    insert_linkedlist(start, arr[4]);
+    insert_linkedlist(start, arr[5]);
+    insert_linkedlist(start, arr[6]);
+    insert_linkedlist(start, arr[7]);
+    insert_linkedlist(start, arr[8]);
+    insert_linkedlist(start, arr[9]);
 
     //print the entire list
     display_linkedlist(start);
+    printf("\n\n\n-------------------------------------------------");
 
     struct node * temp;
     //search for a node
-    temp = search_linkedlist(start, "priya");
+    temp = search_linkedlist(start, arr[7]);
 
     if(temp!=NULL)
     {
-        printf("\nFound match: %s",temp->name);
+        printf("\nFound match: %s",temp->filedescriptor.file_name);
     }
     else
     {
         printf("No search found");
     }
-}*/
+
+    del = delete_linkedlist(start,arr[4]);
+    if(del !=NULL)
+    {
+        printf("\nFound match: %s",temp->filedescriptor.file_name);
+    }
+    else
+    {
+        printf("cannot be  deleted");
+    }
+
+    printf("\n\n\n-------------------------------------------------");
+    display_linkedlist(start);
+
+}
 
 /*
 void test_complex_linkedlist()
@@ -184,10 +254,10 @@ void test_complex_linkedlist()
 }*/
 
 
-/*
+
 int main()
 {
-    test_complex_linkedlist();
+    test_simple_linkedlist();
     return 0;
 }
-*/
+

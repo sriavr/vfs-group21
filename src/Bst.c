@@ -124,58 +124,49 @@ void displaybst(struct bst *bst_node)
 
 void test_simple_bst()
 {
-    struct bst * tree = NULL;
 
-    file_descriptor temp_fd;
-    strcpy(temp_fd.file_name , "Sridhar.jpeg");
-    strcpy(temp_fd.location_full_path, "/home/iiitb/Desktop");
-    temp_fd.file_size = 10000;
-    strcpy(temp_fd.file_type, "file");
-    temp_fd.location_block_num = 5100;
 
-    tree = init_bst(tree, temp_fd);
 
-    strcpy(temp_fd.file_name, "Pavan.jpeg");
-    strcpy(temp_fd.location_full_path, "/home/iiitb/Documents");
-    temp_fd.file_size = 1200;
-    strcpy(temp_fd.file_type, "file");
-    temp_fd.location_block_num = 5200;
 
-    insert_bst(tree, temp_fd);
 
-    strcpy(temp_fd.file_name, "Lakshya.jpeg");
-    strcpy(temp_fd.location_full_path, "/home/iiitb/Documents");
-    temp_fd.file_size = 2200;
-    strcpy(temp_fd.file_type, "file");
-    temp_fd.location_block_num = 5300;
+     char *a[2]={"file" ,"dir"};
+     char *temp_string =NULL , *string_full_path =NULL;
+     int len=0, length ;
+     struct bst * del=NULL , *start=NULL;
+     int i=0 , j=0 , k=0;
+     file_descriptor arr[10];
 
-    insert_bst(tree, temp_fd);
+     for(i=0;i<10;i++)
+     {
 
-    strcpy(temp_fd.file_name, "Ruchi.jpeg");
-    strcpy(temp_fd.location_full_path, "/home/iiitb/Documents");
-    temp_fd.file_size = 4200;
-    strcpy(temp_fd.file_type, "file");
-    temp_fd.location_block_num = 5400;
+        string_full_path = generate_rand_string();
+        for(k=0;k<length;k++)
+        arr[i].location_full_path[k] =string_full_path[k];
+        temp_string=*a[rand()%2];
+        len=strlen(temp_string);
+        for(j=0;j<len;j++)
+        arr[i].file_type[j]= a[j];
+        arr[i].file_size =rand();
+        arr[i].location_block_num=rand();
 
-    insert_bst(tree, temp_fd);
 
-    strcpy(temp_fd.file_name, "Priya.jpeg");
-    strcpy(temp_fd.location_full_path, "/home/iiitb/Documents");
-    temp_fd.file_size = 7200;
-    strcpy(temp_fd.file_type, "file");
-    temp_fd.location_block_num = 5700;
+    }
 
-    insert_bst(tree, temp_fd);
+        del=init_bst(start , arr[0]);
+        for(j=1;j<10;j++)
+       del= insert_bst(start, arr[j]);
+       if(del!=NULL)
+       {
+            printf("sucessfull  inserted");
 
-    printf("\nInorder traversal\n");
-    inorder_traversal(tree, &displaybst);
+       }
+       else
+       {
+            printf(" UNsuccessful inserted");
+       }
 
-    printf("\nPreorder traversal\n");
-    preorder_traversal(tree, &displaybst);
 
-    printf("\nPostorder traversal\n");
-    postorder_traversal(tree, &displaybst);
-
+        displaybst(start);
 }
 
 /*
@@ -210,8 +201,8 @@ int main()
     test_simple_bst();
     //test_complex_bst();
     return 0;
-}
-*/
+}*/
+
 
 
 /*
