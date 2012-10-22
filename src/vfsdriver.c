@@ -41,47 +41,48 @@ void exportfile ( char *P1, char *P2 );
 void searchfile ( char *P1, char *P2 );
 
 void processcommand( char *command, char *P1, char *P2, char *P3 );
-
-int main( int argc, char *argv[] )
-{
-	FILE *scriptfp;
-	char linebuffer[BUFSIZE];
-	char command[CMDSIZE], par1[PARSIZE], par2[PARSIZE], par3[PARSIZE];
-	char *token;
-
-	if( argc != 2 ){
-	    printf("%d",argc);
-		fprintf(stderr,"Usage: vfsdriver <scriptfile>\n");
-		return(1);
-	}
-
-	if( (scriptfp=fopen(argv[1],"r")) == NULL ){
-		fprintf(stderr,"Unable to open script file: %s\n", argv[1]);
-		return(2);
-	}
-
-	while( fgets(linebuffer, sizeof(linebuffer), scriptfp) != NULL ){
-		/* This output is for debugging... do not uncomment in final version */
-/*
-		printf("==================================================\n");
-		printf("Processing: %s", linebuffer);
-		printf("==================================================\n");
-*/
-		/* Remove the extra newline character in the end of line */
-		linebuffer[ strlen(linebuffer)-1 ] = '\0';
-
-		/* Get the command and the parameters using tokenizer */
-		strcpy( command, (token = strtok(linebuffer, " ")) == NULL ? "" : token );
-
-		strcpy( par1, (token = strtok(NULL, " ")) == NULL ? "" : token );
-		strcpy( par2, (token = strtok(NULL, " ")) == NULL ? "" : token );
-		strcpy( par3, (token = strtok(NULL, " ")) == NULL ? "" : token );
-
-//		printf("Command:%s:p1:%s:p2:%s:p3:%s\n",command, par1, par2, par3);
-
-		processcommand( command, par1, par2, par3 );
-	}
-}
+//
+//int main( int argc, char *argv[] )
+//{
+//	FILE *scriptfp;
+//	char linebuffer[BUFSIZE];
+//	char command[CMDSIZE], par1[PARSIZE], par2[PARSIZE], par3[PARSIZE];
+//	char *token;
+//
+//	if( argc != 2 ){
+//	    printf("%d",argc);
+//		fprintf(stderr,"Usage: vfsdriver <scriptfile>\n");
+//		return(1);
+//	}
+//
+//	if( (scriptfp=fopen(argv[1],"r")) == NULL ){
+//		fprintf(stderr,"Unable to open script file: %s\n", argv[1]);
+//		return(2);
+//	}
+//
+//	while( fgets(linebuffer, sizeof(linebuffer), scriptfp) != NULL ){
+//		/* This output is for debugging... do not uncomment in final version */
+///*
+//		printf("==================================================\n");
+//		printf("Processing: %s", linebuffer);
+//		printf("==================================================\n");
+//*/
+//		/* Remove the extra newline character in the end of line */
+//		linebuffer[ strlen(linebuffer)-1 ] = '\0';
+//
+//		/* Get the command and the parameters using tokenizer */
+//		strcpy( command, (token = strtok(linebuffer, " ")) == NULL ? "" : token );
+//
+//		strcpy( par1, (token = strtok(NULL, " ")) == NULL ? "" : token );
+//		strcpy( par2, (token = strtok(NULL, " ")) == NULL ? "" : token );
+//		strcpy( par3, (token = strtok(NULL, " ")) == NULL ? "" : token );
+//
+////		printf("Command:%s:p1:%s:p2:%s:p3:%s\n",command, par1, par2, par3);
+//
+//		processcommand( command, par1, par2, par3 );
+//	}
+//	return 0;
+//}
 
 void processcommand( char *command, char *P1, char *P2, char *P3 )
 {
