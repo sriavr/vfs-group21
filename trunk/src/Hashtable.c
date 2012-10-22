@@ -20,18 +20,18 @@ void init_hashtable(struct node * hashtable[])
 //Insert a string of length len into the HashTable,
 // and return node where it was inserted
 struct node * insert_hashtable(
-    struct node * hashtable[], file_descriptor filedescriptor, int value)
+    struct node * hashtable[], file_descriptor filedescriptor)
 {
     int index = 0;
     // Makes sure the key is not already present in the hashtable.
-    int hash_code = get_hash_code(key);
+    int hash_code = get_hash_code(filedescriptor.file_name);
     index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
     struct node *temp = NULL;
     temp = hashtable[index];
     while(temp!= NULL)
     {
-        if((get_hash_code(temp -> name)) == hash_code                  //requirement of this???
-                && (strcmp(temp -> name, filedescriptor.file_name)==0))
+        if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code                  //requirement of this???
+                && (strcmp(temp -> filedescriptor.file_name, filedescriptor.file_name)==0))
         {
             return temp;
         }
@@ -41,34 +41,34 @@ struct node * insert_hashtable(
     //Go to the index calculated
     temp = hashtable[index];
     //Add the node to linked list
-    hashtable[index] = insert_linkedlist(temp, filedescriptor, value);
-    
-    
+    hashtable[index] = insert_linkedlist(temp, filedescriptor);
+
+
     return temp;
 }
 
 
 
 struct node * delete_hashtable(
-    struct node * hashtable[], file_descriptor filedescriptor, int value)
+    struct node * hashtable[], file_descriptor filedescriptor)
 {
     int index = 0;
     // Makes sure the key is not already present in the hashtable.
-    int hash_code = get_hash_code(key);
+    int hash_code = get_hash_code(filedescriptor.file_name);
     index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
     struct node *temp = NULL;
     temp = hashtable[index];
     while(temp!= NULL)
     {
-        if((get_hash_code(temp -> name)) == hash_code                  //requirement of this???
-                && (strcmp(temp -> name, filedescriptor.file_name)==0))
+        if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code                  //requirement of this???
+                && (strcmp(temp -> filedescriptor.file_name , filedescriptor.file_name)==0))
         {
-            delete_linkedlist(hashtable,index,temp);
+            delete_linkedlist(temp, filedescriptor);
         }
         temp = temp -> next;
     }
 
-   
+
     return temp;
 }
 
@@ -104,14 +104,14 @@ int get_hash_code(const char *str)
 
 struct node * search_hashtable(struct node * hashtable[], file_descriptor filedescriptor )          //pass filedescriptor file_name in this
 {
-    int hash_code = get_hash_code(key);
+    int hash_code = get_hash_code(filedescriptor.file_name);
     int index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
     struct node *temp = NULL;
     temp = hashtable[index];
     while(temp!= NULL)
     {
-        if((get_hash_code(temp -> name)) == hash_code
-                && (strcmp(temp -> name, filedescriptor.file_name)==0))
+        if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code
+                && (strcmp(temp -> filedescriptor.file_name, filedescriptor.file_name)==0))
         {
             return temp;
         }
@@ -143,7 +143,7 @@ void displayhashlist(struct node *print)
     }
 }*/
 
-void test_complex_hashtable()
+/*void test_complex_hashtable()
 {
     struct node * hashtable[HASHSIZE], *temp = NULL;
     init_hashtable(hashtable);
@@ -174,39 +174,65 @@ void test_complex_hashtable()
         }
     }
     printf("\nSearch function and creation of node working fine\n");
-}
+}*/
 
+ 
 void test_simple_hashtable()
 {
+
+    filedescriptor arr[5];
+    char *name[2]={"file","dir"};
+
+    for(i=0;i<5;i++)
+    {
+        strcpy(arr[i].file_name , generate_rand_string());
+        strcpy(arr[i].location_full_path, generate_rand_string());
+        strcpy(arr[i].file_type , *name[rand()%2]);
+        arr[i].fileSize = rand();
+        arr[i].location_block_num =rand();
+
+    }
     struct node * hashtable[HASHSIZE];
     init_hashtable(hashtable);
-    insert_hashtable(hashtable, "Sridhar", 138);
-    insert_hashtable(hashtable, "Priya", 42);
-    insert_hashtable(hashtable, "Ruchi", 55);
-    insert_hashtable(hashtable, "Pavan", 63);
-    insert_hashtable(hashtable, "Lakshya", 72);
+    for(i=0;i<10;i++)
+    insert_hashtable(hashtable, arr[i]);
+
     display_hashtable(hashtable);
 
     struct node * temp;
-    temp = search_hashtable(hashtable, "Sridhar");
+    temp = search_hashtable(hashtable, arr[4]);
 
     if(temp!=NULL)
     {
-        printf("\nMatch found. Key:%s, Value:%d\n",temp->name, temp->value);
+        printf("\nMatch found. Key:%s, Value:%d\n",temp->name);
     }
     else
     {
         printf("\nNo Match found\n");
     }
+
+   temp= delete_hashtable(hashtable, filedescriptor);
+
+    if(temp!=NULL)
+    {
+        printf("\nDELETED SUCCESSFULY");
+    }
+    else
+    {
+        printf("\nNOT DELETED\n");
+    }
+
+
+    display_hashtable(hashtable);
 }
-/*
+
 int main()
 {
-    test_complex_hashtable();
-    //test_simple_hashtable();
+    //test_complex_hashtable();
+    test_simple_hashtable();
     return 0;
 }
-*/
+
 
 /*
 

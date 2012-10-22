@@ -142,8 +142,8 @@ int mount_vfs(char fullpath[150])
     */
 
     //Create nAry Tree representing directory structure
-    nNode * nAry_tree = NULL;
-    nAry_tree = (nNode *) create_nAry_tree(file_descriptor_list, file_descriptor_list_size);
+   // nNode * nAry_tree = NULL;
+   // nAry_tree = (nNode *) create_nAry_tree(file_descriptor_list, file_descriptor_list_size);
 
     //Create Hashtable storing all the file names without path (for search based on file name without path)
     struct node * hashtable[HASHSIZE];

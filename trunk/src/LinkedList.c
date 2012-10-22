@@ -145,12 +145,6 @@ struct node *delete_linkedlist(struct node *first, file_descriptor filedescripto
 
 
 
-ile_name[FILENAME_MAX_SIZE];
-    char location_full_path[FULLPATH_WITH_FILENAME_MAX_SIZE];
-    char file_type[10];
-    long int file_size;
-    int location_block_num;
-
 
 void test_simple_linkedlist()
     {
