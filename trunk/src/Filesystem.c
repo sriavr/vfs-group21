@@ -67,7 +67,7 @@ int create_vfs(char fullpath[150], int size)
 {
     FILE *fp;
     // creates the fileSystem file
-    fp=fopen(fullpath,"r+b");
+    fp=fopen(fullpath,"w+b");
 
     //allocates memory for the file system
     char *memory=(char*) malloc(size + sizeof(header) + sizeof(meta_header));
