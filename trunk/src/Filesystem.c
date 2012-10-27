@@ -25,6 +25,7 @@ char full_path_file_name[150];
 
 void fsystem_ui()
 {
+    char full_path_file_name[150];
     int file_length,ret=0;
 
     printf("\nEnter the file name with full path: ");

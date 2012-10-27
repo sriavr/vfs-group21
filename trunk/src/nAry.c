@@ -59,7 +59,7 @@ char * substring( char * str , int startIndex , int endIndex ) {
  Note: Path should start with /
  e.g. "/" or "/home"
 */
-int splitPath(  char nPath[] , char nName[][MAX_LENGTH]) {
+int splitPath(  char nPath[] , char nName[][MAX_LENGTH] ) {
      int startIndex = 0;
      int endIndex = -1;
      int length = strlen( nPath );
@@ -220,6 +220,117 @@ void display_nary( nNode * root , int level ) {
   }
 }
 
+void insert_naryTree( nNode * root , int level ) {
+
+  nNode * t;
+
+  if( root == NULL ) {
+     return;
+  }
+
+  changeLevel( level );
+  //printf("%s \n", root->name );
+
+  if( root->child != NULL ) { // condition not required.
+    // for each child node
+    for( t = root->child ; t != NULL ; t = t->sibling )
+        insert_naryTree( t , level + 1 );
+  }
+}
+
+    /*
+nNode * move_dir(nNode * root ,char * src_path, char * dest_path)
+{
+
+    int levelSrc = splitPath(src_path);
+    int levelDst = splitPath(dest_path);
+    nNode * cPath;
+    nNode * newNode, existingPath;
+    cPath = checkPath( root, src_path );
+    if ( cPath == 0 )
+    {
+        printf("Invalid Source Path");
+        return NULL;
+    }
+    newNode = cPath;
+    cPath = checkPath( root, dest_path );
+    if ( cPath == 0 )
+    {
+        printf("Invalid Destination Path");
+        return NULL;
+    }
+    existingPath = cPath;
+
+    root = getnAry(root,newNode,existingPath,levelSrc,levelDst);
+
+    return root;
+} */
+
+nNode * getnAry( nNode * root, nNode * newNode, nNode * existingPath, int levelSrc, int levelDst )
+{
+    nNode * ins;
+
+//    t = root;
+//	for( i = 0; i < count ; i++ ) {
+//	    // Identify the matching node in all the siblings
+//	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
+//	    if( matchedNode == NULL ) {
+//	    	fprintf( stderr, "Invalid path");
+//	    	return NULL;
+//	    }
+//	    t = matchedNode;
+//	}
+}
+
+int checkPath( nNode * root , char nPath[] )//, char name[] )
+{
+	nNode *ins;
+	char nName[MAX_LEVELS][MAX_LENGTH];
+	int count = splitPath( nPath, nName );
+	int i;
+	nNode * t, * matchedNode = NULL;
+
+	if( count != 0 && root == NULL ) {
+	  	fprintf(stderr,"Invalid Path");
+	  	return 0;
+	}
+
+	// When root is null then create node as root.
+//	if( count == 0 && root == NULL ) {
+//		ins = createNode( name ); // expecting root node name is "/"
+//		return ins;
+//	}
+
+	// Path is empty then node should be created under root.
+//	if( count == 0 && root != NULL ) {
+//
+//	    	// should be last child under root.
+//	    	root->child = insertAtEnd( root->child , name );
+//
+//	    	return root;
+//	}
+
+	// Must be inserted in the given path.
+	t = root;
+	for( i = 0; i < count ; i++ ) {
+	    // Identify the matching node in all the siblings
+	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
+	    if( matchedNode == NULL ) {
+	    	fprintf( stderr, "Invalid path");
+	    	return NULL;
+	    }
+	    t = matchedNode;
+	}
+
+	// condition check not required.
+//	if( matchedNode != NULL ) {
+//		matchedNode->child = insertAtEnd( matchedNode->child , name );
+//	}
+//
+	return matchedNode;
+}
+
+
 
 void print( char str[][MAX_LENGTH], int count ) {
    int i;
@@ -229,7 +340,7 @@ void print( char str[][MAX_LENGTH], int count ) {
    }
 }
 
-/*void testSplit() {
+void testSplit() {
    char path1[] = "/home/abc";
    char path2[] = "/";
    char path3[] = "";
@@ -254,7 +365,7 @@ void print( char str[][MAX_LENGTH], int count ) {
    count = splitPath( path5 , names );
    print( names , count );
 }
-*/
+
 void test_nary_main(){
    //testSplit();
    nNode * root = NULL;
