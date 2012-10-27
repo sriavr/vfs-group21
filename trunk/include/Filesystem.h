@@ -112,3 +112,6 @@ void print_block(block blk);
 
 //unmounting meta_header,header n blocks of disk
 int unmount_vfs(char  full_file_path_name[150]);
+
+//write contents of a file to a block
+int write_to_block(long int block_num, char * filename_with_path, int size);

@@ -17,7 +17,6 @@ header *hdr;
 meta_header *mh;
 //block *block_array; //NO NEED TO READ BLOCK ARRAY
 
-FILE *fp;
 nNode * nAry_tree = NULL;
 struct bst * bst_tree = NULL;
 struct node * hashtable[HASHSIZE];
@@ -66,6 +65,7 @@ void fsystem_ui()
 
 int create_vfs(char fullpath[150], int size)
 {
+    FILE *fp;
     // creates the fileSystem file
     fp=fopen(fullpath,"r+b");
 
@@ -172,6 +172,7 @@ int mount_vfs(char fullpath[150])
 
 int unmount_vfs(char filepath[150])
 {
+    FILE *fp;
     fp=fopen(full_path_file_name, "r+b");
     if(fwrite(mh,sizeof(meta_header),1,fp)!=1)
     {
@@ -197,6 +198,7 @@ int unmount_vfs(char filepath[150])
 
 int write_to_block(long int block_num, char * filename_with_path, int size)
 {
+    FILE *fp;
     //fp is file pointer to VFS
     fp = fopen(full_path_file_name,"r+b");
 
@@ -260,7 +262,7 @@ void test_vfs(char fullpath[150])
     /*  FILE *fp;
       meta_header *mh;
       header *hdr;*/
-
+    FILE *fp;
     //allocate memory for meta header
     mh=(meta_header*) malloc(sizeof(meta_header));
 
@@ -284,14 +286,11 @@ void test_vfs(char fullpath[150])
         fclose(fp);
         return;
     }
-
 }
 
 meta_header * read_meta_header(char fullpath[150])
 {
-    /*    FILE *fp;
-        meta_header *mh;
-    */
+    FILE *fp;
     //allocate memory for meta header
     mh=(meta_header*) malloc(sizeof(meta_header));
 
@@ -311,9 +310,8 @@ meta_header * read_meta_header(char fullpath[150])
 
 header * read_header(char fullpath[150])
 {
-    /*  FILE *fp;
-      header *hdr;
-    */
+    FILE *fp;
+
     //allocate memory for header
     hdr=(header*) malloc(sizeof(header));
     fp = fopen(fullpath,"r+b");

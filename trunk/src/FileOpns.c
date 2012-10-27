@@ -1,3 +1,9 @@
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "../include/DirOpns.h"
 #include "../include/FileOpns.h"
 #include "../include/Filesystem.h"
@@ -5,10 +11,6 @@
 #include "../include/Bst.h"
 #include "../include/Hashtable.h"
 #include "../include/LinkedList.h"
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <stdio.h>
 
 extern nNode * nAry_tree;
 extern struct bst *bst_tree;
