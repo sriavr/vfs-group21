@@ -1,5 +1,0 @@
-#include "Bsth.h"
-#include "Hashh.h"
-#include "LinkedListh.h"
-#include "Naryh.h"
-#include "Structure.h"
