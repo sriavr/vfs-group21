@@ -1,20 +1,19 @@
-
 #define MAX_LEVELS 20
-#define MAX_LENGTH 10
+#define MAX_LENGTH 50
 
-/**
-     1) Change char name[] to char *
-     2) Add an additional field int value to nAryNode
-     3) Write unit test cases adding 1000 random test nodes
-**/
+#define SUCCESS 0
+#define FAILED 1
 
 typedef struct nAryNode{
 	struct nAryNode *child;
 	struct nAryNode *sibling;
-	char name[];
+	file_descriptor filedescriptor;
 }nNode;
 
-//nNode* createNode(char name[]);
+void display_nary( nNode * root , int level );
+nNode * find( nNode * root , char nPath[] );
+nNode * removeLinkFromList( nNode * list , char * nodeName );
+
 nNode* createNode(char name[]);
 
 int indexOf( char str[] , char searchChr , int startPos );
