@@ -9,11 +9,12 @@
 **/
 
 typedef struct nAryNode{
-	char name[ MAX_LENGTH ];
 	struct nAryNode *child;
 	struct nAryNode *sibling;
+	char name[];
 }nNode;
 
+//nNode* createNode(char name[]);
 nNode* createNode(char name[]);
 
 int indexOf( char str[] , char searchChr , int startPos );
@@ -29,6 +30,7 @@ nNode * searchForNodeInAllSiblings( nNode * t , char name[] );
 nNode * insertAtEnd( nNode * t , char name[] );
 
 nNode* insertNode( nNode * root , char nPath[] , char name[] );
+//nNode* insertNode( nNode * root , file_descriptor filedescriptor );
 
 void changeLevel( int level );
 
