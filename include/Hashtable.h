@@ -12,7 +12,7 @@ struct node * insert_hashtable(
         struct node * hashtable[], file_descriptor filedescriptor);
 
 //search for a particular key and return that node
-struct node * search_hashtable(struct node * hashtable[], file_descriptor filedescriptor );
+struct node * search_hashtable(struct node * hashtable[], char *filename );
 //delete a particular node in a hash table. TODO
 struct node * delete_hashtable(
     struct node * hashtable[], file_descriptor filedescriptor);
