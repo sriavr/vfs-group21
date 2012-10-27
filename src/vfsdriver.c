@@ -226,7 +226,8 @@ void exportfile ( char *P1, char *P2 )
 
 void searchfile ( char *P1, char *P2 )
 {
-    /* Call the appropriate function with given arguments and display appropriate output on the screen */
+     /* Call the appropriate function with given arguments and display appropriate output on the screen */
+    search_hash(P1,P2);
     printf("searchfile_TO_BE_DONE\n");
 }
 

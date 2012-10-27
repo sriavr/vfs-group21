@@ -62,8 +62,24 @@ void list_file(char * file_path , char* output_file)
     for(i=0;i<MAX_NUM_OF_BLOCKS ;i++)
     strcmp(hdr ->fd_array[i].location_full_path , file_path);
 
-    */
+	*/
 
 
+}
+
+void search_hash(char *filename, char *outputfile){
+    struct node *match = NULL;
+    match = search_hashtable(hashtable,filename);
+
+    FILE *fp;
+    fp = fopen(outputfile,"w+");
+
+    fprintf(fp, "%10s %4s %150s %8s\n", "Filename", "Filetype", "Filepath", "Filesize");
+    while(match!=NULL){
+        fprintf(fp, "%10s %4s %150s %8ld\n", match->filedescriptor.file_name, match->filedescriptor.file_type, match->filedescriptor.location_full_path, match->filedescriptor.file_size);
+        match =  match->next;
+    }
+
+    fclose(fp);
 }
 

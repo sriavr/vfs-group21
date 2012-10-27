@@ -50,7 +50,7 @@ void display_linkedlist(struct node *print)
     struct node *temp=NULL;
     temp=print;
     //iterate to the last node
-    while(temp)
+    while(temp!=NULL)
     {
         printf("filename:%s, filepath:%s\n",
                temp->filedescriptor.file_name, temp->filedescriptor.location_full_path);
