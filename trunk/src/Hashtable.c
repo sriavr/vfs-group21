@@ -31,7 +31,8 @@ struct node * insert_hashtable(
     while(temp!= NULL)
     {
         if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code                  //requirement of this???
-                && (strcmp(temp -> filedescriptor.file_name, filedescriptor.file_name)==0))
+                && (strcmp(temp -> filedescriptor.file_name, filedescriptor.file_name)==0)
+                && (strcmp(temp->filedescriptor.location_full_path, filedescriptor.location_full_path)==0))
         {
             return temp;
         }
@@ -102,22 +103,24 @@ int get_hash_code(const char *str)
     return hash;
 }
 
-struct node * search_hashtable(struct node * hashtable[], file_descriptor filedescriptor )          //pass filedescriptor file_name in this
+struct node * search_hashtable(struct node * hashtable[], char *filename )          //pass filedescriptor file_name in this
 {
-    int hash_code = get_hash_code(filedescriptor.file_name);
+    int hash_code = get_hash_code(filename);
     int index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
+    struct node *start = NULL;
     struct node *temp = NULL;
     temp = hashtable[index];
     while(temp!= NULL)
     {
         if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code
-                && (strcmp(temp -> filedescriptor.file_name, filedescriptor.file_name)==0))
+                && (strcmp(temp -> filedescriptor.file_name, filename)==0))
         {
-            return temp;
+            start = insert_linkedlist(start, temp -> filedescriptor);
         }
         temp = temp -> next;
     }
-    return NULL;
+
+    return start;
 }
 
 void display_hashtable(struct node * hashtable[])
@@ -177,10 +180,63 @@ void displayhashlist(struct node *print)
 }*/
 
 
-void test_simple_hashtable()
+void test_simple_search_hashtable()
 {
-
     file_descriptor arr[5];
+    strcpy(arr[0].file_name, "cat.txt");
+    strcpy(arr[0].location_full_path, "/home/sri/");
+    strcpy(arr[0].file_type, "file");
+    arr[0].file_size = 1024;
+    arr[0].location_block_num = 2543;
+
+    strcpy(arr[1].file_name, "cat.txt");
+    strcpy(arr[1].location_full_path, "/home/ruchi/");
+    strcpy(arr[1].file_type, "file");
+    arr[1].file_size = 10;
+    arr[1].location_block_num = 253;
+
+    strcpy(arr[2].file_name, "cat.txt");
+    strcpy(arr[2].location_full_path, "/home/priya/");
+    strcpy(arr[2].file_type, "file");
+    arr[2].file_size = 1024;
+    arr[2].location_block_num = 25;
+
+    strcpy(arr[3].file_name, "rat.txt");
+    strcpy(arr[3].location_full_path, "/home/pavan/");
+    strcpy(arr[3].file_type, "file");
+    arr[3].file_size = 1024;
+    arr[3].location_block_num = 2643;
+
+    strcpy(arr[4].file_name, "rat.txt");
+    strcpy(arr[4].location_full_path, "/home/mohan/");
+    strcpy(arr[4].file_type, "file");
+    arr[4].file_size = 1024;
+    arr[4].location_block_num = 2763;
+
+    struct node * hashtable[HASHSIZE];
+    init_hashtable(hashtable);
+
+    int i;
+    for(i=0; i<5; i++)
+    {
+        insert_hashtable(hashtable, arr[i]);
+    }
+
+    struct node * temp;
+    temp = search_hashtable(hashtable, "cat.txt");
+
+    if(temp!=NULL)
+    {
+        display_linkedlist(temp);
+        //printf("\nMatch found. Key:%s\n",temp->filedescriptor.file_name);
+    }
+    else
+    {
+        printf("\nNo Match found\n");
+    }
+
+
+    /*file_descriptor arr[5];
     char *name[2]={"file","dir"};
     int i;
     for(i=0;i<5;i++)
@@ -192,15 +248,16 @@ void test_simple_hashtable()
         arr[i].location_block_num =rand();
 
     }
+
     struct node * hashtable[HASHSIZE];
     init_hashtable(hashtable);
-    for(i=0;i<10;i++)
+    for(i=0;i<5;i++)
     insert_hashtable(hashtable, arr[i]);
 
     display_hashtable(hashtable);
 
     struct node * temp;
-    temp = search_hashtable(hashtable, arr[4]);
+    temp = search_hashtable(hashtable, arr[4].file_name);
 
     if(temp!=NULL)
     {
@@ -211,7 +268,7 @@ void test_simple_hashtable()
         printf("\nNo Match found\n");
     }
 
-   temp= delete_hashtable(hashtable, temp->filedescriptor);
+       temp= delete_hashtable(hashtable, temp->filedescriptor);
 
     if(temp!=NULL)
     {
@@ -221,17 +278,53 @@ void test_simple_hashtable()
     {
         printf("\nNOT DELETED\n");
     }
-    display_hashtable(hashtable);
+    display_hashtable(hashtable);*/
 }
 
-/*
+void test_complex_search_hashtable()
+{
+    int size = 5000, i,j;
+    file_descriptor arr[size];
+    char temp[20];
+    for(i=0; i<size; i++)
+    {
+        strcpy(temp, generate_rand_string());
+        for(j=i; (j < (rand()%15)+10) && (j <size); j++)
+        {
+            strcpy(arr[j].file_name, temp);
+            strcpy(arr[j].location_full_path, generate_rand_string());
+            strcpy(arr[j].file_type, "file");
+            arr[j].file_size = rand()%30;
+            arr[j].location_block_num = rand()%1000;
+        }
+        i = j;
+    }
+
+    struct node * hashtable[HASHSIZE];
+    init_hashtable(hashtable);
+
+    for(i=0; i<size; i++)
+    {
+        insert_hashtable(hashtable, arr[i]);
+    }
+
+    display_hashtable(hashtable);
+
+    struct node * tempr;
+    tempr = search_hashtable(hashtable, "wlrbbmqb");
+    printf("printing matches\n");
+    display_linkedlist(tempr);
+}
+
+
 int main()
 {
     //test_complex_hashtable();
-    test_simple_hashtable();
+    //test_simple_search_hashtable();
+    test_complex_search_hashtable();
     return 0;
 }
-*/
+
 
 /*
 
