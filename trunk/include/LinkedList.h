@@ -2,8 +2,6 @@
 //so that we can reuse code for FreeList and HashTable of file descriptors
 struct node
 {
-
-
     struct node *next;
     file_descriptor filedescriptor;
 };
