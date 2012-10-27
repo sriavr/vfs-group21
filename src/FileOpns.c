@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "../include/DirOpns.h"
 #include "../include/FileOpns.h"
@@ -11,13 +12,15 @@
 #include "../include/Bst.h"
 #include "../include/Hashtable.h"
 #include "../include/LinkedList.h"
+#include "../include/freelist.h"
 
 extern nNode * nAry_tree;
 extern struct bst *bst_tree;
 extern struct node *hashtable[HASHSIZE];
 extern header *hdr;
+extern char full_path_file_name[150];
 
-void add_file(char *dest_dir_path , char* file_name , char* data_file_path)
+int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 {
     //1)CHECK IF DIRECTORY EXISTS IN NARY
     //2)IF IT DOES NOT EXISTS THEN CALL MAKE_DIR()
@@ -26,20 +29,24 @@ void add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     //5)UPDATE FILEDESCRIPTOR DURING UNMOUNT
 
     //find file size
-    struct stat buf;
-    stat(file_name, &buf);
-    int size = buf.st_size;
+//    struct stat buf;
+//    stat(file_name, &buf);
+//    int size = buf.st_size;
+      FILE *fp_data_file = fopen(data_file_path, "rb");
+      long int size = fseek(fp_data_file, 0L, SEEK_END);
+      size = ftell(fp_data_file);
+      fclose(fp_data_file);
+//    int i, block_num = -1;
+//    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
+//    {
+//        if(hdr->list[i].allocated == 0)
+//        {
+//            block_num = i;
+//            break;
+//        }
+//    }
 
-    int i, block_num = -1;
-    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
-    {
-        if(hdr->list[i].allocated == 0)
-        {
-            block_num = i;
-            break;
-        }
-    }
-
+    long int block_num = next_free_block();
     write_to_block(block_num, data_file_path, size);
 
     file_descriptor filedescriptor;
@@ -52,22 +59,44 @@ void add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     //create a directory if doesn't exist and modify data structures
     char *name = splitstringPath(dest_dir_path);
     make_dir(dest_dir_path, name);
-    insert_bst(bst_tree, filedescriptor);
+    bst_tree = insert_bst(bst_tree, filedescriptor);
     insert_hashtable(hashtable, filedescriptor);
+    printf("addfile_SUCCESS\n");
+    return 0;
 }
 
-void list_file(char * file_path , char* output_file)
+int list_file(char * file_path , char* output_file)
 {
-    /*
-    for(i=0;i<MAX_NUM_OF_BLOCKS ;i++)
-    strcmp(hdr ->fd_array[i].location_full_path , file_path);
+    int block_num =0;
+    file_descriptor  filedescriptor;
+    filedescriptor = search_bst(bst_tree ,file_path );
+    block_num = filedescriptor.location_block_num ;
+    FILE *output , *fp;
+    output = fopen(output_file ,"w+b");
+    fp = fopen(full_path_file_name ,"r+b");
 
-	*/
+    long int size = filedescriptor.file_size;
 
+    block *get_content =(block*) malloc(sizeof(block));
+    if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num), SEEK_SET) != 0)
+    {
+        return 1;
+    }
 
+    if(fread(get_content,size,1,fp)!=1)
+    {
+        return 1;
+    }
+
+    if(fwrite(get_content, size, 1 ,output)!=1)
+    {
+        return 1;
+    }
+    printf("listfile_SUCCESS\n");
+    return 0;
 }
 
-void search_hash(char *filename, char *outputfile){
+int search_hash(char *filename, char *outputfile){
     struct node *match = NULL;
     match = search_hashtable(hashtable,filename);
 
@@ -81,5 +110,7 @@ void search_hash(char *filename, char *outputfile){
     }
 
     fclose(fp);
+    printf("searchfile_SUCCESS\n");
+    return 0;
 }
 

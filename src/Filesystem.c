@@ -203,7 +203,7 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     fp = fopen(full_path_file_name,"r+b");
 
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
-    if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num - 1), SEEK_SET) != 0)
+    if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num), SEEK_SET) != 0)
     {
         //printf("\nFailed to read block array");
         fclose(fp);

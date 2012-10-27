@@ -21,18 +21,18 @@ struct node * create_linkedlist(file_descriptor * file_descriptor_list, long int
     return start;
 }
 
-struct bst* create_bst(file_descriptor * file_descriptor_list, long int file_descriptor_list_size)
+struct bst* create_bst(file_descriptor* file_descriptor_list, long int file_descriptor_list_size)
 {
     if(file_descriptor_list_size <=0)
         return NULL;
 
     struct bst * tree = NULL;
-    tree = init_bst(tree, file_descriptor_list[0]);
+    //tree = init_bst(tree, file_descriptor_list[0]);
 
     long int i;
-    for(i=1; i < file_descriptor_list_size; i ++)
+    for(i=0; i < file_descriptor_list_size; i ++)
     {
-        insert_bst(tree, file_descriptor_list[i]);
+        tree = insert_bst(tree, file_descriptor_list[i]);
     }
 
     return tree;
