@@ -22,6 +22,8 @@ char * substring( char * str , int startIndex , int endIndex );
 
 int splitPath(  char nPath[] , char nName[][MAX_LENGTH] );
 
+char* splitstringPath(  char nPath[] );
+
 nNode * searchForNodeInAllSiblings( nNode * t , char name[] );
 
 nNode * insertAtEnd( nNode * t , char name[] );

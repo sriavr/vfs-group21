@@ -1,6 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
 #include "../include/Filesystem.h"
 #include "../include/LinkedList.h"
 #include "../include/Hashtable.h"
@@ -11,13 +15,16 @@
 
 header *hdr;
 meta_header *mh;
-block *block_array;
+//block *block_array; //NO NEED TO READ BLOCK ARRAY
+
 FILE *fp;
 nNode * nAry_tree = NULL;
+struct bst * bst_tree = NULL;
+struct node * hashtable[HASHSIZE];
+char full_path_file_name[150];
 
 void fsystem_ui()
 {
-    char full_path_file_name[150];
     int file_length,ret=0;
 
     printf("\nEnter the file name with full path: ");
@@ -58,13 +65,8 @@ void fsystem_ui()
 
 int create_vfs(char fullpath[150], int size)
 {
-    // FILE *fp;
-    //  meta_header *mh;
-    //  header *hdr;
-    // block *block_array;
-
     // creates the fileSystem file
-    fp=fopen(fullpath,"w+b");
+    fp=fopen(fullpath,"r+b");
 
     //allocates memory for the file system
     char *memory=(char*) malloc(size + sizeof(header) + sizeof(meta_header));
@@ -75,8 +77,8 @@ int create_vfs(char fullpath[150], int size)
         printf("createvfs_FAILURE\n");
         return 1;
     }
-    fclose(fp);
 
+    fclose(fp);
 
     fp=fopen(fullpath,"r+b");
 
@@ -87,7 +89,7 @@ int create_vfs(char fullpath[150], int size)
     strcpy(mh->file_system_label, fullpath);
 
     mh->file_descriptors_used = 0;
-    //mh->max_num_file_descriptors=1000000;
+
     //write meta header to the file
     fwrite(mh,sizeof(meta_header),1,fp);
 
@@ -95,11 +97,19 @@ int create_vfs(char fullpath[150], int size)
     hdr=(header*) malloc(sizeof(header));
     strcpy(hdr -> HEADER_TEST_FIELD, "TEST HEADER OK");
 
+    //initialize the next_block_num to 0 for all free list items
+    int i;
+    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
+    {
+        hdr -> list[i].allocated = 0;
+    }
+
     //create_test_fd_data(hdr -> fd_array, size);
 
     //write header to the files
     fwrite(hdr,sizeof(header),1,fp);
 
+    block *block_array;
     //allocate memory for block_array
     //block_array = calloc(MAX_NUM_OF_BLOCKS, sizeof(block));
     block_array = malloc(size);
@@ -114,68 +124,58 @@ int create_vfs(char fullpath[150], int size)
     return(0);
 }
 
+/**
+    Traverse all the file descriptors and create
+    1) nAry Tree representing directory structure
+    2) Hashtable storing all the file names without path (for search based on file name without path)
+    // ~~~ NOT NEEDED 3) Linkedlist storing list of the free blocks into which new files can be written
+    4) BST storing all the file names with absolute path of file (for search based on absolute path of file)
+*/
 int mount_vfs(char fullpath[150])
 {
-//   meta_header *mh = NULL;
+    file_descriptor *file_descriptor_list;
+    long int file_descriptor_used;
+
+    strcpy(full_path_file_name, fullpath);
+
+    //read meta header, header
     mh = read_meta_header(fullpath);
-
-//    header *hdr = NULL;
     hdr = read_header(fullpath);
+    //block_array = read_block_array(fullpath); //DONT READ BLOCK ARRAY INTO RAM
 
-//    block* block_array = NULL;
-    block_array = read_block_array(fullpath);
-
-    file_descriptor *file_descriptor_list = hdr -> fd_array;
-    long int file_descriptor_list_size = mh -> file_descriptors_used;
-
-    /*
-        Traverse all the file descriptors and create
-        1) nAry Tree representing directory structure
-        2) Hashtable storing all the file names without path (for search based on file name without path)
-        3) Linkedlist storing list of the free blocks into which new files can be written
-        4) BST storing all the file names with absolute path of file (for search based on absolute path of file)
-
-        NEED CONCEPTUAL CLARITY IN IMPLEMENTATION OF FREE LIST AND SAVING OF FILES IN BLOCKS
-
-        TODO
-        1) modify all the node declarations in Linkedlist, Hashtable, nAry tree to accomodate a file descriptor
-        2) Create test data for header and meta header info
-        3) Test the creation of each data structure using the test data
-    */
+    file_descriptor_list = hdr -> fd_array;
+    file_descriptor_used = mh -> file_descriptors_used;
 
     //Create nAry Tree representing directory structure
     //nAry_tree = (nNode *) create_nAry_tree(file_descriptor_list, file_descriptor_list_size);
 
     //Create Hashtable storing all the file names without path (for search based on file name without path)
-    struct node * hashtable[HASHSIZE];
     init_hashtable(hashtable);
-    fill_hashtable(hashtable, file_descriptor_list, file_descriptor_list_size);
-
-    //Linkedlist storing list of the free blocks into which new files can be written
-    struct node *free_blocks_llist = NULL;
-    //DOUBTFUL SHOULD GET FREE LIST
-    free_blocks_llist = (struct node *) create_linkedlist(file_descriptor_list, file_descriptor_list_size);
+    fill_hashtable(hashtable, file_descriptor_list, file_descriptor_used);
 
     //BST storing all the file names with absolute path of file (for search based on absolute path of file)
-    struct bst * bst_tree = NULL;
-    bst_tree = create_bst(file_descriptor_list, file_descriptor_list_size);
+    bst_tree = create_bst(file_descriptor_list, file_descriptor_used);
 
-//    printf("\nInorder traversal\n");
-//    inorder_traversal(bst_tree, &displaybst);
+    //printf("\nInorder traversal\n");
+    //inorder_traversal(bst_tree, &displaybst);
+
+    //Linkedlist storing list of the free blocks into which new files can be written
+    //struct node *free_blocks_llist = NULL;
+    //DOUBTFUL SHOULD GET FREE LIST
+    //free_blocks_llist = (struct node *) create_linkedlist(file_descriptor_list, file_descriptor_list_size);
 
     printf("mountvfs_SUCCESS\n");
     return 0;
 }
 
 
-int unmount_vfs(char  full_file_path_name[150])
+int unmount_vfs(char filepath[150])
 {
-    fp=fopen(full_file_path_name , "r+b");
+    fp=fopen(full_path_file_name, "r+b");
     if(fwrite(mh,sizeof(meta_header),1,fp)!=1)
     {
         printf("not able to unmount meta_header");
         return 1;
-
     }
     //printf("successfully unmount meta_header");
     if(fwrite(hdr,sizeof(header),1,fp)!=1)
@@ -184,14 +184,74 @@ int unmount_vfs(char  full_file_path_name[150])
         return 1;
     }
     //printf("successfully unmount header");
-    if(fwrite(block_array,sizeof(BLOCK_SIZE * MAX_NUM_OF_BLOCKS),1,fp)!=1)
+    //WE ARE NOT GOING TO SAVE THE BLOCK ARRAY IN HARD DISK
+    /*if(fwrite(block_array,sizeof(BLOCK_SIZE * MAX_NUM_OF_BLOCKS),1,fp)!=1)
     {
         printf("unmountvfs_FAILURE\n");
         return 1;
-    }
-
+    }*/
     printf("unmountvfs_SUCCESS\n");
     return 0;
+}
+
+int write_to_block(long int block_num, char * filename_with_path, int size)
+{
+    //fp is file pointer to VFS
+    fp = fopen(full_path_file_name,"r+b");
+
+    //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
+    if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num - 1), SEEK_SET) != 0)
+    {
+        //printf("\nFailed to read block array");
+        fclose(fp);
+        return 1;
+    }
+
+    //create an empty block that has to be saved
+    block *newfile_block;
+    newfile_block = (block *)malloc(sizeof(block));
+    newfile_block->next_block_num = 0;
+
+    //check the size of the file, if it is more than size of block
+    //print error and return 1
+    if(size <= sizeof(block))
+    {
+        //copy the contents of file into block structure
+        FILE *newfile;
+        newfile = fopen(filename_with_path, "r+b");
+        if(fread(newfile_block, size, 1, newfile)!=1)
+        {
+            //printf("SUCCESSFULLY READ");
+            return 1;
+        }
+        fclose(newfile);
+
+        //write the new block into the vfs (hard disk)
+        if(fwrite(newfile_block, size, 1, fp)!=1)
+        {
+            return 1;
+        }
+        else
+        {
+            //printf("SUCCESSFULLY WRITTEN TO DISK");
+        }
+    }
+    else
+    {
+        //printf("FILE SIZE EXCEEDS BLOCK SIZE");
+        return 1;
+    }
+
+    fclose(fp);
+    return 0;
+
+    //read and copy the block_array to array
+    //if( fwrite(hdr,sizeof(header),1,fp)!= 1)
+    //{
+        //printf("\nFailed to read block_array");
+        //fclose(fp);
+        //return 1;
+    //}
 }
 
 void test_vfs(char fullpath[150])
@@ -278,9 +338,9 @@ header * read_header(char fullpath[150])
 
 block *read_block_array(char fullpath[150])
 {
-    /*  FILE *fp;
-      block *block_array;
-    */
+    FILE *fp;
+    block *block_array;
+
     //allocate memory for header
     block_array = calloc(MAX_NUM_OF_BLOCKS, sizeof(block));
 
@@ -334,6 +394,7 @@ void test_read_header(char fullpath[150])
 
 void test_read_block_array(char fullpath[150])
 {
+    block *block_array;
     block_array = read_block_array(fullpath);
     int i;
     if(block_array !=NULL)

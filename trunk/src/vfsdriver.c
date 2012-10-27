@@ -18,6 +18,7 @@
 #include<string.h>
 #include "../include/DirOpns.h"
 #include "../include/Filesystem.h"
+#include "../include/FileOpns.h"
 
 
 #define BUFSIZE 200
@@ -182,6 +183,7 @@ void listdir ( char *P1, int P2, char *P3 )
 void addfile ( char *P1, char *P2, char *P3 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
+    add_file(P1 , P2 , P3);
     printf("addfile_TO_BE_DONE\n");
 }
 

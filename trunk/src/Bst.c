@@ -131,21 +131,20 @@ void test_simple_bst()
 
      char *a[2]={"file" ,"dir"};
      char *temp_string =NULL , *string_full_path =NULL;
-     int len=0, length ;
      struct bst * del=NULL , *start=NULL;
-     int i=0 , j=0 , k=0;
+     int i=0 , j=0;
      file_descriptor arr[10];
 
      for(i=0;i<10;i++)
      {
 
-        string_full_path = generate_rand_string();
-        for(k=0;k<length;k++)
-        arr[i].location_full_path[k] =string_full_path[k];
-        temp_string=*a[rand()%2];
-        len=strlen(temp_string);
-        for(j=0;j<len;j++)
-        arr[i].file_type[j]= a[j];
+        strcpy(string_full_path, generate_rand_string());
+        //for(k=0;k<length;k++)
+        strcpy(arr[i].location_full_path, string_full_path);
+        strcpy(temp_string, a[rand()%2]);
+        //len=strlen(temp_string);
+        //for(j=0;j<len;j++)
+        strcpy(arr[i].file_type, temp_string);
         arr[i].file_size =rand();
         arr[i].location_block_num=rand();
 
