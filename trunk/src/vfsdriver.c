@@ -190,6 +190,7 @@ void addfile ( char *P1, char *P2, char *P3 )
 void listfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
+    list_file(P1 , P2);
     printf("listfile_TO_BE_DONE\n");
 }
 
