@@ -80,6 +80,14 @@ struct bst * insert_bst(struct bst* bst_root, file_descriptor filedescriptor)
     return bst_root;
 }
 
+void search_bst( struct bst* bst_node , char* file_name)
+{
+
+
+
+}
+
+
 void inorder_traversal(struct bst* bst_node,
                        void (*process_node)(struct bst* bst_node))
 {
