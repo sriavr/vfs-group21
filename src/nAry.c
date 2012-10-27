@@ -1,13 +1,12 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+
 #include "../include/Filesystem.h"
 #include "../include/Commons.h"
 #include "../include/nAry.h"
 
 char dir_name[][MAX_LENGTH];
-
-void display_nary( nNode * root , int level );
 
 /*
 * Creates a node and returns a pointer to it.
@@ -147,7 +146,7 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
 	nNode *ins;
 	char nName[MAX_LEVELS][MAX_LENGTH];
 	int count = splitPath( nPath, nName );
-	int i;
+	int i,temp = 0;
 	nNode * t, * matchedNode = NULL;
 
 	if( count != 0 && root == NULL ) {
@@ -176,18 +175,13 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
 	    // Identify the matching node in all the siblings
 	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
 	    if( matchedNode == NULL ) {
-	    //	fprintf( stderr, "Invalid path");
-	    	t->child = insertAtEnd( t->child , nName[i] );
-	    	matchedNode = t->child;
-	    	//return root;
-	    }
+	        t->child = insertAtEnd( t->child , nName[i] );
+	        matchedNode = searchForNodeInAllSiblings( t->child , nName[i] ); // efficient sol required.
+	     }
 	    t = matchedNode;
 	}
 
-	// condition check not required.
-	if( matchedNode != NULL ) {
-		matchedNode->child = insertAtEnd( matchedNode->child , name );
-	}
+	matchedNode->child = insertAtEnd( matchedNode->child , name );
 
 	return root;
 
@@ -196,7 +190,7 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
 void changeLevel( int level ) {
   int i;
   for( i = 1; i <= level ; i++ )
-     printf("  ");
+     printf("         ");
 }
 
 /* Initial call
@@ -220,69 +214,139 @@ void display_nary( nNode * root , int level ) {
   }
 }
 
-void insert_naryTree( nNode * root , int level ) {
+// Should come inside only when dest is not null.
+// Return 0 : on success
+//        1 : incase of failure.
+int addChild(nNode * src, nNode * dest)
+{
+	if( dest == NULL || src == NULL ) {
+	    return FAILED;
+	}
+	nNode * t , * q;
+  	t = dest->child;
+	if( t == NULL)
+	{
+		dest->child = src;
+	}
+	else
+	{
+		for( ; t != NULL ; t = t->sibling)
+		        q = t;
 
-  nNode * t;
-
-  if( root == NULL ) {
-     return;
-  }
-
-  changeLevel( level );
-  //printf("%s \n", root->name );
-
-  if( root->child != NULL ) { // condition not required.
-    // for each child node
-    for( t = root->child ; t != NULL ; t = t->sibling )
-        insert_naryTree( t , level + 1 );
-  }
+		// q points to last sibling( in the child nodes )
+		q->sibling = src;
+	}
+	return SUCCESS;
 }
 
-    /*
-nNode * move_dir(nNode * root ,char * src_path, char * dest_path)
-{
+nNode * removeLink( nNode * root , char * srcPath ) {
+	nNode *ins;
+	char nName[MAX_LEVELS][MAX_LENGTH];
+	int count = splitPath( srcPath, nName );
+	int i;
+	nNode * t, * matchedNode = NULL;
 
-    int levelSrc = splitPath(src_path);
-    int levelDst = splitPath(dest_path);
-    nNode * cPath;
-    nNode * newNode, existingPath;
-    cPath = checkPath( root, src_path );
-    if ( cPath == 0 )
+	if( count <= 0 || root == NULL ) {
+	  	fprintf(stderr,"Invalid Path");
+	  	return root;
+	}
+
+	t = root;
+	// search till one level up.
+	for( i = 0; i < count - 1 ; i++ ) {
+	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
+	    if( matchedNode == NULL ) {
+	    	fprintf( stderr, "Invalid path");
+	    	return root;
+	    }
+	    t = matchedNode;
+	}
+
+	// t points to the parent node
+
+	t->child = removeLinkFromList( t->child , nName[i] );
+
+	return root;
+}
+
+nNode * removeLinkFromList( nNode * list , char * nodeName ) {
+
+    if( list == NULL )
+        return NULL;
+
+    nNode *t, *p;
+
+    t = list;
+    while( t != NULL ) {
+
+         if( strcmp( t->name, nodeName )  == 0 ) { // found
+
+             if( t == list ) {  // first node
+                 list = list->sibling;
+             } else {
+                 p->sibling = t->sibling ;
+             }
+
+             break;
+         }
+
+         p = t;
+         t = t->sibling;
+    }
+
+    return list;
+}
+
+
+/*
+E.g. :-
+   srcDir = "/root/sub";
+   destDir = "/root/sub1";
+
+   Here entire directory sub must be copied to sub1 i.e. sub will form the child node of sub1.
+
+   if( ! equals( srcPath , destPath ) { // Can not move a directory to itself.
+
+	   nNode * src = find( root , srcPath );  // will give a pointer to sub
+	   nNode * dest = find( root , destPath ); // will give a pointer to sub1
+
+	   if( src != null && dest != null ) { // both src and dest exist.
+	     addChild( dest , src );   // add src node to dest list of child nodes.
+	     root = removeLink( root , srcDir );  // remove only link ( i.e. do not free memory )
+	   }
+   }
+
+*/
+nNode * moveDir(nNode * root ,char * src_path, char * dest_path)
+{
+    nNode * src, *dest;
+    int retCode = FAILED;
+    src = find( root, src_path );
+    if ( src == NULL )
     {
         printf("Invalid Source Path");
-        return NULL;
+        return root;
     }
-    newNode = cPath;
-    cPath = checkPath( root, dest_path );
-    if ( cPath == 0 )
+
+    dest = find( root, dest_path );
+    if ( dest == NULL )
     {
         printf("Invalid Destination Path");
-        return NULL;
+        return root;
     }
-    existingPath = cPath;
 
-    root = getnAry(root,newNode,existingPath,levelSrc,levelDst);
+    if( src != NULL && dest != NULL ) { // both src and dest exist.
+	  retCode = addChild( src , dest );   // add src node to dest list of child nodes.
+	  if( retCode == SUCCESS ) { // Only if successfully added
+	     root = removeLink( root , src_path );  // remove only link ( i.e. do not free memory )
+	     src->sibling = NULL; // remove link to next sibling
+	  }
+    }
 
     return root;
-} */
-
-nNode * getnAry( nNode * root, nNode * newNode, nNode * existingPath, int levelSrc, int levelDst )
-{
-    nNode * ins;
-
-//    t = root;
-//	for( i = 0; i < count ; i++ ) {
-//	    // Identify the matching node in all the siblings
-//	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
-//	    if( matchedNode == NULL ) {
-//	    	fprintf( stderr, "Invalid path");
-//	    	return NULL;
-//	    }
-//	    t = matchedNode;
-//	}
 }
 
-int checkPath( nNode * root , char nPath[] )//, char name[] )
+nNode * find( nNode * root , char nPath[] )//, char name[] )
 {
 	nNode *ins;
 	char nName[MAX_LEVELS][MAX_LENGTH];
@@ -295,25 +359,8 @@ int checkPath( nNode * root , char nPath[] )//, char name[] )
 	  	return 0;
 	}
 
-	// When root is null then create node as root.
-//	if( count == 0 && root == NULL ) {
-//		ins = createNode( name ); // expecting root node name is "/"
-//		return ins;
-//	}
-
-	// Path is empty then node should be created under root.
-//	if( count == 0 && root != NULL ) {
-//
-//	    	// should be last child under root.
-//	    	root->child = insertAtEnd( root->child , name );
-//
-//	    	return root;
-//	}
-
-	// Must be inserted in the given path.
 	t = root;
 	for( i = 0; i < count ; i++ ) {
-	    // Identify the matching node in all the siblings
 	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
 	    if( matchedNode == NULL ) {
 	    	fprintf( stderr, "Invalid path");
@@ -322,14 +369,50 @@ int checkPath( nNode * root , char nPath[] )//, char name[] )
 	    t = matchedNode;
 	}
 
-	// condition check not required.
-//	if( matchedNode != NULL ) {
-//		matchedNode->child = insertAtEnd( matchedNode->child , name );
-//	}
-//
 	return matchedNode;
 }
 
+int freeNode( nNode * root, int level )
+{
+	nNode * t;
+
+  if( root == NULL ) {
+     return;
+  }
+
+  changeLevel( level );
+  //printf("%s \n", root->name );
+
+
+  if( root->child != NULL ) { // condition not required.
+    // for each child node
+    for( t = root->child ; t != NULL ; t = t->sibling )
+        freeNode( t , level + 1 );
+  }
+  //printf("Freed node %s : \n", root->name);
+  free(root);
+  return SUCCESS;
+}
+
+nNode * deleteDir(nNode * root,char path[])
+{
+	nNode * delPathNode;
+	int retCode;
+	delPathNode = find( root,path );
+	if ( delPathNode == NULL )
+    	{
+        	printf("Invalid Path");
+        	return root;
+    	}
+	root = removeLink( root , path );
+	retCode = freeNode(delPathNode,0);
+	if (retCode == FAILED)
+	{
+		fprintf(stderr,"ERROR IN FREEING OF NODES");
+		return root;
+	}
+	return root;
+}
 
 
 void print( char str[][MAX_LENGTH], int count ) {
@@ -366,7 +449,7 @@ void testSplit() {
    print( names , count );
 }
 
-void test_nary_main(){
+void test_nary_tree(){
    //testSplit();
    nNode * root = NULL;
    root = insertNode(root,"","/");
@@ -377,10 +460,18 @@ void test_nary_main(){
    root = insertNode(root,"/home/xyz","doc");
    root = insertNode(root,"/","otherInRoot");
    root = insertNode(root,"/home/demo","test"); // expecting invalid path
-   root = insertNode(root,"/home/sdf/jkl","test1"); // expecting invalid path
-   root = insertNode(root,"/home/sdf/jkl/hjk/iop/mno","test1"); // expecting invalid path
-
+   //root = insertNode(root,"/home/sdf/jkl/hjk","test1"); // expecting invalid path
+   //root = insertNode(root,"/home/sdf/jkl/hjk/iop/mno","test2"); // expecting invalid path
+   //  root = moveDir(root, "/home/xyz" , "/home/demo");
+   //root = insertNode(root,"/home/klo/opl","poi");
+   //   root = insertNode(root,"/home/klo/opl/iop/lop","poi");
+  // root = insertNode(root,"/home/demo/tyu/123/098","test098"); // expecting invalid path
+   root = insertNode(root,"/123/456/789/098","1011");
+ // root = insertNode(root,"/home/demo/klp/oiu","1089");
+  // root = insertNode(root,"/home/demo/kpop/ouu","1000");
+   root = insertNode(root,"/123/456/987/890","1110");
+   root = moveDir(root, "/123/456/789","/123/456/987");
+   root = deleteDir(root,"/123/456/987");
    printf("\n");
    display_nary( root , 1 );
 }
-
