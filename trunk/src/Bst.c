@@ -5,7 +5,7 @@
 #include "../include/Commons.h"
 #include "../include/Bst.h"
 
-
+/*
 struct bst* init_bst(struct bst* bst_root, file_descriptor filedescriptor)
 {
     bst_root = malloc(sizeof(struct bst));
@@ -27,66 +27,118 @@ struct bst* init_bst(struct bst* bst_root, file_descriptor filedescriptor)
     bst_root -> filedescriptor = filedescriptor;                      //reqirement of this???????????????/
 
     return bst_root;
-}
+}*/
 
 struct bst * insert_bst(struct bst* bst_root, file_descriptor filedescriptor)
 {
-    struct bst * temp = bst_root;
+    struct bst *fresh=NULL, *temp=NULL;
+
     //create a new_node
-    struct bst * new_node  = malloc(sizeof(struct bst));
-    new_node -> right = NULL;
-    new_node -> left = NULL;
-
+    fresh = malloc(sizeof(struct bst));
+    fresh -> right = NULL;
+    fresh -> left = NULL;
     int length = strlen(filedescriptor.location_full_path) + strlen(filedescriptor.file_name);
-    new_node -> key = calloc((length+2),sizeof(char));
-    strcat(new_node -> key, filedescriptor.location_full_path);
-    strcat(new_node -> key, "/");
-    strcat(new_node -> key, filedescriptor.file_name);
-    new_node -> filedescriptor = filedescriptor;
+    fresh -> key = calloc((length+2),sizeof(char));
+    strcat(fresh -> key, filedescriptor.location_full_path);
+    strcat(fresh -> key, "/");
+    strcat(fresh -> key, filedescriptor.file_name);
+    fresh -> filedescriptor = filedescriptor;
 
-    while(1)
+    if(bst_root == NULL)
     {
-        if(strcmp(new_node -> key, temp -> key) < 0)
+        bst_root = fresh;
+    }
+    else
+    {
+        temp = bst_root;
+
+        while(1)
         {
-            if(temp -> left == NULL)
+            if(strcmp(fresh -> key, temp -> key) < 0)
             {
-                temp -> left = new_node;
+                if(temp -> left == NULL)
+                {
+                    temp -> left = fresh;
+                    break;
+                }
+                else
+                {
+                    temp = temp -> left;
+                }
+            }
+            else if(strcmp(fresh -> key, temp -> key) > 0)
+            {
+                if(temp -> right == NULL)
+                {
+                    temp -> right = fresh;
+                    break;
+                }
+                else
+                {
+                    temp = temp -> right;
+                }
+            }
+            else if(strcmp(fresh -> key, temp -> key) == 0)
+            {
+                //fprintf(stderr, "Duplicate key insertion is not allowed.");
                 break;
             }
-            else
-            {
-                temp = temp -> left;
-            }
-        }
-        else if(strcmp(new_node -> key, temp -> key) > 0)
-        {
-            if(temp -> right == NULL)
-            {
-                temp -> right = new_node;
-                break;
-            }
-            else
-            {
-                temp = temp -> right;
-            }
-        }
-        else if(strcmp(new_node -> key, temp -> key) == 0)
-        {
-            fprintf(stderr, "Duplicate key insertion is not allowed.");
-            break;
         }
     }
 
     return bst_root;
 }
 
-void search_bst( struct bst* bst_node , char* file_name)
+//Array last element is not getting displayed(corner case problem)
+file_descriptor search_bst(struct bst* bst_node, char* file_name)
 {
+    file_descriptor file;
+    strcpy(file.location_full_path ,"0");
+    strcpy(file.file_type ,"0");
+    file.file_size =0;
+    strcpy(file.file_name ,"0");
+    file.location_block_num =0;
 
+    while(1)
+    {
+        if(strcmp(bst_node -> filedescriptor.file_name, file_name) < 0)
+        {
+            if(bst_node -> left == NULL)
+            {
+                return file ;
+            }
+            else
+            {
+                bst_node = bst_node -> left;
+            }
+        }
+        else if(strcmp(bst_node -> filedescriptor.file_name, file_name) > 0)
+        {
+            if(bst_node -> right == NULL)
+            {
+                return file;
+            }
+            else
+            {
+                bst_node = bst_node-> right;
+            }
+        }
+        else
+        {
+            return bst_node -> filedescriptor;
+        }
+    }
 
-
+    /*if(bst_node ==NULL)
+    return file;
+    else if(strcmp(bst_node->filedescriptor .file_name , file_name)==0)
+    return bst_node ->filedescriptor;
+    else if(strcmp(bst_node->filedescriptor .file_name , file_name) < 0)
+    return search_bst(bst_node ->left , file_name);
+    else
+    return search_bst(bst_node ->right , file_name);
+    */
 }
-
 
 void inorder_traversal(struct bst* bst_node,
                        void (*process_node)(struct bst* bst_node))
@@ -132,48 +184,41 @@ void displaybst(struct bst *bst_node)
 
 void test_simple_bst()
 {
+    char *a[2]= {"file" ,"dir"};
+    char temp_string[5], string_full_path[30];
+    struct bst *start=NULL;
+    int i=0 , j=0;
+    file_descriptor arr[10] , output;
 
-
-
-
-
-     char *a[2]={"file" ,"dir"};
-     char *temp_string =NULL , *string_full_path =NULL;
-     struct bst * del=NULL , *start=NULL;
-     int i=0 , j=0;
-     file_descriptor arr[10];
-
-     for(i=0;i<10;i++)
-     {
-
+    for(i=0; i<10; i++)
+    {
         strcpy(string_full_path, generate_rand_string());
-        //for(k=0;k<length;k++)
         strcpy(arr[i].location_full_path, string_full_path);
         strcpy(temp_string, a[rand()%2]);
-        //len=strlen(temp_string);
-        //for(j=0;j<len;j++)
         strcpy(arr[i].file_type, temp_string);
         arr[i].file_size =rand();
         arr[i].location_block_num=rand();
-
-
     }
 
-        del=init_bst(start , arr[0]);
-        for(j=1;j<10;j++)
-       del= insert_bst(start, arr[j]);
-       if(del!=NULL)
-       {
-            printf("sucessfull  inserted");
+    for(j=0; j<10; j++)
+        start = insert_bst(start, arr[j]);
+    if(start!=NULL)
+    {
+        printf("sucessfull  inserted");
+    }
+    else
+    {
+        printf(" UNsuccessful inserted");
+    }
 
-       }
-       else
-       {
-            printf(" UNsuccessful inserted");
-       }
-
-
-        displaybst(start);
+    displaybst(start);
+    inorder_traversal(start, displaybst);
+    output= search_bst(start , arr[9].file_name);
+    printf("Filename: %s\n" , output.file_name);
+    printf("Location: %s\n" , output.location_full_path);
+    printf("Filetype: %s\n" , output.file_type);
+    printf("Block Num: %d\n" , output.location_block_num);
+    printf("Size: %ld\n" , output.file_size);
 }
 
 /*
@@ -202,73 +247,11 @@ void test_complex_bst()
 }
 */
 
-/*
-int main()
+
+/*int main()
 {
     test_simple_bst();
     //test_complex_bst();
     return 0;
 }*/
-
-
-
-/*
-{
-    struct tree *p,*root;
-    int m,x;
-    char s;
-    root=(struct tree *)malloc(sizeof(struct tree));
-    printf("\nenter the value of the main root");
-    scanf("%d",&m);
-    root->data=m;
-    root->left=NULL;
-    root->right=NULL;
-    printf("\nenter n to stop creation of the binary search tree");
-    fflush(stdin);
-    scanf("%c",&s);
-    while(s!='n')
-    {
-        p=root;
-        printf("\nenter the value of the newnode");
-        fflush(stdin);
-        scanf("%d",&x);
-        while(1)
-        {
-            if(x<p->data)
-            {
-                if(p->left==NULL)
-                {
-                    p->left=(struct tree *)malloc(sizeof(struct tree));
-                    p=p->left;
-                    p->data=x;
-                    p->right=NULL;
-                    p->left=NULL;
-                    break;
-                }
-                else
-                p=p->left;
-            }
-            else
-            {
-                if(p->right==NULL)
-                {
-                    p->right=(struct tree *)malloc(sizeof(struct tree));
-                    p=p->right;
-                    p->data=x;
-                    p->right=NULL;
-                    p->left=NULL;
-                    break;
-                }
-                else
-                p=p->right;
-            }
-        }
-        printf("\nwant to continue");
-        fflush(stdin);
-        scanf("%c",&s);
-    }
-    return(root);
-}
-
-*/
 

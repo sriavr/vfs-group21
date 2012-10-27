@@ -494,8 +494,8 @@ void testSplit()
     print( names , count );
 }
 
-void main()
-{
+//void main()
+//{
     //testSplit();
   /*  nNode * root = NULL;
     root = insertNode(root,"","/");
@@ -520,4 +520,4 @@ void main()
     //root = deleteDir(root,"/123/456/987");
     printf("\n");
     display_nary( root , 1 ); */
-}
+//}

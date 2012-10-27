@@ -7,8 +7,9 @@ struct bst{
     file_descriptor filedescriptor;
 };
 
+file_descriptor search_bst( struct bst* bst_node , char* file_name);
 //Initialize the basic bst tree
-struct bst* init_bst(struct bst*, file_descriptor filedescriptor);
+//struct bst* init_bst(struct bst*, file_descriptor filedescriptor);
 
 //insert a tree node in appropriate place and return root
 struct bst * insert_bst(struct bst* bst_root, file_descriptor filedescriptor);

@@ -317,13 +317,13 @@ void test_complex_search_hashtable()
 }
 
 
-int main()
+/*int main()
 {
     //test_complex_hashtable();
     //test_simple_search_hashtable();
     test_complex_search_hashtable();
     return 0;
-}
+}*/
 
 
 /*
