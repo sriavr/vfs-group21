@@ -1,18 +1,22 @@
 createvfs demo 1024
 mountvfs demo
 unmountvfs demo
-mountvfs demo
+
 makedir /home/sub1 sub2
---makedir /home/sub1 sub3
+makedir /home/sub1 sub3
 makedir /home/sub2 sub3
+
 deletedir /home/sub1
 movedir /home/sub2 /home/sub3
 listdir /home/sub1 1 /home/lakshya90/Desktop/test.txt
-listfile /home/sub2/adding.txt /home/lakshya90/Desktop/added.txt
+listdir /home/sub1 0 /home/lakshya90/Desktop/test.txt
 
+
+--addfile /home/sub2 adding.txt /home/lakshya90/Desktop/abc.txt
+listfile /home/sub2/adding.txt /home/lakshya90/Desktop/added.txt
 updatefile /home/sub2/adding.txt /home/lakshya90/Desktop/added.txt
---addfile /home/sub2 check.txt /home/lakshya90/Desktop/abc.txt
 removefile /home/sub2/adding.txt
+--addfile /home/sub2 check.txt /home/lakshya90/Desktop
 movefile /home/sub2/check.txt /home/sub3
 copyfile /home/sub3/check.txt /home/sub2
 exportfile /home/sub3/check.txt /home/lakshya90/Desktop/abc.txt

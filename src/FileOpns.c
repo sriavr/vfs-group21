@@ -58,10 +58,11 @@ void add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 
 void list_file(char * file_path , char* output_file)
 {
+    /*
     for(i=0;i<MAX_NUM_OF_BLOCKS ;i++)
     strcmp(hdr ->fd_array[i].location_full_path , file_path);
 
-
+    */
 
 
 }

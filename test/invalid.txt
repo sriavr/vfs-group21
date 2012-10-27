@@ -1,0 +1,41 @@
+createvfs demo -1
+createvfs 0 demo
+
+mountvfs 0
+unmountvfs 
+
+makedir /home/sub1 
+makedir /home/sub3 sub1
+makedir /home/sub2 /home/sub3
+
+deletedir /home/sub5 --dir does not exist
+movedir /home/sub2 /sub3
+
+listdir /home/sub1 /home/lakshya90/Desktop/test.txt
+listdir sub1 1 /home/lakshya90/Desktop/test.txt
+listdir 1 /home/lakshya90/Desktop/test.txt
+
+listfile /home/sub2 /home/lakshya90/Desktop/added.txt
+listfile /home/sub2/adding.txt /home/lakshya90/Desktop
+
+updatefile /home/sub2 /home/lakshya90/Desktop/added.txt
+updatefile /home/sub2/adding.txt /home/lakshya90/Desktop
+
+removefile /home/sub2
+
+movefile /home/sub2/check.txt 
+movefile /home/sub2 /home/sub3
+
+
+copyfile /home/sub2
+copyfile /home/sub3/check.txt 
+copyfile /home/sub3 /home/sub2
+
+
+exportfile /home/sub3 /home/lakshya90/Desktop
+exportfile /home/sub3/check.txt /home/lakshya90/Desktop
+
+
+
+searchfile /home/sub3 /home/lakshya90/Desktop
+searchfile check.txt /home/lakshya90/Desktop
