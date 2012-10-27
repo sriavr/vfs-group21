@@ -5,6 +5,8 @@
 #include "../include/Commons.h"
 #include "../include/nAry.h"
 
+char dir_name[][MAX_LENGTH];
+
 void display_nary( nNode * root , int level );
 
 /*
@@ -57,7 +59,7 @@ char * substring( char * str , int startIndex , int endIndex ) {
  Note: Path should start with /
  e.g. "/" or "/home"
 */
-int splitPath(  char nPath[] , char nName[][MAX_LENGTH] ) {
+int splitPath(  char nPath[] , char nName[][MAX_LENGTH]) {
      int startIndex = 0;
      int endIndex = -1;
      int length = strlen( nPath );
@@ -78,6 +80,30 @@ int splitPath(  char nPath[] , char nName[][MAX_LENGTH] ) {
 
      return count;
 }
+
+char* splitstringPath(  char nPath[]) {
+     int startIndex = 0;
+     int endIndex = -1;
+     int length = strlen( nPath );
+     int count = 0;
+     do {
+        endIndex = indexOf( nPath , '/' , startIndex + 1 );
+        if( endIndex == -1 )
+            endIndex = length;
+
+        char * substr = substring( nPath, startIndex + 1 , endIndex );
+        if( substr != NULL ) {
+           strcpy( dir_name[count] , substr );
+           count++;
+	}
+
+        startIndex = endIndex ;
+     }while( endIndex != length );
+
+     return dir_name[count-1];
+}
+
+
 
 nNode * searchForNodeInAllSiblings( nNode * t , char name[] ) {
 
@@ -203,7 +229,7 @@ void print( char str[][MAX_LENGTH], int count ) {
    }
 }
 
-void testSplit() {
+/*void testSplit() {
    char path1[] = "/home/abc";
    char path2[] = "/";
    char path3[] = "";
@@ -228,7 +254,7 @@ void testSplit() {
    count = splitPath( path5 , names );
    print( names , count );
 }
-
+*/
 void test_nary_main(){
    //testSplit();
    nNode * root = NULL;

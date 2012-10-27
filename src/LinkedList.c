@@ -8,8 +8,8 @@
 
 struct node *insert_linkedlist(struct node *start, file_descriptor new_node)
 {
-    int len = strlen(new_node.file_name);
-    struct node *fresh=NULL,*temp=NULL;
+    //int len = strlen(new_node.file_name);
+    struct node *fresh=NULL, *temp=NULL;
 
     //allocate memory for fresh node
     fresh=(struct node*)malloc(sizeof(struct node));
@@ -62,7 +62,7 @@ void display_linkedlist(struct node *print)
 struct node * search_linkedlist(struct node *first, file_descriptor filedescriptor)
 {
     struct node *temp=NULL,*matched_node=NULL;
-    int i, found=0;
+    int found=0;
 
     //iterate till the last node
     temp=first;
@@ -94,8 +94,7 @@ struct node * search_linkedlist(struct node *first, file_descriptor filedescript
 
 struct node *delete_linkedlist(struct node *first, file_descriptor filedescriptor)
 {
-    struct node *temp=NULL,*matched_node=NULL , *previous = NULL ,*del =NULL;
-    int i, found=0;
+    struct node *temp=NULL, *previous = NULL, *del =NULL;
 
     if(strcmp(first->filedescriptor.file_name, filedescriptor.file_name) == 0)
     {
@@ -109,11 +108,8 @@ struct node *delete_linkedlist(struct node *first, file_descriptor filedescripto
     temp=first;
     while(temp)
     {
-
-
-        if(temp->next  !=NULL)
+        if(temp->next != NULL)
         {
-
             if(strcmp((temp->next)-> filedescriptor.file_name, filedescriptor.file_name) == 0)
             {
                 del=temp -> next;
@@ -122,9 +118,10 @@ struct node *delete_linkedlist(struct node *first, file_descriptor filedescripto
                 return first;
             }
         }
-        else{
+        else
+        {
 
-             if(strcmp(temp-> filedescriptor.file_name, filedescriptor.file_name) == 0)
+            if(strcmp(temp-> filedescriptor.file_name, filedescriptor.file_name) == 0)
             {
 
                 //temp -> next = temp -> next -> next;
@@ -140,36 +137,29 @@ struct node *delete_linkedlist(struct node *first, file_descriptor filedescripto
         previous =temp;
         temp=temp->next;
     }
+    return NULL;
 }
 
-
-
-
-
 void test_simple_linkedlist()
-    {
-
-    char *a[2]={"file" ,"dir"};
-    char *temp_string =NULL , *string_full_path =NULL;
-    int len=0, length ;
+{
+    char *a[2]= {"file" ,"dir"};
+    char *string_full_path =NULL;
     struct node * del=NULL;
-    int i=0 , j=0 , k=0;
+    int i=0;
     file_descriptor arr[10];
-    for(i=0;i<10;i++)
+    for(i=0; i<10; i++)
     {
-
-        string_full_path = generate_rand_string();
-        for(k=0;k<length;k++)
-        arr[i].location_full_path[k] =string_full_path[k];
-        temp_string=*a[rand()%2];
-        len=strlen(temp_string);
-        for(j=0;j<len;j++)
-        arr[i].file_type[j]= a[j];
+        strcpy(string_full_path, generate_rand_string());
+        //for(k=0; k<length; k++)
+        strcpy(arr[i].location_full_path, string_full_path);
+        strcpy(arr[i].file_type, a[rand()%2]);
+        //len=strlen(temp_string);
+        //for(j=0; j<len; j++)
+        //    arr[i].file_type[j]= a[j];
         arr[i].file_size =rand();
         arr[i].location_block_num=rand();
-
-
     }
+
     struct node *start = NULL;
     start = insert_linkedlist(start, arr[0]);
     insert_linkedlist(start, arr[1]);

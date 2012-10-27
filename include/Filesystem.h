@@ -4,8 +4,7 @@
 #define FILE_SYSTEM_LABEL_MAX_SIZE 150
 #define FILENAME_MAX_SIZE 50
 #define FULLPATH_WITH_FILENAME_MAX_SIZE 150
-#define BLOCK_SIZE 10000
-//#include "../include/Filesystem.h"
+#define BLOCK_SIZE 10240
 
 /*
 ## structure for File descriptor##
@@ -30,10 +29,12 @@ typedef struct fDes
 ## structure for storing the free list ##
  * Contains the pointer to the next free block
 */
+//WE SHOULD INITIALIZE NEXT_FREE_BLOCK TO -1 IN ALL BLOCKS BY DEFAULT
 typedef struct fLst
 {
-    int block_num;
-    struct fLst *next_free_block;
+    //int block_num;
+    //if allocated store 1, not allocated store 0
+    int allocated:1;
 } free_list;
 
 /*
@@ -54,8 +55,9 @@ typedef struct mHdr
 */
 typedef struct head
 {
-    file_descriptor fd_array[FILE_DESCRIPTOR_MAX_LIMIT];
-    free_list list[FREE_LIST_MAX_LIMIT];
+    //considering one file is stored in one file, MAX_NUM_OF_BLOCKS = FILE_DESCRIPTOR_MAX_LIMIT
+    file_descriptor fd_array[MAX_NUM_OF_BLOCKS];
+    free_list list[MAX_NUM_OF_BLOCKS];
     char HEADER_TEST_FIELD[50]; //only for testing purpose, should be deleted in release time
 } header;
 

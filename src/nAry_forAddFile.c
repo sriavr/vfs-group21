@@ -1,4 +1,4 @@
-#include<stdio.h>
+/*#include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
 #include "../include/nAry.h"
@@ -10,7 +10,7 @@ void display_nary( nNode * root , int level );
 * name -  Name to be set as the node name.
 * return - Returns a pointer to the created node.
 */
-nNode* createNode(char name[]) {
+/*nNode* createNode(char name[]) {
 	nNode *node=(nNode *)malloc(sizeof(nNode));
 
 	if(node == NULL) {
@@ -51,11 +51,12 @@ char * substring( char * str , int startIndex , int endIndex ) {
 }
 
 
-/*
+
  Note: Path should start with /
  e.g. "/" or "/home"
-*/
-int splitPath(  char nPath[] , char nName[][MAX_LENGTH] ) {
+
+
+char* splitPath(  char nPath[] ) {
      int startIndex = 0;
      int endIndex = -1;
      int length = strlen( nPath );
@@ -74,8 +75,10 @@ int splitPath(  char nPath[] , char nName[][MAX_LENGTH] ) {
         startIndex = endIndex ;
      }while( endIndex != length );
 
-     return count;
+     return nName;
 }
+
+
 
 nNode * searchForNodeInAllSiblings( nNode * t , char name[] ) {
 
@@ -108,12 +111,14 @@ nNode * insertAtEnd( nNode * t , char name[] ) {
    return q;
 }
 
-/*
-*  Usecase 1 :-   root = insertNode( root , "/", "a" );    ---> nNames count = 0
-*  Usecase 2 :-   root = insertNode( root , "/home" , "b" ); ---> nNames count = 1 i.e. "home"
-*  Usecase 3 :-   root = insertNode( root , "/home/Desktop", "c" );  --> nNames count = 2 i.e. "home","Desktop"
-*
-*/
+
+  Usecase 1 :-   root = insertNode( root , "/", "a" );    ---> nNames count = 0
+  Usecase 2 :-   root = insertNode( root , "/home" , "b" ); ---> nNames count = 1 i.e. "home"
+  Usecase 3 :-   root = insertNode( root , "/home/Desktop", "c" );  --> nNames count = 2 i.e. "home","Desktop"
+
+
+
+
 nNode* insertNode( nNode * root , char nPath[] , char name[] )
 {
 	nNode *ins;
@@ -169,9 +174,10 @@ void changeLevel( int level ) {
      printf("  ");
 }
 
-/* Initial call
+ /*Initial call
    display_nary( root , 1 );
- */
+*/
+/*
 void display_nary( nNode * root , int level ) {
 
   nNode * t;
@@ -199,7 +205,7 @@ void print( char str[][MAX_LENGTH], int count ) {
    }
 }
 
-void testSplit() {
+/*void testSplit() {
    char path1[] = "/home/abc";
    char path2[] = "/";
    char path3[] = "";
@@ -223,8 +229,8 @@ void testSplit() {
 
    count = splitPath( path5 , names );
    print( names , count );
-}
-
+}*/
+/*
 void test_nary(){
    //testSplit();
    nNode * root = NULL;
@@ -238,5 +244,5 @@ void test_nary(){
    root = insertNode(root,"/home/demo","test"); // expecting invalid path
    printf("\n");
    display_nary( root , 1 );
-}
+}*/
 
