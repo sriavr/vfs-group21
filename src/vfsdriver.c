@@ -16,10 +16,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+
+#include "../include/FileOpns.h"
 #include "../include/DirOpns.h"
 #include "../include/Filesystem.h"
-#include "../include/FileOpns.h"
-
 
 #define BUFSIZE 200
 #define CMDSIZE 30
@@ -184,7 +184,7 @@ void addfile ( char *P1, char *P2, char *P3 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     add_file(P1 , P2 , P3);
-    printf("addfile_TO_BE_DONE\n");
+    //printf("addfile_TO_BE_DONE\n");
 }
 
 void listfile ( char *P1, char *P2 )
