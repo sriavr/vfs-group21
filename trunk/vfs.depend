@@ -1,0 +1,110 @@
+# depslib dependency file v1.0
+1351334415 source:/home/lakshya90/Desktop/vfs-group21/src/Bst.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"../include/Filesystem.h"
+	"../include/Commons.h"
+	"../include/Bst.h"
+
+1351332795 /home/lakshya90/Desktop/vfs-group21/include/Filesystem.h
+
+1351245246 /home/lakshya90/Desktop/vfs-group21/include/Commons.h
+
+1351245246 /home/lakshya90/Desktop/vfs-group21/include/Bst.h
+
+1348871977 source:/home/lakshya90/Desktop/vfs-group21/src/Commons.c
+	<stdlib.h>
+
+1351332358 source:/home/lakshya90/Desktop/vfs-group21/src/DirOpns.c
+	<string.h>
+	<stdio.h>
+	"../include/DirOpns.h"
+	"../include/Filesystem.h"
+	"../include/nAry.h"
+
+1351245246 /home/lakshya90/Desktop/vfs-group21/include/DirOpns.h
+
+1351332358 /home/lakshya90/Desktop/vfs-group21/include/nAry.h
+
+1351332795 source:/home/lakshya90/Desktop/vfs-group21/src/FileOpns.c
+	<unistd.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<stdio.h>
+	<string.h>
+	"../include/DirOpns.h"
+	"../include/FileOpns.h"
+	"../include/Filesystem.h"
+	"../include/nAry.h"
+	"../include/Bst.h"
+	"../include/Hashtable.h"
+	"../include/LinkedList.h"
+
+1351332795 /home/lakshya90/Desktop/vfs-group21/include/FileOpns.h
+
+1351245246 /home/lakshya90/Desktop/vfs-group21/include/Hashtable.h
+
+1351245246 /home/lakshya90/Desktop/vfs-group21/include/LinkedList.h
+
+1351334415 source:/home/lakshya90/Desktop/vfs-group21/src/Filesystem.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<sys/stat.h>
+	<sys/types.h>
+	"../include/Filesystem.h"
+	"../include/LinkedList.h"
+	"../include/Hashtable.h"
+	"../include/nAry.h"
+	"../include/Bst.h"
+	"../include/dsCreator.h"
+	"../include/Commons.h"
+
+1351245246 /home/lakshya90/Desktop/vfs-group21/include/dsCreator.h
+
+1351245000 source:/home/lakshya90/Desktop/vfs-group21/src/Hashtable.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	"../include/Filesystem.h"
+	"../include/LinkedList.h"
+	"../include/Hashtable.h"
+	"../include/Commons.h"
+
+1351332358 source:/home/lakshya90/Desktop/vfs-group21/src/LinkedList.c
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<string.h>
+	"../include/Filesystem.h"
+	"../include/LinkedList.h"
+	"../include/Commons.h"
+
+1351332358 source:/home/lakshya90/Desktop/vfs-group21/src/dsCreator.c
+	<stdio.h>
+	"../include/Filesystem.h"
+	"../include/LinkedList.h"
+	"../include/Hashtable.h"
+	"../include/Bst.h"
+	"../include/nAry.h"
+
+1351332358 source:/home/lakshya90/Desktop/vfs-group21/src/nAry.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	"../include/Filesystem.h"
+	"../include/Commons.h"
+	"../include/nAry.h"
+
+1351332358 source:/home/lakshya90/Desktop/vfs-group21/src/nAry_forAddFile.c
+
+1351334415 source:/home/lakshya90/Desktop/vfs-group21/src/vfsdriver.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"../include/FileOpns.h"
+	"../include/DirOpns.h"
+	"../include/Filesystem.h"
+
