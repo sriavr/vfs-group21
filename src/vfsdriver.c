@@ -209,19 +209,19 @@ void removefile ( char *P1 )
 void movefile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    printf("movefile_TO_BE_DONE\n");
+    move_file(P1,P2);
 }
 
 void copyfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    printf("copyfile_TO_BE_DONE\n");
+    copy_file(P1,P2);
 }
 
 void exportfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    printf("exportfile_TO_BE_DONE\n");
+    export_file(P1,P2);
 }
 
 void searchfile ( char *P1, char *P2 )

@@ -67,6 +67,29 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 
 int list_file(char * file_path , char* output_file)
 {
+	int flag = 1;
+	int block_number ;
+	long int filesize;
+	block *read_block;
+	file_descriptor filedescriptor;
+    filedescriptor = search_bst(bst_tree , file_path);
+    block_number = filedescriptor.location_block_num;
+    filesize = filedescriptor.file_size;
+    read_block = read_from_block(block_number, filesize , flag);
+
+    FILE *fp;
+    fopen(output_file , "w+");
+    fwrite(read_block,filesize,1,fp);
+    fclose(fp);
+    printf("listfile_SUCCESS\n");
+    return 0;
+}
+
+
+/* Priya's code
+
+int list_file(char * file_path , char* output_file)
+{
     int block_num =0;
     file_descriptor  filedescriptor;
     filedescriptor = search_bst(bst_tree ,file_path );
@@ -96,7 +119,11 @@ int list_file(char * file_path , char* output_file)
     return 0;
 }
 
-int search_hash(char *filename, char *outputfile){
+
+*/
+
+//implementation for search_file operation
+int search_file(char *filename, char *outputfile){
     struct node *match = NULL;
     match = search_hashtable(hashtable,filename);
 
@@ -114,3 +141,63 @@ int search_hash(char *filename, char *outputfile){
     return 0;
 }
 
+void remove_file(char *file_path){
+    //TODO
+
+}
+
+void export_file(char *source_file_path, char *destination_file_path){
+	int flag = 0;
+	int block_number ;
+	long int filesize;
+	block *read_block;
+	file_descriptor filedescriptor;
+    filedescriptor = search_bst(bst_tree , source_file_path);
+    //TODO
+    // implement searh_bst in Bst.c
+
+    block_number = filedescriptor.location_block_num;
+    filesize = filedescriptor.file_size;
+    read_block = read_from_block(block_number, filesize , flag);
+
+    FILE *fp;
+    fopen(destination_file_path , "wb+");
+    fwrite(read_block,filesize,1,fp);
+    printf("exportfile_SUCCESS\n");
+    fclose(fp);
+
+}
+
+ void copy_file(char *source_file_with_path , char *destination_file_path){
+    int i, block_num = -1;
+    file_descriptor filedescriptor , new_filedescriptor;
+    filedescriptor = search_bst(bst_tree , source_file_with_path);
+    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
+    {
+        if(hdr->list[i].allocated == 0)
+        {
+            block_num = i;
+            break;// returns the first free block number
+        }
+    }
+
+    strcpy(new_filedescriptor.file_name , filedescriptor.file_name);
+    strcpy(new_filedescriptor.location_full_path , destination_file_path);
+    //assuming location_file_path is containing only file path and not file name
+    strcpy(new_filedescriptor.file_type , filedescriptor.file_type);
+    new_filedescriptor.file_size = filedescriptor.file_size;
+    new_filedescriptor.location_block_num = i;
+
+    //adding to datastructures except nAry
+    insert_bst(bst_tree, new_filedescriptor);
+    insert_hashtable(hashtable, new_filedescriptor);
+	printf("copyfile_SUCCESS\n");
+ }
+
+void move_file(char *source_file_with_path , char *destination_with_path ){
+    copy_file(source_file_with_path , destination_with_path);
+    remove_file(source_file_with_path);
+    //TODO
+    // implement remove_file
+	printf("searchfile_FAILURE\n");
+}

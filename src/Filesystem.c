@@ -251,10 +251,44 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     //read and copy the block_array to array
     //if( fwrite(hdr,sizeof(header),1,fp)!= 1)
     //{
-        //printf("\nFailed to read block_array");
-        //fclose(fp);
-        //return 1;
+    //printf("\nFailed to read block_array");
+    //fclose(fp);
+    //return 1;
     //}
+}
+
+block* read_from_block(long int block_num, int size , int flag)
+{
+    FILE *fp;
+    //fp is file pointer to VFS
+    if(flag==1)
+    {
+        fp = fopen(full_path_file_name,"r");
+    }
+    else if(flag==0)
+    {
+        fp = fopen(full_path_file_name,"rb+");
+    }
+    //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
+    if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num - 1), SEEK_SET) != 0)
+    {
+        //printf("\nFailed to read block array");
+        fclose(fp);
+        return NULL;
+    }
+
+    //create an empty block that has to be saved
+    block *newfile_block;
+    newfile_block = (block *)malloc(sizeof(block));
+    newfile_block->next_block_num = 0;
+
+    //write the new block into the vfs
+    if(fread(newfile_block, size, 1, fp)!=1)
+    {
+        return NULL;
+    }
+    fclose(fp);
+    return newfile_block;
 }
 
 void test_vfs(char fullpath[150])
