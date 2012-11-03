@@ -115,3 +115,6 @@ int unmount_vfs(char  full_file_path_name[150]);
 
 //write contents of a file to a block
 int write_to_block(long int block_num, char * filename_with_path, int size);
+
+//read the file from vfs block and return a new block
+block* read_from_block(long int block_num, int size , int flag);
