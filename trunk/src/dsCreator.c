@@ -5,10 +5,20 @@
 #include "../include/Bst.h"
 #include "../include/nAry.h"
 
-struct node * create_linkedlist(file_descriptor * file_descriptor_list, long int file_descriptor_list_size)
-{
+extern header *hdr;
+extern meta_header *mh;
 
+//THIS FUNCTION MAY BE SOON DROPPED
+struct node * create_linkedlist()
+{
     struct node *start=NULL;
+    /*
+    file_descriptor *file_descriptor_list;
+    long int file_descriptor_list_size;
+    file_descriptor_list = hdr -> fd_array;
+    file_descriptor_list_size = mh -> file_descriptors_used;
+
+
     int i;
     if(file_descriptor_list_size<=0)
         return NULL;
@@ -17,12 +27,17 @@ struct node * create_linkedlist(file_descriptor * file_descriptor_list, long int
     {
         start= insert_linkedlist(start , file_descriptor_list[i]);
     }
-
+    */
     return start;
 }
 
-struct bst* create_bst(file_descriptor* file_descriptor_list, long int file_descriptor_list_size)
+struct bst* create_bst()
 {
+    file_descriptor *file_descriptor_list;
+    long int file_descriptor_list_size;
+    file_descriptor_list = hdr -> fd_array;
+    file_descriptor_list_size = mh -> file_descriptors_used;
+
     if(file_descriptor_list_size <=0)
         return NULL;
 
@@ -40,6 +55,11 @@ struct bst* create_bst(file_descriptor* file_descriptor_list, long int file_desc
 
 void test_create_bst()
 {
+    file_descriptor *file_descriptor_list;
+    long int file_descriptor_list_size;
+    file_descriptor_list = hdr -> fd_array;
+    file_descriptor_list_size = mh -> file_descriptors_used;
+
     long int size = 5;
     file_descriptor* fd_array = NULL;
     fd_array = create_test_fd_data(fd_array, size);
@@ -55,36 +75,49 @@ void test_create_bst()
     postorder_traversal(bst_tree, &displaybst);
 }
 
-void fill_hashtable(struct node * hashtable[], file_descriptor * file_descriptor_list, long int file_descriptor_list_size)
+struct node* fill_hashtable(struct node * hashtable[])
 {
+    file_descriptor *file_descriptor_list;
+    long int file_descriptor_list_size;
+    file_descriptor_list = hdr -> fd_array;
+    file_descriptor_list_size = mh -> file_descriptors_used;
 
     struct node * test=NULL;
     int i=0;
-
-    //test=insert_hashtable(hashtable , file_descriptor_list[0].file_name , file_descriptor_list[0].location_block_num);
 
     for(i=0; i<file_descriptor_list_size ; i++)
     {
         test=insert_hashtable(hashtable, file_descriptor_list[i]);
     }
 
+    return test;
 }
 
-nNode * create_nAry_tree(file_descriptor * file_descriptor_list, long int file_descriptor_list_size)
+nNode * create_nAry_tree()
 {
+    file_descriptor *file_descriptor_list;
+    long int file_descriptor_list_size;
+    file_descriptor_list = hdr -> fd_array;
+    file_descriptor_list_size = mh -> file_descriptors_used;
+
     //TODO
     /*
     if(file_descriptor_list_size <=0)
         return NULL;
 
-    struct nAryNode * nAryTree = NULL;
-    nAryTree = createNode(file_descriptor_list[0]);
-
     long int i;
     for(i=1; i < file_descriptor_list_size; i ++)
     {
-        insertNode(nAryTree, file_descriptor_list[i]);
+        nAryTree = add_nary(nNode * root, file_descriptor filedescriptor);
     }
 
     return nAryTree;*/
+}
+
+void update_fd_list(nNode* root){
+    file_descriptor *file_descriptor_list;
+    long int file_descriptor_list_size;
+    file_descriptor_list = hdr -> fd_array;
+    file_descriptor_list_size = mh -> file_descriptors_used;
+    //TODO read the nary_tree and update the filedescriptor list
 }

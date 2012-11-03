@@ -12,6 +12,7 @@
 #include "../include/Bst.h"
 #include "../include/dsCreator.h"
 #include "../include/Commons.h"
+#include "../include/freelist.h"
 
 header *hdr;
 meta_header *mh;
@@ -98,12 +99,8 @@ int create_vfs(char fullpath[150], int size)
     hdr=(header*) malloc(sizeof(header));
     strcpy(hdr -> HEADER_TEST_FIELD, "TEST HEADER OK");
 
-    //initialize the next_block_num to 0 for all free list items
-    int i;
-    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
-    {
-        hdr -> list[i].allocated = 0;
-    }
+    //initialize the allocated flag to 0 in free list
+    init_free_list();
 
     //create_test_fd_data(hdr -> fd_array, size);
 
@@ -114,6 +111,13 @@ int create_vfs(char fullpath[150], int size)
     //allocate memory for block_array
     //block_array = calloc(MAX_NUM_OF_BLOCKS, sizeof(block));
     block_array = malloc(size);
+
+    /*TODO: THERE IS A CONFUSION BETWEEN MAX_NUM_BLOCKS AND size
+    long int i;
+    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
+    {
+        block_array[i].next_free_block = -1;
+    }*/
 
     //write the block_array into disk
     fwrite(block_array,sizeof(MAX_NUM_OF_BLOCKS),1,fp);
@@ -172,6 +176,9 @@ int mount_vfs(char fullpath[150])
 
 int unmount_vfs(char filepath[150])
 {
+    //update the fd_list using the nary tree
+    update_fd_list(nAry_tree);
+
     FILE *fp;
     fp=fopen(full_path_file_name, "r+b");
     if(fwrite(mh,sizeof(meta_header),1,fp)!=1)
@@ -270,7 +277,7 @@ block* read_from_block(long int block_num, int size , int flag)
         fp = fopen(full_path_file_name,"rb+");
     }
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
-    if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num - 1), SEEK_SET) != 0)
+    if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num), SEEK_SET) != 0)
     {
         //printf("\nFailed to read block array");
         fclose(fp);

@@ -28,6 +28,7 @@ typedef struct fDes
 /*
 ## structure for storing the free list ##
  * Contains the pointer to the next free block
+  block numbering starts from 0
 */
 //WE SHOULD INITIALIZE NEXT_FREE_BLOCK TO -1 IN ALL BLOCKS BY DEFAULT
 typedef struct fLst

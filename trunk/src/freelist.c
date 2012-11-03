@@ -4,6 +4,18 @@
 
 extern header *hdr;
 
+//block numbering starts from 0
+
+void init_free_list()
+{
+    //initialize the next_block_num to -1 for all free list items
+    long int i;
+    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
+    {
+        hdr -> list[i].allocated = 0;
+    }
+}
+
 //gives the next available free block
 long int next_free_block()
 {

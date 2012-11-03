@@ -1,6 +1,9 @@
 #ifndef FREELIST_H_INCLUDED
 #define FREELIST_H_INCLUDED
 
+//initialize the free list allocated to 0
+void init_free_list();
+
 //gives the next available free block
 long int next_free_block();
 
