@@ -1,11 +1,12 @@
 #ifndef NARY_TREE_H_INCLUDED
 #define NARY_TREE_H_INCLUDED
 
-typedef struct nAryNode{
-	struct nAryNode *child;
-	struct nAryNode *sibling;
-	file_descriptor filedescriptor;
-}nNode;
+typedef struct nAryNode
+{
+    struct nAryNode *child;
+    struct nAryNode *sibling;
+    file_descriptor filedescriptor;
+} nNode;
 
 //returns all the sub-directories & files inside a specified directory
 //in form of a linkedlist of file_descriptors (not recursive)
@@ -27,5 +28,10 @@ nNode * movedir_nary(nNode * root, char * src_dir_path, char * dest_dir_path);
 //print all the contents (dir, files) on console (in indented format)
 nNode * display_nary(nNode * root);
 
+//similar to traversal in BST
+nNode * traverse_nary(nNode *root, void (*process_nary_node)(nNode * node));
+
+//returns 0 if the directory doesn't exist, returns 1 if directory exists
+int directory_exists(nNode * root, char * dir_path);
 
 #endif // NARY_TREE_H_INCLUDED

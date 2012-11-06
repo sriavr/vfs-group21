@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include <string.h>
 #include "../include/Filesystem.h"
 #include "../include/LinkedList.h"
 #include "../include/Hashtable.h"
 #include "../include/Bst.h"
-#include "../include/nAry.h"
+#include "../include/nary_tree.h"
 
+void process_file_desc(nNode* node);
 extern header *hdr;
 extern meta_header *mh;
 
@@ -95,29 +97,57 @@ struct node* fill_hashtable(struct node * hashtable[])
 
 nNode * create_nAry_tree()
 {
+    nNode *nAryTree = NULL;
     file_descriptor *file_descriptor_list;
     long int file_descriptor_list_size;
     file_descriptor_list = hdr -> fd_array;
     file_descriptor_list_size = mh -> file_descriptors_used;
 
-    //TODO
-    /*
     if(file_descriptor_list_size <=0)
         return NULL;
 
     long int i;
-    for(i=1; i < file_descriptor_list_size; i ++)
+    for(i=0; i < file_descriptor_list_size; i ++)
     {
-        nAryTree = add_nary(nNode * root, file_descriptor filedescriptor);
+        nAryTree = add_nary(nAryTree, file_descriptor_list[i]);
     }
 
-    return nAryTree;*/
+    return nAryTree;
 }
 
-void update_fd_list(nNode* root){
-    file_descriptor *file_descriptor_list;
-    long int file_descriptor_list_size;
+int arr_index = 0;
+file_descriptor *file_descriptor_list;
+long int file_descriptor_list_size;
+
+void update_fd_list(nNode* root)
+{
     file_descriptor_list = hdr -> fd_array;
     file_descriptor_list_size = mh -> file_descriptors_used;
-    //TODO read the nary_tree and update the filedescriptor list
+
+    //create an empty file descriptor
+    file_descriptor empty_file_desc;
+    strcpy(empty_file_desc.file_name, "");
+    strcpy(empty_file_desc.location_full_path, "");
+    strcpy(empty_file_desc.file_type, "");
+    empty_file_desc.file_size = 0;
+    empty_file_desc.location_block_num = -1;
+
+    //clear existing file_descriptor array
+    int i;
+    for(i = 0; i< file_descriptor_list_size; i++)
+    {
+        file_descriptor_list[i] = empty_file_desc;
+    }
+
+    //traverse each node of nary tree and add a file descriptor for each node
+    traverse_nary(root, process_file_desc);
+
+    //update the number of file descriptors used
+    mh -> file_descriptors_used = arr_index;
+}
+
+void process_file_desc(nNode* node)
+{
+    //add to a file descriptor array
+    file_descriptor_list[arr_index++] = node -> filedescriptor;
 }

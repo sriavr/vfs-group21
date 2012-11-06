@@ -5,30 +5,6 @@
 #include "../include/Commons.h"
 #include "../include/Bst.h"
 
-/*
-struct bst* init_bst(struct bst* bst_root, file_descriptor filedescriptor)
-{
-    bst_root = malloc(sizeof(struct bst));
-    if(bst_root == NULL)
-    {
-        return NULL;
-    }
-
-    bst_root -> right = NULL;
-    bst_root -> left = NULL;
-
-    // /root/home/sridhar + '/' + abc.dat + '\0'
-    int length = strlen(filedescriptor.location_full_path) + strlen(filedescriptor.file_name);
-    bst_root -> key = calloc((length+2),sizeof(char));
-    strcat(bst_root -> key, filedescriptor.location_full_path);
-    strcat(bst_root -> key, "/");
-    strcat(bst_root -> key, filedescriptor.file_name);
-
-    bst_root -> filedescriptor = filedescriptor;                      //reqirement of this???????????????/
-
-    return bst_root;
-}*/
-
 struct bst * insert_bst(struct bst* bst_root, file_descriptor filedescriptor)
 {
     struct bst *fresh=NULL, *temp=NULL;

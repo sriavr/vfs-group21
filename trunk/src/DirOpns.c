@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "../include/DirOpns.h"
 #include "../include/Filesystem.h"
-#include "../include/nAry.h"
+#include "../include/nary_tree.h"
 extern nNode * nAry_tree;
 void make_dir(char *parent_path, char *dir_name)
 {
@@ -16,11 +16,6 @@ void make_dir(char *parent_path, char *dir_name)
 
 //    nAryNode = insertNode(nAry_tree, filedescriptor);
     printf("makedir_SUCCESS\n");
-}
-
-void displaynary(){
-    display_nary( nAry_tree , 0 );
-    printf("display_SUCCESS\n");
 }
 
 void delete_dir(char *dir_path)
