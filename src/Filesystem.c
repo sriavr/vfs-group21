@@ -8,7 +8,7 @@
 #include "../include/Filesystem.h"
 #include "../include/LinkedList.h"
 #include "../include/Hashtable.h"
-#include "../include/nAry.h"
+#include "../include/nary_tree.h"
 #include "../include/Bst.h"
 #include "../include/dsCreator.h"
 #include "../include/Commons.h"
@@ -120,7 +120,7 @@ int create_vfs(char fullpath[150], int size)
     }*/
 
     //write the block_array into disk
-    fwrite(block_array,sizeof(MAX_NUM_OF_BLOCKS),1,fp);
+    fwrite(block_array,size,1,fp);
 
     fclose(fp);
 
@@ -152,7 +152,7 @@ int mount_vfs(char fullpath[150])
     file_descriptor_used = mh -> file_descriptors_used;
 
     //Create nAry Tree representing directory structure
-    //nAry_tree = (nNode *) create_nAry_tree(file_descriptor_list, file_descriptor_list_size);
+    nAry_tree = (nNode *) create_nAry_tree(file_descriptor_list, file_descriptor_used);
 
     //Create Hashtable storing all the file names without path (for search based on file name without path)
     init_hashtable(hashtable);

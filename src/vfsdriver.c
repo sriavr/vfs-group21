@@ -20,6 +20,7 @@
 #include "../include/FileOpns.h"
 #include "../include/DirOpns.h"
 #include "../include/Filesystem.h"
+#include "../include/vfs_errorcodes.h"
 
 #define BUFSIZE 200
 #define CMDSIZE 30
@@ -49,7 +50,9 @@ int main( int argc, char *argv[] )
     char linebuffer[BUFSIZE];
     char command[CMDSIZE], par1[PARSIZE], par2[PARSIZE], par3[PARSIZE];
     char *token;
-
+    //HARDCODING
+    //argc = 2;
+    //argv[1] = "/home/sridhar/VFS-code/svn/test/input.txt";
     if( argc != 2 )
     {
         printf("%d",argc);
@@ -126,8 +129,6 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         exportfile (P1,P2);
     else if( strcmp(command, "searchfile") == 0 )
         searchfile (P1,P2);
-    else if( strcmp(command, "displaynary") == 0 )
-        displaynary();
     else
         printf("Ignoring invalid command %s\n", command);
 }
