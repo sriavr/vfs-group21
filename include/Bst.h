@@ -7,6 +7,9 @@ struct bst{
     file_descriptor filedescriptor;
 };
 
+void delete_bst(struct bst *bst_node , file_descriptor filedescriptor ,struct bst*position );
+
+
 file_descriptor search_bst( struct bst* bst_node , char* file_name);
 //Initialize the basic bst tree
 //struct bst* init_bst(struct bst*, file_descriptor filedescriptor);
@@ -15,15 +18,15 @@ file_descriptor search_bst( struct bst* bst_node , char* file_name);
 struct bst * insert_bst(struct bst* bst_root, file_descriptor filedescriptor);
 
 //delete a tree node and return root
-struct bst * delete_bst(struct bst* bst_root, file_descriptor filedescriptor);
+
 
 //perform preorder traversal
 void preorder_traversal(struct bst* bst_root,
                            void (*process_node)(struct bst* bst_node));
 
 //perform postorder traversal
-void postorder_traversal(struct bst* bst_root,
-                           void (*process_node)(struct bst* bst_node));
+struct bst* postorder_traversal(struct bst* bst_root);
+
 
 //perform inorder traversal
 void inorder_traversal(struct bst* bst_root,

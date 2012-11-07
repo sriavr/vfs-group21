@@ -74,7 +74,7 @@ void test_create_bst()
     preorder_traversal(bst_tree, &displaybst);
 
     printf("\nPostorder traversal\n");
-    postorder_traversal(bst_tree, &displaybst);
+    postorder_traversal(bst_tree);
 }
 
 struct node* fill_hashtable(struct node * hashtable[])

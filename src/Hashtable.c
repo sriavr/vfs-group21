@@ -61,8 +61,8 @@ struct node * delete_hashtable(
     temp = hashtable[index];
     while(temp!= NULL)
     {
-        if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code                  //requirement of this???
-                && (strcmp(temp -> filedescriptor.file_name , filedescriptor.file_name)==0))
+        if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code
+                && (strcmp(temp -> filedescriptor.location_full_path , filedescriptor.location_full_path)==0))
         {
             delete_linkedlist(temp, filedescriptor);
         }

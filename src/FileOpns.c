@@ -23,12 +23,15 @@ extern char full_path_file_name[150];
 int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 {
     //1)CHECK IF DIRECTORY EXISTS IN NARY
+  
     //3)ADD THE FILE TO BST & HASH TABLE
     //4)Save to disk
     //5)UPDATE FILEDESCRIPTOR DURING UNMOUNT
+
+
     FILE *fp_data_file = fopen(data_file_path, "rb");
-    long int size = fseek(fp_data_file, 0L, SEEK_END);
-    size = ftell(fp_data_file);
+    long int size = fseek(fp_data_file, 0L, SEEK_CUR);
+     size = ftell(fp_data_file);
     fclose(fp_data_file);
 //    int i, block_num = -1;
 //    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)

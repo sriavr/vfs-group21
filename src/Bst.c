@@ -140,22 +140,61 @@ void preorder_traversal(struct bst* bst_node,
     preorder_traversal( bst_node -> right, process_node );
 }
 
-void postorder_traversal(struct bst* bst_node,
-                         void (*process_node)(struct bst* bst_node))
+struct bst* postorder_traversal(struct bst* bst_node)
 {
     if (bst_node == NULL)
     {
         return;
     }
 
-    postorder_traversal( bst_node -> left, process_node);
-    postorder_traversal( bst_node -> right, process_node );
-    process_node(bst_node);
+    postorder_traversal( bst_node -> left );
+    postorder_traversal( bst_node -> right);
+    //process_node(bst_node);
+    return bst_node;
 }
 
 void displaybst(struct bst *bst_node)
 {
     printf("Key: %s\t Filetype: %s\t Block No: %d\n", bst_node -> key, bst_node -> filedescriptor.file_type, bst_node -> filedescriptor.location_block_num);
+}
+
+
+
+void delete_bst(struct bst *bst_node , file_descriptor filedescriptor ,struct bst*position )
+{           //here bst_node is the parent of node to be deleted
+            // n position is the left/right pointer of node to be deleted
+
+            struct bst * child ,*temp;
+            if(child->left == NULL && child->right == NULL)
+            {
+                free(child);
+                position=NULL;
+            }
+            else if(child->left !=NULL && child->right == NULL)
+            {
+                    position =child->left;
+                    free(child);
+
+            }
+            else if(child->right !=NULL && child->left == NULL)
+            {
+                    position =child->right;
+                    free(child);
+
+            }
+            else
+            {
+
+                child = postorder_traversal(position);
+                temp=position;
+                position = child;
+                child = temp->left;
+                free(temp);
+            }
+
+
+
+
 }
 
 void test_simple_bst()
