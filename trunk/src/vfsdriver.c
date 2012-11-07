@@ -20,7 +20,6 @@
 #include "../include/FileOpns.h"
 #include "../include/DirOpns.h"
 #include "../include/Filesystem.h"
-#include "../include/vfs_errorcodes.h"
 
 #define BUFSIZE 200
 #define CMDSIZE 30
@@ -129,6 +128,8 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         exportfile (P1,P2);
     else if( strcmp(command, "searchfile") == 0 )
         searchfile (P1,P2);
+    else if( strcmp(command, "displaynary") == 0 )
+        displaynary();
     else
         printf("Ignoring invalid command %s\n", command);
 }
@@ -192,7 +193,7 @@ void listfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     list_file(P1 , P2);
-    printf("listfile_TO_BE_DONE\n");
+   // printf("listfile_TO_BE_DONE\n");
 }
 
 void updatefile ( char *P1, char *P2 )
@@ -229,7 +230,7 @@ void searchfile ( char *P1, char *P2 )
 {
      /* Call the appropriate function with given arguments and display appropriate output on the screen */
     search_file(P1,P2);
-    printf("searchfile_TO_BE_DONE\n");
+    //printf("searchfile_TO_BE_DONE\n");
 }
 
 
