@@ -4,6 +4,8 @@
 #include "../include/Filesystem.h"
 #include "../include/nary_tree.h"
 extern nNode * nAry_tree;
+extern bst *bst_tree;
+extern head *hdr;
 void make_dir(char *parent_path, char *dir_name)
 {
     /*
@@ -24,6 +26,30 @@ void delete_dir(char *dir_path)
         1) Delete the node from nAryTree
         2) Physically delete from the hard disk
     */
+    filedescriptor file_descriptor;
+    int is_exists = directory_exists(root , dir_path);
+    if(is_exists ==1)
+    {
+             char *file_name = delete_nary(root,  file_descriptor);
+            //if it is dir then nary logic will throw error n should return 'f' to indiate that it is file n should return 0 as char
+            //else if it is file then should return filename
+            if(strcmp(file_name , "0")!=0)
+            {
+                strcat(dest_path ,"/");
+                strcat(dest_path ,file_name);
+                for(int i=0;i<MAX_NUM_OF_BLOCKS;i++)
+                {
+
+                    if(strcmp(dest_path)
+                }
+                delete_hashtable(hashtable , file_descriptor);
+                delete_bst(bst_tree , file_descriptor , position)
+
+            }
+
+
+    }
+
     printf("deletedir_FAILURE\n");
 }
 
