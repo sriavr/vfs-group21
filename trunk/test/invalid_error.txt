@@ -59,7 +59,7 @@ copyfile /home/sub3/sub5/check.txt /home/sub2
 copyfile /home/sub3/check.txt /home/sub2/sub6/abc
 copyfile                      /home/sub2
 copyfile /home/sub3/check.txt
-copyfile /home/sub3 /home/sub2/check.txt --cannot copy dir to file
+copyfile /home/sub3 /home/sub2/check.txt 
 copyfile /home/sub3/check.txt /home/sub2 --file system full
 
 exportfile /home/sub3/sub5/check.txt /home/lakshya90/Desktop/abc.txt
@@ -67,7 +67,7 @@ exportfile /home/sub3/check.txt /home/lakshya90/Desktop/abc/abc.txt
 exportfile                    /home/lakshya90/Desktop/abc.txt
 exportfile /home/sub3/check.txt 
 exportfile /home/sub3/check.txt /home/lakshya90/Desktop/abc.txt --file already exists
-exportfile /home/sub3/check.txt /home/lakshya90/Desktop/abc/abc.txt --cannot export dir
+exportfile /home/sub3 /home/lakshya90/Desktop/abc/abc.txt --cannot export dir
 
 searchfile noexistance.txt /home/lakshya90/Desktop/abc/abc.txt
 searchfile /home/sub3/check.txt 
