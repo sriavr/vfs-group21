@@ -23,7 +23,7 @@ extern char full_path_file_name[150];
 int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 {
     //1)CHECK IF DIRECTORY EXISTS IN NARY
-  
+
     //3)ADD THE FILE TO BST & HASH TABLE
     //4)Save to disk
     //5)UPDATE FILEDESCRIPTOR DURING UNMOUNT
@@ -31,7 +31,7 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 
     FILE *fp_data_file = fopen(data_file_path, "rb");
     long int size = fseek(fp_data_file, 0L, SEEK_CUR);
-     size = ftell(fp_data_file);
+    size = ftell(fp_data_file);
     fclose(fp_data_file);
 //    int i, block_num = -1;
 //    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
@@ -206,4 +206,32 @@ void move_file(char *source_file_with_path , char *destination_with_path )
     //TODO
     // implement remove_file
     printf("searchfile_FAILURE\n");
+}
+
+void test()
+{
+    char * dest_dir_path ="/home/priya/Desktop";
+    char * file_name ="graphics.txt";
+    char * data_file_path ="/home/priya/Desktop/graphics.txt";
+    char * destination_file_path="/home/priya/Desktop/destined.txt";
+    char * outputfile = "output.txt";
+    char * export_file ="/home/priya/Desktop/export.txt";
+    char * destination2_with_path ="/home/priya/Desktop/destined2.txt";
+    add_file(dest_dir_path ,file_name ,data_file_path);
+
+    int receive = search_file(file_name,outputfile);
+
+    export_file(data_file_path, export_file);
+
+    copy_file(data_file_path ,destination_file_path);
+
+    move_file(data_file_path ,destination2_with_path );
+
+    int received = search_file(file_name,outputfile);
+
+}
+
+void main()
+{
+    test();
 }
