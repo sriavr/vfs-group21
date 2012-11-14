@@ -15,7 +15,7 @@
 #include "../include/freelist.h"
 
 extern nNode * nAry_tree;
-extern struct bst *bst_tree;
+extern bst *bst_tree;
 extern struct node *hashtable[HASHSIZE];
 extern header *hdr;
 extern char full_path_file_name[150];
@@ -30,8 +30,9 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 
 
     FILE *fp_data_file = fopen(data_file_path, "rb");
-    long int size = fseek(fp_data_file, 0L, SEEK_CUR);
-    size = ftell(fp_data_file);
+
+    fseek(fp_data_file, 0L, SEEK_END);
+    long int size = ftell(fp_data_file);
     fclose(fp_data_file);
 //    int i, block_num = -1;
 //    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
@@ -59,6 +60,8 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     add_nary(nAry_tree,filedescriptor);
     bst_tree = insert_bst(bst_tree, filedescriptor);
     insert_hashtable(hashtable, filedescriptor);
+    display_file_descriptor(filedescriptor);
+
     printf("addfile_SUCCESS\n");
     return 0;
 }
@@ -70,7 +73,8 @@ int list_file(char * file_path , char* output_file)
     long int filesize;
     block *read_block;
     file_descriptor filedescriptor;
-    filedescriptor = search_bst(bst_tree , file_path);
+    filedescriptor = search_bst_full(bst_tree, file_path);
+    display_file_descriptor(filedescriptor);
     block_number = filedescriptor.location_block_num;
     filesize = filedescriptor.file_size;
     read_block = read_from_block(block_number, filesize , flag);
@@ -82,6 +86,19 @@ int list_file(char * file_path , char* output_file)
     printf("listfile_SUCCESS\n");
     return 0;
 }
+
+
+void display_file_descriptor(file_descriptor output)
+{
+
+     printf("Filename: %s\n" , output.file_name);
+    printf("Location: %s\n" , output.location_full_path);
+    printf("Filetype: %s\n" , output.file_type);
+    printf("Block Num: %d\n" , output.location_block_num);
+    printf("Size: %ld\n" , output.file_size);
+
+}
+
 
 
 /* Priya's code
@@ -154,7 +171,7 @@ void export_file(char *source_file_path, char *destination_file_path)
     long int filesize;
     block *read_block;
     file_descriptor filedescriptor;
-    filedescriptor = search_bst(bst_tree , source_file_path);
+    filedescriptor = search_bst_full(bst_tree , source_file_path);
     //TODO
     // implement searh_bst in Bst.c
 
@@ -173,7 +190,7 @@ void copy_file(char *source_file_with_path , char *destination_file_path)
 {
     int block_num = -1;
     file_descriptor filedescriptor , new_filedescriptor;
-    filedescriptor = search_bst(bst_tree , source_file_with_path);
+    filedescriptor = search_bst_full(bst_tree , source_file_with_path);
 
     /*
     for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
@@ -208,30 +225,32 @@ void move_file(char *source_file_with_path , char *destination_with_path )
     printf("searchfile_FAILURE\n");
 }
 
-void test()
+/*void test()
 {
     char * dest_dir_path ="/home/priya/Desktop";
     char * file_name ="graphics.txt";
     char * data_file_path ="/home/priya/Desktop/graphics.txt";
     char * destination_file_path="/home/priya/Desktop/destined.txt";
     char * outputfile = "output.txt";
-    char * export_file ="/home/priya/Desktop/export.txt";
+    char * exportfile ="/home/priya/Desktop/export.txt";
     char * destination2_with_path ="/home/priya/Desktop/destined2.txt";
     add_file(dest_dir_path ,file_name ,data_file_path);
 
     int receive = search_file(file_name,outputfile);
 
-    export_file(data_file_path, export_file);
+    export_file(data_file_path, exportfile);
 
     copy_file(data_file_path ,destination_file_path);
 
-    move_file(data_file_path ,destination2_with_path );
+ //   move_file(data_file_path ,destination2_with_path );
 
     int received = search_file(file_name,outputfile);
 
 }
 
-void main()
+int  main()
 {
     test();
+    return 0;
 }
+*/

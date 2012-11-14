@@ -33,7 +33,7 @@ struct node * create_linkedlist()
     return start;
 }
 
-struct bst* create_bst()
+bst* create_bst()
 {
     file_descriptor *file_descriptor_list;
     long int file_descriptor_list_size;
@@ -43,7 +43,7 @@ struct bst* create_bst()
     if(file_descriptor_list_size <=0)
         return NULL;
 
-    struct bst * tree = NULL;
+    bst * tree = NULL;
     //tree = init_bst(tree, file_descriptor_list[0]);
 
     long int i;
@@ -60,12 +60,12 @@ void test_create_bst()
     file_descriptor *file_descriptor_list;
     long int file_descriptor_list_size;
     file_descriptor_list = hdr -> fd_array;
-    file_descriptor_list_size = mh -> file_descriptors_used;
+    //file_descriptor_list_size = mh -> file_descriptors_used;
 
     long int size = 5;
     file_descriptor* fd_array = NULL;
     fd_array = create_test_fd_data(fd_array, size);
-    struct bst * bst_tree = create_bst(fd_array, size);
+    bst * bst_tree = create_bst(fd_array, size);
 
     printf("\nInorder traversal\n");
     inorder_traversal(bst_tree, &displaybst);

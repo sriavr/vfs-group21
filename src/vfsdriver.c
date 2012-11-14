@@ -50,8 +50,8 @@ int main( int argc, char *argv[] )
     char command[CMDSIZE], par1[PARSIZE], par2[PARSIZE], par3[PARSIZE];
     char *token;
     //HARDCODING
-    //argc = 2;
-    //argv[1] = "/home/sridhar/VFS-code/svn/test/input.txt";
+    argc = 2;
+    argv[1] = "/home/priya/Desktop/VFS-21/svn/test/input.txt";
     if( argc != 2 )
     {
         printf("%d",argc);
@@ -128,8 +128,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         exportfile (P1,P2);
     else if( strcmp(command, "searchfile") == 0 )
         searchfile (P1,P2);
-    else if( strcmp(command, "displaynary") == 0 )
-        displaynary();
+
     else
         printf("Ignoring invalid command %s\n", command);
 }
@@ -166,7 +165,7 @@ void deletedir ( char *P1 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("deletedir_TO_BE_DONE\n");
-    delete_dir(P1);
+//    delete_dir(P1);
 }
 
 void movedir ( char *P1, char *P2 )
@@ -179,58 +178,61 @@ void movedir ( char *P1, char *P2 )
 void listdir ( char *P1, int P2, char *P3 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    printf("listdir_TO_BE_DONE\n");
+    //printf("listdir_TO_BE_DONE\n");
 }
 
 void addfile ( char *P1, char *P2, char *P3 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     add_file(P1 , P2 , P3);
-    //printf("addfile_TO_BE_DONE\n");
+    printf("addfile_successfully_DONE\n");
 }
 
 void listfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     list_file(P1 , P2);
-   // printf("listfile_TO_BE_DONE\n");
+   printf("listfile_successfully_DONE\n");
 }
 
 void updatefile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    printf("updatefile_TO_BE_DONE\n");
+        //update_file(P1, P2);
+    //printf("updatefile_TO_BE_DONE\n");
 }
 
 void removefile ( char *P1 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    printf("removefile_TO_BE_DONE\n");
+    //printf("removefile_TO_BE_DONE\n");
 }
 
 void movefile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    move_file(P1,P2);
+    //move_file(P1,P2);
 }
 
 void copyfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     copy_file(P1,P2);
+    printf("Copy_file successfully done");
 }
 
 void exportfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     export_file(P1,P2);
+    printf("export file Successfully done");
 }
 
 void searchfile ( char *P1, char *P2 )
 {
      /* Call the appropriate function with given arguments and display appropriate output on the screen */
     search_file(P1,P2);
-    //printf("searchfile_TO_BE_DONE\n");
+    printf("searchfile_successfully_DONE\n");
 }
 
 

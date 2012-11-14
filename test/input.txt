@@ -2,10 +2,21 @@ createvfs demo 1024
 mountvfs demo
 unmountvfs demo
 mountvfs demo
-makedir /home/sub1 sub2
+makedir /home/Desktop/sub1 sub2
 addfile /home/Desktop graphics.c /home/priya/Desktop/graphics.c
-displaynary
+
+
 listfile /home/priya/Desktop/graphics.c graph.txt
+
+searchfile graphics.txt output.txt
+
+exportfile /home/Desktop/graphics.txt  /home/Desktop/export.txt
+
+copyfile /home/Desktop/graphics.txt /home/Desktop/destined.txt
+
+searchfile graphics.txt output.txt
+
+
 makedir /home/sub1 sub3
 unmountvfs demo
 mountvfs demo
