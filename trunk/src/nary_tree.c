@@ -1,7 +1,10 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include "../include/Filesystem.h"
 #include "../include/nary_tree.h"
+#define MAX_LENGTH 50
+char dir_name[][MAX_LENGTH];
 
 //returns all the sub-directories & files inside a specified directory
 //in form of a linkedlist of file_descriptors (not recursive)
@@ -53,3 +56,57 @@ int directory_exists(nNode * root, char * dir_path)
 
 }
 
+int indexOf( char str[] , char searchChr , int startPos )
+{
+    int length = strlen( str );
+    int i = -1;
+    for( i = startPos ; i < length ; i++ )
+        if( str[i] == searchChr )
+            return i;
+    return -1;
+}
+
+char * substring( char * str , int startIndex , int endIndex )
+{
+    int length = endIndex - startIndex;
+    char * copy;
+    int index,k=0;
+    if( length <= 0 )
+        return NULL;
+    copy = (char *)malloc(sizeof(char) * (length+1) );
+
+    for( index = startIndex ; index < endIndex ; index++ )
+    {
+        copy[k] = str[index];
+        k++;
+    }
+    copy[k] = '\0';
+    return copy;
+}
+
+
+char* splitstringPath(char nPath[])
+{
+    int startIndex = 0;
+    int endIndex = -1;
+    int length = strlen( nPath );
+    int count = 0;
+    do
+    {
+        endIndex = indexOf( nPath , '/' , startIndex + 1 );
+        if( endIndex == -1 )
+            endIndex = length;
+
+        char * substr = substring( nPath, startIndex + 1 , endIndex );
+        if( substr != NULL )
+        {
+            strcpy( dir_name[count] , substr );
+            count++;
+        }
+
+        startIndex = endIndex ;
+    }
+    while( endIndex != length );
+
+    return dir_name[count-1];
+}

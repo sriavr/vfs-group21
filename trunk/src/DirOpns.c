@@ -4,8 +4,10 @@
 #include "../include/Filesystem.h"
 #include "../include/nary_tree.h"
 extern nNode * nAry_tree;
-extern bst *bst_tree;
-extern head *hdr;
+//extern bst   * bst_tree;
+extern header *hdr;
+
+
 void make_dir(char *parent_path, char *dir_name)
 {
     /*
@@ -20,17 +22,19 @@ void make_dir(char *parent_path, char *dir_name)
     printf("makedir_SUCCESS\n");
 }
 
-void delete_dir(char *dir_path)
+/*void delete_dir(char *dir_path)
 {
     /*
         1) Delete the node from nAryTree
         2) Physically delete from the hard disk
     */
-    filedescriptor file_descriptor;
-    int is_exists = directory_exists(root , dir_path);
+  /*  char * dest_path;
+    file_descriptor filedescriptor;
+    //int is_exists = directory_exists(root , dir_path);
+    int is_exists=0;
     if(is_exists ==1)
     {
-             char *file_name = delete_nary(root,  file_descriptor);
+            char *file_name = delete_nary(nAry_tree,filedescriptor);
             //if it is dir then nary logic will throw error n should return 'f' to indiate that it is file n should return 0 as char
             //else if it is file then should return filename
             if(strcmp(file_name , "0")!=0)
@@ -40,10 +44,10 @@ void delete_dir(char *dir_path)
                 for(int i=0;i<MAX_NUM_OF_BLOCKS;i++)
                 {
 
-                    if(strcmp(dest_path)
+                    //if(strcmp(dest_path)
                 }
-                delete_hashtable(hashtable , file_descriptor);
-                delete_bst(bst_tree , file_descriptor , position)
+                delete_hashtable(hashtable , filedescriptor);
+                //delete_bst(bst_tree , filedescriptor , position)
 
             }
 
@@ -52,7 +56,7 @@ void delete_dir(char *dir_path)
 
     printf("deletedir_FAILURE\n");
 }
-
+*/
 void move_dir(char * src_path, char * dest_path)
 {
     /*

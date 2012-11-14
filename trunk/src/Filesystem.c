@@ -14,12 +14,12 @@
 #include "../include/Commons.h"
 #include "../include/freelist.h"
 
-header *hdr;
-meta_header *mh;
+header *hdr =NULL;
+meta_header *mh =NULL;
 //block *block_array; //NO NEED TO READ BLOCK ARRAY
 
 nNode * nAry_tree = NULL;
-struct bst * bst_tree = NULL;
+bst * bst_tree = NULL;
 struct node * hashtable[HASHSIZE];
 char full_path_file_name[150];
 

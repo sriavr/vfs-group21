@@ -4,13 +4,14 @@
 #include "../include/Filesystem.h"
 #include "../include/Commons.h"
 #include "../include/Bst.h"
+#include "../include/nary_tree.h"
 
-struct bst * insert_bst(struct bst* bst_root, file_descriptor filedescriptor)
+bst * insert_bst(bst* bst_root, file_descriptor filedescriptor)
 {
-    struct bst *fresh=NULL, *temp=NULL;
+    bst *fresh=NULL, *temp=NULL;
 
     //create a new_node
-    fresh = malloc(sizeof(struct bst));
+    fresh = malloc(sizeof(bst));
     fresh -> right = NULL;
     fresh -> left = NULL;
     int length = strlen(filedescriptor.location_full_path) + strlen(filedescriptor.file_name);
@@ -66,7 +67,8 @@ struct bst * insert_bst(struct bst* bst_root, file_descriptor filedescriptor)
 }
 
 //Array last element is not getting displayed(corner case problem)
-file_descriptor search_bst(struct bst* bst_node, char* file_name)
+file_descriptor search_bst(bst* bst_node, char* file_name,
+                           char* location_full_path)
 {
     file_descriptor file;
     strcpy(file.location_full_path ,"0");
@@ -75,9 +77,16 @@ file_descriptor search_bst(struct bst* bst_node, char* file_name)
     strcpy(file.file_name ,"0");
     file.location_block_num =0;
 
+    int length = strlen(location_full_path)
+                + strlen(file_name);
+    char * key = calloc((length+2),sizeof(char));
+    strcat(key, location_full_path);
+    strcat(key, "/");
+    strcat(key, file_name);
+
     while(1)
     {
-        if(strcmp(bst_node -> filedescriptor.file_name, file_name) < 0)
+        if(strcmp(bst_node -> key, key) < 0)
         {
             if(bst_node -> left == NULL)
             {
@@ -88,7 +97,7 @@ file_descriptor search_bst(struct bst* bst_node, char* file_name)
                 bst_node = bst_node -> left;
             }
         }
-        else if(strcmp(bst_node -> filedescriptor.file_name, file_name) > 0)
+        else if(strcmp(bst_node -> key, key) > 0)
         {
             if(bst_node -> right == NULL)
             {
@@ -104,20 +113,26 @@ file_descriptor search_bst(struct bst* bst_node, char* file_name)
             return bst_node -> filedescriptor;
         }
     }
-
-    /*if(bst_node ==NULL)
-    return file;
-    else if(strcmp(bst_node->filedescriptor .file_name , file_name)==0)
-    return bst_node ->filedescriptor;
-    else if(strcmp(bst_node->filedescriptor .file_name , file_name) < 0)
-    return search_bst(bst_node ->left , file_name);
-    else
-    return search_bst(bst_node ->right , file_name);
-    */
 }
 
-void inorder_traversal(struct bst* bst_node,
-                       void (*process_node)(struct bst* bst_node))
+file_descriptor search_bst_full(bst* bst_node,
+                                char* filename_with_full_path)
+{
+//    char *temp = NULL, *file_name = NULL;
+//    do {
+//        file_name = temp;
+//        temp = strtok(filename_with_full_path, "/");
+//    } while (temp!=NULL);
+//
+//    char * ptr = strstr(filename_with_full_path, file_name);
+//    ptr = ptr - 2;
+
+
+}
+
+
+void inorder_traversal(bst* bst_node,
+                       void (*process_node)(bst* bst_node))
 {
     if (bst_node == NULL)
     {
@@ -128,8 +143,8 @@ void inorder_traversal(struct bst* bst_node,
     inorder_traversal( bst_node -> right, process_node );
 }
 
-void preorder_traversal(struct bst* bst_node,
-                        void (*process_node)(struct bst* bst_node))
+void preorder_traversal(bst* bst_node,
+                        void (*process_node)(bst* bst_node))
 {
     if (bst_node == NULL)
     {
@@ -140,7 +155,7 @@ void preorder_traversal(struct bst* bst_node,
     preorder_traversal( bst_node -> right, process_node );
 }
 
-struct bst* postorder_traversal(struct bst* bst_node)
+bst* postorder_traversal(bst* bst_node)
 {
     if (bst_node == NULL)
     {
@@ -153,18 +168,18 @@ struct bst* postorder_traversal(struct bst* bst_node)
     return bst_node;
 }
 
-void displaybst(struct bst *bst_node)
+void displaybst(bst *bst_node)
 {
     printf("Key: %s\t Filetype: %s\t Block No: %d\n", bst_node -> key, bst_node -> filedescriptor.file_type, bst_node -> filedescriptor.location_block_num);
 }
 
 
 
-void delete_bst(struct bst *bst_node , file_descriptor filedescriptor ,struct bst*position )
+void delete_bst(bst *bst_node , file_descriptor filedescriptor ,bst *position )
 {           //here bst_node is the parent of node to be deleted
             // n position is the left/right pointer of node to be deleted
 
-            struct bst * child ,*temp;
+            bst * child ,*temp;
             if(child->left == NULL && child->right == NULL)
             {
                 free(child);
@@ -191,32 +206,29 @@ void delete_bst(struct bst *bst_node , file_descriptor filedescriptor ,struct bs
                 child = temp->left;
                 free(temp);
             }
-
-
-
-
 }
 
 void test_simple_bst()
 {
     char *a[2]= {"file" ,"dir"};
-    char temp_string[5], string_full_path[30];
-    struct bst *start=NULL;
+    char temp_string[5];
+    bst *start=NULL;
     int i=0 , j=0;
-    file_descriptor arr[10] , output;
+    file_descriptor arr , output;
 
-    for(i=0; i<10; i++)
-    {
-        strcpy(string_full_path, generate_rand_string());
-        strcpy(arr[i].location_full_path, string_full_path);
+
+    //for(i=0; i<10; i++)
+    //{
+        strcpy(arr.file_name,"pinnacle" );
+        strcpy(arr.location_full_path, "/home/desktop");
         strcpy(temp_string, a[rand()%2]);
-        strcpy(arr[i].file_type, temp_string);
-        arr[i].file_size =rand();
-        arr[i].location_block_num=rand();
-    }
+        strcpy(arr.file_type, temp_string);
+        arr.file_size =rand();
+        arr.location_block_num=rand();
+    //}
 
-    for(j=0; j<10; j++)
-        start = insert_bst(start, arr[j]);
+    //for(j=0; j<10; j++)
+        start = insert_bst(start, arr);
     if(start!=NULL)
     {
         printf("sucessfull  inserted");
@@ -228,7 +240,7 @@ void test_simple_bst()
 
     displaybst(start);
     inorder_traversal(start, displaybst);
-    output= search_bst(start , arr[9].file_name);
+    output= search_bst(start, arr.location_full_path, arr.file_name);
     printf("Filename: %s\n" , output.file_name);
     printf("Location: %s\n" , output.location_full_path);
     printf("Filetype: %s\n" , output.file_type);
@@ -239,7 +251,7 @@ void test_simple_bst()
 /*
 void test_complex_bst()
 {
-    struct bst * tree = NULL;
+    bst * tree = NULL;
     tree = init_bst(tree, "ROOT", 100);
     char * random_str;
     int i;
