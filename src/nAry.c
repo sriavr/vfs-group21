@@ -330,6 +330,17 @@ nNode * moveDir(nNode * root ,char * src_path, char * dest_path)
     return root;
 }
 
+nNode * move_dir_nary(nNode * root, char * src_dir_path, char * dest_dir_path)
+{
+    return moveDir(root , src_dir_path, dest_dir_path);
+}
+
+nNode * move_file_nary(nNode * root, char * srcfile_with_dir_path, char * dest_dir_path)
+{
+    return moveDir(root , srcfile_with_dir_path, dest_dir_path);
+}
+
+
 nNode * find( nNode * root , char nPath[] )//, char name[] )
 {
 	nNode *ins;
@@ -355,7 +366,58 @@ nNode * find( nNode * root , char nPath[] )//, char name[] )
 
 	return matchedNode;
 }
+int directory_exists(nNode * root, char * nPath)
+{
+	nNode *ins;
+	char nName[MAX_LEVELS][MAX_LENGTH];
+	int count = splitPath( nPath, nName );
+	int i;
+	nNode * t, * matchedNode = NULL;
 
+	if( count != 0 && root == NULL ) {
+	  	fprintf(stderr,"Invalid Path");
+	  	return 0;
+	}
+
+	t = root;
+	for( i = 0; i < count ; i++ ) {
+	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
+	    if( matchedNode == NULL ) {
+	    	fprintf( stderr, "Invalid path");
+	    	return FAILED;
+	    }
+	    t = matchedNode;
+	}
+
+	return SUCCESS;
+}
+
+int file_exists(nNode * root, char * nPath)
+{
+
+	nNode *ins;
+	char nName[MAX_LEVELS][MAX_LENGTH];
+	int count = splitPath( nPath, nName );
+	int i;
+	nNode * t, * matchedNode = NULL;
+
+	if( count != 0 && root == NULL ) {
+	  	fprintf(stderr,"Invalid Path");
+	  	return 0;
+	}
+
+	t = root;
+	for( i = 0; i < count ; i++ ) {
+	    matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
+	    if( matchedNode == NULL ) {
+	    	fprintf( stderr, "Invalid path");
+	    	return FAILED;
+	    }
+	    t = matchedNode;
+	}
+
+	return SUCCESS;
+}
 int freeNode( nNode * root, int level )
 {
 	nNode * t;
@@ -388,8 +450,16 @@ nNode * deleteDir(nNode * root,char path[])
         	printf("Invalid Path");
         	return root;
     	}
-	root = removeLink( root , path );
-	retCode = freeNode(delPathNode,0);
+    	if (delPathNode->child == NULL)
+    	{
+		root = removeLink( root , path );
+		retCode = freeNode(delPathNode,0);
+	}
+	else
+	{
+		printf("Cannot delete node ");
+	}
+	//retCode = freeNode(delPathNode,0);
 	if (retCode == FAILED)
 	{
 		fprintf(stderr,"ERROR IN FREEING OF NODES");
@@ -398,6 +468,39 @@ nNode * deleteDir(nNode * root,char path[])
 	return root;
 }
 
+nNode* delete_file_nary(nNode * root, char * node_path)
+{
+    return deleteDir(root, node_path);
+}
+
+nNode* delete_dir_nary(nNode * root, char * node_path)
+{
+    return deleteDir(root, node_path);
+}
+
+nNode* add_file_nary(nNode * root, char * filename , char * filepath)
+{
+	return insertNode( root , filepath , filename );
+}
+nNode* add_dir_nary(nNode * root, char * dirpath)
+{
+	char nName[MAX_LEVELS][MAX_LENGTH],dirname[MAX_LENGTH],*dirpath_insert,slash[] = "/";
+	int count = splitPath(  dirpath , nName ),length,length_name,i;
+	//printf("-------- %s",nName[count-1]);
+	strcpy(dirname,nName[count-1]);
+	length_name = strlen(nName[count-1]);
+	length = strlen(dirpath);
+	length = length - length_name;
+	dirpath_insert = malloc(sizeof(char)*(length+1));
+	for(i=0;i<length;i++)
+	{
+		dirpath_insert[i] = dirpath[i];
+	}
+	dirpath_insert[i] = '\0';
+	//printf("--------> %s",dirpath_insert);
+	root = insertNode( root , dirpath_insert , dirname );
+	return root;
+}
 
 void print( char str[][MAX_LENGTH], int count ) {
    int i;
@@ -433,7 +536,7 @@ void testSplit() {
    print( names , count );
 }
 
-void test_main(){
+void mainr(){
    //testSplit();
    nNode * root = NULL;
    root = insertNode(root,"","/");
@@ -444,149 +547,11 @@ void test_main(){
    root = insertNode(root,"/home/xyz","doc");
    root = insertNode(root,"/","otherInRoot");
    root = insertNode(root,"/home/demo","test"); // expecting invalid path
-   //root = insertNode(root,"/home/sdf/jkl/hjk","test1"); // expecting invalid path
-   //root = insertNode(root,"/home/sdf/jkl/hjk/iop/mno","test2"); // expecting invalid path
-   //  root = moveDir(root, "/home/xyz" , "/home/demo");
-   //root = insertNode(root,"/home/klo/opl","poi");
-   //   root = insertNode(root,"/home/klo/opl/iop/lop","poi");
-  // root = insertNode(root,"/home/demo/tyu/123/098","test098"); // expecting invalid path
-   root = insertNode(root,"/123/456/789/098","1011");
- // root = insertNode(root,"/home/demo/klp/oiu","1089");
-  // root = insertNode(root,"/home/demo/kpop/ouu","1000");
-   root = insertNode(root,"/123/456/987/890","1110");
-   root = moveDir(root, "/123/456/789","/123/456/987");
-   root = deleteDir(root,"/123/456/987");
+   root = add_dir_nary(root,"/home/demo/Pavan");
+   root = add_dir_nary(root,"/home/demo/Sridhar");
+   root = add_file_nary(root,"yele","/home/demo/Pavan");
+   root = deleteDir(root,"/home/demo/Pavan");
    printf("\n");
    display_nary( root , 1 );
 }
 
-//returns all the sub-directories & files inside a specified directory
-//in form of a linkedlist of file_descriptors (not recursive)
-//file_descriptor *listall_nary(nNode * root, char * dir_path, int is_recursive)
-/*
-node_list listall_nary(nNode * root, char * dir_path, int is_recursive)
-{
-    nNode * dir,*temp;
-    char dir_names[20][20];
-    int count=0,i=0,length=0;
-    dir = find( root, dir_path );
-    if(is_recursive == 0)
-    {
-        temp = dir->child;
-        while( temp->sibling != NULL )
-        {
-          //move to last child.
-            count = count + 1;
-            //printf("%s ",dir->name);
-            strcpy(dir_names[count-1],temp->name);
-            temp = temp->sibling;
-        }
-        node_list.dirnames = (char **) calloc(count, sizeof(char *));
-        for(i = 0 ; i<count ;i++)
-        {
-            length = strlen(dir_names[i]);
-            dirnames[i] = (char *) calloc(length, sizeof(char));for i = 1 to num_nodes
-	    length = strlen(narynode -> path)
-	    dirnames[i] = (char *) calloc(length, sizeof(char));
-            strcpy(dirnames[i], narynode -> path);
-            strcpy(node_list.dirnames[i], dir_names[i]);
-        }
-        node_list.size = count;
-    }
-    else if (is_recursive == 1)
-    {
-        temp = dir->child;
-        while( temp->sibling != NULL )
-        {
-          //move to last child.
-            count = count + 1;
-            //printf("%s ",dir->name);
-            strcpy(dir_names[count-1],temp->name)
-            temp = temp->sibling;
-        }
-        node_list.dirnames = (char **) calloc(count, sizeof(char *));
-        for(i = 0 ; i<count ;i++)
-        {
-            length = strlen(dir_names[i]);
-            dirnames[i] = (char *) calloc(length, sizeof(char));
-            strcpy(node_list.dirnames[i], dir_names[i]);
-        }
-        node_list.size = count;
-    }
-    return node_list;
-}
-*/
-
-/* add a file_descriptor node to existing nary tree.
-If root is null, create the root node. Check if the node currently added is dir or file.
-If dir and parents don't exist, create filedescriptors for each of nonexistant parents */
-//nNode* add_nary(nNode * root, file_descriptor filedescriptor)
-nNode* add_file_nary(nNode * root, char * filename , char * filepath)
-{
-	return insertNode( root , filepath , filename );
-}
-
-//add_dir_nary(root, "/home/sridhar")
-nNode* add_dir_nary(nNode * root, char * dirpath)
-{
-    nNode * temp;
-    //temp = find(root,path);
-
-	//return insertNode(root, dirpath , );
-}
-
-
-//check if node is file or dir, if dir, and it contains subdir or files,
-//don't allow deletion and throw the error
-nNode* delete_file_nary(nNode * root, char * node_path)
-{
-         root=deleteDir(root,node_path);
-         return root;
-}
-
-nNode* delete_dir_nary(nNode * root, char * node_path)
-{
-	root=deleteDir(root,node_path);
-	return root;
-}
-
-//move a directory from source to destination, all the contents of subtree should
-//also be moved
-nNode * move_dir_nary(nNode * root, char * src_dir_path, char * dest_dir_path)
-{
-	root=moveDir(root ,src_dir_path, dest_dir_path);
-	return root;
-}
-
-nNode * move_file_nary(nNode * root, char * srcfile_with_dir_path, char * dest_dir_path)
-{
-	root=moveDir(root ,srcfile_with_dir_path, dest_dir_path);
-	return root;
-}
-
-//print all the contents (dir, files) on console (in indented format)
-nNode * displaynary(nNode * root)
-{
-    //printf("Filepath: %s\t Filename: %s\t Filetype: %s\t Block No: %d\n",
-      //      root -> filedescriptor.location_full_path, root -> filedescriptor.file_name,
-      //      root -> filedescriptor.file_type, root -> filedescriptor.location_block_num);
-    display_nary(root,0);
-}
-
-//similar to traversal in BST
-nNode * traverse_nary(nNode *root, void (*process_nary_node)(nNode * node))
-{
-
-}
-
-
-//returns 0 if the directory doesn't exist, returns 1 if directory exists
-int directory_exists(nNode * root, char * dir_path)
-{
-
-}
-
-int file_exists(nNode * root, char * file_path)
-{
-
-}

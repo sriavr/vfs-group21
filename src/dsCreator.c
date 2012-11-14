@@ -112,13 +112,13 @@ nNode * create_nAry_tree()
     {
         if(strcmp(file_descriptor_list[i].file_type, "file"))
         {
-           // nAryTree = add_file_nary(nAryTree, file_descriptor_list[i].file_name,
-            //                         file_descriptor_list[i].location_full_path);
+           nAryTree = add_file_nary(nAryTree, file_descriptor_list[i].file_name,
+                                    file_descriptor_list[i].location_full_path);
         }
         else if(strcmp(file_descriptor_list[i].file_type, "dir"))
         {
-           // nAryTree = add_dir_nary(nAryTree,
-           //                          file_descriptor_list[i].location_full_path);
+           nAryTree = add_dir_nary(nAryTree,
+                                     file_descriptor_list[i].location_full_path);
         }
 
     }
@@ -151,7 +151,7 @@ void update_fd_list(nNode* root)
     }
 
     //traverse each node of nary tree and add a file descriptor for each node
-    traverse_nary(root, process_file_desc);
+    //traverse_nary(root, process_file_desc);
 
     //update the number of file descriptors used
     mh -> file_descriptors_used = arr_index;

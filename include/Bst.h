@@ -7,7 +7,7 @@ typedef struct bst_n{
     file_descriptor filedescriptor;
 } bst;
 
-void delete_bst(bst *bst_node , file_descriptor filedescriptor ,bst *position );
+void delete_bst(bst *bst_node, char * node_path);
 
 
 
