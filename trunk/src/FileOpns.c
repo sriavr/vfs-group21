@@ -8,7 +8,7 @@
 #include "../include/Filesystem.h"
 #include "../include/LinkedList.h"
 #include "../include/Hashtable.h"
-#include "../include/nary_tree.h"
+#include "../include/nAry.h"
 #include "../include/Bst.h"
 #include "../include/freelist.h"
 #include "../include/FileOpns.h"
@@ -24,19 +24,20 @@ extern char full_path_file_name[150];
 int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 {
     //1)CHECK IF DIRECTORY EXISTS IN NARY
-
     //3)ADD THE FILE TO BST & HASH TABLE
     //4)Save to disk
     //5)UPDATE FILEDESCRIPTOR DURING UNMOUNT
 
-
     FILE *fp_data_file = fopen(data_file_path, "rb");
-
     fseek(fp_data_file, 0L, SEEK_END);
     long int size = ftell(fp_data_file);
     fclose(fp_data_file);
 
     long int block_num = next_free_block();
+    printf("block_num ::%d\n",block_num);
+    int i=update_flist_allocate(block_num);
+    printf("updated_value ::%d\n",i);
+    //update_flist_deallocate(long int block_num);
     write_to_block(block_num, data_file_path, size);
 
     file_descriptor filedescriptor;
@@ -47,8 +48,6 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     filedescriptor.location_block_num = block_num;
 
     //create a directory if doesn't exist and modify data structures
-    //char *name = splitstringPath(dest_dir_path);
-    //make_dir(dest_dir_path, name);
     add_file_nary(nAry_tree, filedescriptor.file_name, filedescriptor.location_full_path);
     bst_tree = insert_bst(bst_tree, filedescriptor);
     insert_hashtable(hashtable, filedescriptor);
@@ -66,7 +65,8 @@ int list_file(char * file_path , char* output_file)
     block *read_block;
     file_descriptor filedescriptor;
     filedescriptor = search_bst_full(bst_tree, file_path);
-    display_file_descriptor(filedescriptor);
+
+    //display_file_descriptor(filedescriptor);
     block_number = filedescriptor.location_block_num;
     filesize = filedescriptor.file_size;
     read_block = read_from_block(block_number, filesize , flag);
