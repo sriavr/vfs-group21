@@ -5,14 +5,14 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "../include/DirOpns.h"
-#include "../include/FileOpns.h"
 #include "../include/Filesystem.h"
+#include "../include/LinkedList.h"
+#include "../include/Hashtable.h"
 #include "../include/nary_tree.h"
 #include "../include/Bst.h"
-#include "../include/Hashtable.h"
-#include "../include/LinkedList.h"
 #include "../include/freelist.h"
+#include "../include/FileOpns.h"
+#include "../include/DirOpns.h"
 
 extern nNode * nAry_tree;
 extern bst *bst_tree;
@@ -34,15 +34,6 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     fseek(fp_data_file, 0L, SEEK_END);
     long int size = ftell(fp_data_file);
     fclose(fp_data_file);
-//    int i, block_num = -1;
-//    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
-//    {
-//        if(hdr->list[i].allocated == 0)
-//        {
-//            block_num = i;
-//            break;
-//        }
-//    }
 
     long int block_num = next_free_block();
     write_to_block(block_num, data_file_path, size);
@@ -57,7 +48,7 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     //create a directory if doesn't exist and modify data structures
     //char *name = splitstringPath(dest_dir_path);
     //make_dir(dest_dir_path, name);
-    add_nary(nAry_tree,filedescriptor);
+    add_file_nary(nAry_tree, filedescriptor.file_name, filedescriptor.location_full_path);
     bst_tree = insert_bst(bst_tree, filedescriptor);
     insert_hashtable(hashtable, filedescriptor);
     display_file_descriptor(filedescriptor);
@@ -86,20 +77,6 @@ int list_file(char * file_path , char* output_file)
     printf("listfile_SUCCESS\n");
     return 0;
 }
-
-
-void display_file_descriptor(file_descriptor output)
-{
-
-     printf("Filename: %s\n" , output.file_name);
-    printf("Location: %s\n" , output.location_full_path);
-    printf("Filetype: %s\n" , output.file_type);
-    printf("Block Num: %d\n" , output.location_block_num);
-    printf("Size: %ld\n" , output.file_size);
-
-}
-
-
 
 /* Priya's code
 
@@ -192,15 +169,6 @@ void copy_file(char *source_file_with_path , char *destination_file_path)
     file_descriptor filedescriptor , new_filedescriptor;
     filedescriptor = search_bst_full(bst_tree , source_file_with_path);
 
-    /*
-    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
-    {
-        if(hdr->list[i].allocated == 0)
-        {
-            block_num = i;
-            break;// returns the first free block number
-        }
-    }*/
     block_num = next_free_block();
 
     strcpy(new_filedescriptor.file_name , filedescriptor.file_name);

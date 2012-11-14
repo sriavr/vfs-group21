@@ -5,7 +5,7 @@ typedef struct bst_n{
     struct bst_n * left;
     struct bst_n * right;
     file_descriptor filedescriptor;
-}bst;
+} bst;
 
 void delete_bst(bst *bst_node , file_descriptor filedescriptor ,bst *position );
 

@@ -159,7 +159,7 @@ bst* postorder_traversal(bst* bst_node)
 {
     if (bst_node == NULL)
     {
-        return;
+        return NULL;
     }
 
     postorder_traversal( bst_node -> left );
@@ -179,7 +179,7 @@ void delete_bst(bst *bst_node , file_descriptor filedescriptor ,bst *position )
 {           //here bst_node is the parent of node to be deleted
             // n position is the left/right pointer of node to be deleted
 
-            bst * child ,*temp;
+            bst * child,*temp;
             if(child->left == NULL && child->right == NULL)
             {
                 free(child);
@@ -213,7 +213,7 @@ void test_simple_bst()
     char *a[2]= {"file" ,"dir"};
     char temp_string[5];
     bst *start=NULL;
-    int i=0 , j=0;
+    //int i=0 , j=0;
     file_descriptor arr , output;
 
 
