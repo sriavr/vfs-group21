@@ -13,6 +13,7 @@
 #include "../include/freelist.h"
 #include "../include/FileOpns.h"
 #include "../include/DirOpns.h"
+#include "../include/vfs_errorcodes.h"
 
 extern nNode * nAry_tree;
 extern bst *bst_tree;
@@ -115,12 +116,46 @@ int list_file(char * file_path , char* output_file)
 */
 
 //implementation for search_file operation
-int search_file(char *filename, char *outputfile)
+/*int search_file(char *filename, char *outputfile)
 {
     struct node *match = NULL;
     match = search_hashtable(hashtable,filename);
 
     FILE *fp;
+    fp = fopen(outputfile,"w+");
+
+    fprintf(fp, "%10s %4s %150s %8s\n", "Filename", "Filetype", "Filepath", "Filesize");
+    while(match!=NULL)
+    {
+        fprintf(fp, "%10s %4s %150s %8ld\n", match->filedescriptor.file_name, match->filedescriptor.file_type, match->filedescriptor.location_full_path, match->filedescriptor.file_size);
+        match =  match->next;
+    }
+
+    fclose(fp);
+    printf("searchfile_SUCCESS\n");
+    return 0;
+}*/
+
+int search_file(char *filename, char *outputfile)
+{
+    if(outputfile == NULL)
+    {
+        printf(ERR_VFS_SEARCHFILE_02);
+        return 1;
+    }
+
+    struct node *match = NULL;
+    match = search_hashtable(hashtable,filename);
+
+    FILE *fp;
+    fp = open(outputfile,"r");
+    if(fp == NULL)
+    {
+        printf(ERR_VFS_SEARCHFILE_01);
+        fclose(fp);
+        return 1;
+    }
+    fclose(fp);
     fp = fopen(outputfile,"w+");
 
     fprintf(fp, "%10s %4s %150s %8s\n", "Filename", "Filetype", "Filepath", "Filesize");
@@ -222,3 +257,20 @@ int  main()
     return 0;
 }
 */
+
+void update_file( char *source_file_with_path, char *data_file)
+{
+    FILE *source_file, *new_data_file;
+    int MAX = 500;
+    char line[MAX];
+
+    new_data_file = fopen(data_file, "r");
+    source_file = fopen(source_file_with_path, "w");
+    while (fgets(line,sizeof(line),new_data_file) != NULL)
+    {
+        /*Write the line */
+        fputs(line, source_file);
+    }
+    fclose (new_data_file);
+    fclose (source_file);
+}

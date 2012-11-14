@@ -78,7 +78,7 @@ file_descriptor search_bst(bst* bst_node, char* file_name,
     file.location_block_num =0;
 
     int length = strlen(location_full_path)
-                + strlen(file_name);
+                 + strlen(file_name);
     char * key = calloc((length+2),sizeof(char));
     strcat(key, location_full_path);
     strcat(key, "/");
@@ -173,40 +173,39 @@ void displaybst(bst *bst_node)
     printf("Key: %s\t Filetype: %s\t Block No: %d\n", bst_node -> key, bst_node -> filedescriptor.file_type, bst_node -> filedescriptor.location_block_num);
 }
 
-
-
-void delete_bst(bst *bst_node , file_descriptor filedescriptor ,bst *position )
-{           //here bst_node is the parent of node to be deleted
-            // n position is the left/right pointer of node to be deleted
-
-            bst * child,*temp;
-            if(child->left == NULL && child->right == NULL)
-            {
-                free(child);
-                position=NULL;
-            }
-            else if(child->left !=NULL && child->right == NULL)
-            {
-                    position =child->left;
-                    free(child);
-
-            }
-            else if(child->right !=NULL && child->left == NULL)
-            {
-                    position =child->right;
-                    free(child);
-
-            }
-            else
-            {
-
-                child = postorder_traversal(position);
-                temp=position;
-                position = child;
-                child = temp->left;
-                free(temp);
-            }
-}
+//void delete_bst(bst *bst_node, char * node_path)
+//{
+//    //here bst_node is the parent of node to be deleted
+//    // n position is the left/right pointer of node to be deleted
+//
+//    bst * child,*temp;
+//    if(child->left == NULL && child->right == NULL)
+//    {
+//        free(child);
+//        position=NULL;
+//    }
+//    else if(child->left !=NULL && child->right == NULL)
+//    {
+//        position =child->left;
+//        free(child);
+//
+//    }
+//    else if(child->right !=NULL && child->left == NULL)
+//    {
+//        position =child->right;
+//        free(child);
+//
+//    }
+//    else
+//    {
+//
+//        child = postorder_traversal(position);
+//        temp=position;
+//        position = child;
+//        child = temp->left;
+//        free(temp);
+//    }
+//}
 
 void test_simple_bst()
 {
@@ -219,16 +218,16 @@ void test_simple_bst()
 
     //for(i=0; i<10; i++)
     //{
-        strcpy(arr.file_name,"pinnacle" );
-        strcpy(arr.location_full_path, "/home/desktop");
-        strcpy(temp_string, a[rand()%2]);
-        strcpy(arr.file_type, temp_string);
-        arr.file_size =rand();
-        arr.location_block_num=rand();
+    strcpy(arr.file_name,"pinnacle" );
+    strcpy(arr.location_full_path, "/home/desktop");
+    strcpy(temp_string, a[rand()%2]);
+    strcpy(arr.file_type, temp_string);
+    arr.file_size =rand();
+    arr.location_block_num=rand();
     //}
 
     //for(j=0; j<10; j++)
-        start = insert_bst(start, arr);
+    start = insert_bst(start, arr);
     if(start!=NULL)
     {
         printf("sucessfull  inserted");
