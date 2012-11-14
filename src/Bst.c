@@ -4,7 +4,7 @@
 #include "../include/Filesystem.h"
 #include "../include/Commons.h"
 #include "../include/Bst.h"
-#include "../include/nary_tree.h"
+#include "../include/nAry.h"
 
 bst * insert_bst(bst* bst_root, file_descriptor filedescriptor)
 {
@@ -76,17 +76,30 @@ file_descriptor search_bst(bst* bst_node, char* file_name,
     file.file_size =0;
     strcpy(file.file_name ,"0");
     file.location_block_num =0;
+    int fullpath_length = strlen(location_full_path);
+    int filename_length = strlen(file_name);
+    int length = 0;
+    char * key = NULL;
+    if(location_full_path[fullpath_length - 1] == '/')
+    {
+        length = fullpath_length + filename_length;
+        key = calloc((length+1),sizeof(char));
+        strcat(key, location_full_path);
+        strcat(key, file_name);
+    }
+    else
+    {
+        length = fullpath_length + filename_length;
+        key = calloc((length+2),sizeof(char));
+        strcat(key, location_full_path);
+        strcat(key, "/");
+        strcat(key, file_name);
+    }
 
-    int length = strlen(location_full_path)
-                 + strlen(file_name);
-    char * key = calloc((length+2),sizeof(char));
-    strcat(key, location_full_path);
-    strcat(key, "/");
-    strcat(key, file_name);
 
     while(1)
     {
-        if(strcmp(bst_node -> key, key) < 0)
+        if(strcmp(bst_node -> key, key) > 0)
         {
             if(bst_node -> left == NULL)
             {
@@ -97,7 +110,7 @@ file_descriptor search_bst(bst* bst_node, char* file_name,
                 bst_node = bst_node -> left;
             }
         }
-        else if(strcmp(bst_node -> key, key) > 0)
+        else if(strcmp(bst_node -> key, key) < 0)
         {
             if(bst_node -> right == NULL)
             {
@@ -118,16 +131,26 @@ file_descriptor search_bst(bst* bst_node, char* file_name,
 file_descriptor search_bst_full(bst* bst_node,
                                 char* filename_with_full_path)
 {
-//    char *temp = NULL, *file_name = NULL;
-//    do {
-//        file_name = temp;
-//        temp = strtok(filename_with_full_path, "/");
-//    } while (temp!=NULL);
-//
-//    char * ptr = strstr(filename_with_full_path, file_name);
-//    ptr = ptr - 2;
-
-
+    char nName[MAX_LEVELS][MAX_LENGTH],
+    dirname[MAX_LENGTH],
+    *dirpath_insert;
+    int count = splitPath(filename_with_full_path, nName),
+                length,
+                length_name,
+                i;
+    strcpy(dirname,nName[count-1]);
+    length_name = strlen(nName[count-1]);
+    length = strlen(filename_with_full_path);
+    length = length - length_name;
+    dirpath_insert = malloc(sizeof(char)*(length+1));
+    for(i=0; i<length; i++)
+    {
+        dirpath_insert[i] = filename_with_full_path[i];
+    }
+    dirpath_insert[i] = '\0';
+    //printf("dirname:%s, dirpath_insert:%s",dirname, dirpath_insert);
+    file_descriptor fd = search_bst(bst_node, dirname, dirpath_insert);
+    return fd;
 }
 
 
@@ -171,40 +194,104 @@ bst* postorder_traversal(bst* bst_node)
 void displaybst(bst *bst_node)
 {
     printf("Key: %s\t Filetype: %s\t Block No: %d\n", bst_node -> key, bst_node -> filedescriptor.file_type, bst_node -> filedescriptor.location_block_num);
+
 }
 
-//void delete_bst(bst *bst_node, char * node_path)
-//{
-//    //here bst_node is the parent of node to be deleted
-//    // n position is the left/right pointer of node to be deleted
+/*void delete_bst(bst *bst_node , file_descriptor filedescriptor)
+{
+
+      if (value < this->value) {
+
+            if (left != NULL)
+
+                  return left->remove(value, this);
+
+            else
+
+                  return NULL;
+
+      } else if (value > this->value) {
+
+            if (right != NULL)
+
+                  return right->remove(value, this);
+
+            else
+
+                  return NULL;
+
+      } else {
+
+            if (left != NULL && right != NULL) {
+
+                  this->value = right->minValue();
+
+                  return right->remove(this->value, this);
+
+            } else if (parent->left == this) {
+
+                  parent->left = (left != NULL) ? left : right;
+
+                  return this;
+
+            } else if (parent->right == this) {
+
+                  parent->right = (left != NULL) ? left : right;
+
+                  return this;
+
+            }
+
+      }
+
+}
+
+
+
+int BSTNode::minValue() {
+
+      if (left == NULL)
+
+            return value;
+
+      else
+
+            return left->minValue();
+
+}
+*/
+
+//void delete_bst(bst *bst_node , file_descriptor filedescriptor ,bst *position )
+//{           //here bst_node is the parent of node to be deleted
+//            // n position is the left/right pointer of node to be deleted
 //
-//    bst * child,*temp;
-//    if(child->left == NULL && child->right == NULL)
-//    {
-//        free(child);
-//        position=NULL;
-//    }
-//    else if(child->left !=NULL && child->right == NULL)
-//    {
-//        position =child->left;
-//        free(child);
+//            bst * child ,*temp;
+//            if(child->left == NULL && child->right == NULL)
+//            {
+//                free(child);
+//                position=NULL;
+//            }
+//            else if(child->left !=NULL && child->right == NULL)
+//            {
+//                    position =child->left;
+//                    free(child);
 //
-//    }
-//    else if(child->right !=NULL && child->left == NULL)
-//    {
-//        position =child->right;
-//        free(child);
+//            }
+//            else if(child->right !=NULL && child->left == NULL)
+//            {
+//                    position =child->right;
+//                    free(child);
 //
-//    }
-//    else
-//    {
+//            }
+//            else
+//            {
 //
-//        child = postorder_traversal(position);
-//        temp=position;
-//        position = child;
-//        child = temp->left;
-//        free(temp);
-//    }
+//                child = postorder_traversal(position);
+//                temp=position;
+//                position = child;
+//                child = temp->left;
+//                free(temp);
+//            }
 //}
 
 void test_simple_bst()
