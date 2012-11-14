@@ -119,3 +119,5 @@ int write_to_block(long int block_num, char * filename_with_path, int size);
 
 //read the file from vfs block and return a new block
 block* read_from_block(long int block_num, int size , int flag);
+
+void display_file_descriptor(file_descriptor output);

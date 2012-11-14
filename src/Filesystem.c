@@ -8,7 +8,7 @@
 #include "../include/Filesystem.h"
 #include "../include/LinkedList.h"
 #include "../include/Hashtable.h"
-#include "../include/nary_tree.h"
+#include "../include/nAry.h"
 #include "../include/Bst.h"
 #include "../include/dsCreator.h"
 #include "../include/Commons.h"
@@ -510,3 +510,16 @@ file_descriptor * create_test_fd_data(file_descriptor * fd_array, long int size)
 
     return fd_array;
 }
+
+
+void display_file_descriptor(file_descriptor output)
+{
+
+    printf("Filename: %s\n" , output.file_name);
+    printf("Location: %s\n" , output.location_full_path);
+    printf("Filetype: %s\n" , output.file_type);
+    printf("Block Num: %d\n" , output.location_block_num);
+    printf("Size: %ld\n" , output.file_size);
+
+}
+

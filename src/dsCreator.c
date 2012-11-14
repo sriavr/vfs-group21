@@ -4,7 +4,7 @@
 #include "../include/LinkedList.h"
 #include "../include/Hashtable.h"
 #include "../include/Bst.h"
-#include "../include/nary_tree.h"
+#include "../include/nAry.h"
 
 void process_file_desc(nNode* node);
 extern header *hdr;
@@ -33,6 +33,7 @@ struct node * create_linkedlist()
     return start;
 }
 
+//TODO check if filedescriptor is directory and then only add
 bst* create_bst()
 {
     file_descriptor *file_descriptor_list;
@@ -60,7 +61,7 @@ void test_create_bst()
     file_descriptor *file_descriptor_list;
     long int file_descriptor_list_size;
     file_descriptor_list = hdr -> fd_array;
-    //file_descriptor_list_size = mh -> file_descriptors_used;
+    file_descriptor_list_size = mh -> file_descriptors_used;
 
     long int size = 5;
     file_descriptor* fd_array = NULL;
@@ -109,7 +110,17 @@ nNode * create_nAry_tree()
     long int i;
     for(i=0; i < file_descriptor_list_size; i ++)
     {
-        nAryTree = add_nary(nAryTree, file_descriptor_list[i]);
+        if(strcmp(file_descriptor_list[i].file_type, "file"))
+        {
+           // nAryTree = add_file_nary(nAryTree, file_descriptor_list[i].file_name,
+            //                         file_descriptor_list[i].location_full_path);
+        }
+        else if(strcmp(file_descriptor_list[i].file_type, "dir"))
+        {
+           // nAryTree = add_dir_nary(nAryTree,
+           //                          file_descriptor_list[i].location_full_path);
+        }
+
     }
 
     return nAryTree;
@@ -149,5 +160,5 @@ void update_fd_list(nNode* root)
 void process_file_desc(nNode* node)
 {
     //add to a file descriptor array
-    file_descriptor_list[arr_index++] = node -> filedescriptor;
+    //file_descriptor_list[arr_index++] = node -> filedescriptor;
 }
