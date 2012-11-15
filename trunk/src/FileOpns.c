@@ -55,7 +55,8 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     //printf("block_num ::%d\n",block_num);
     //printf("updated_value ::%d\n",i);
     //update_flist_deallocate(long int block_num);
-    write_to_block(block_num, data_file_path, size);
+    if(write_to_block(block_num, data_file_path, size) < 0)
+        return -1;
 
     file_descriptor filedescriptor;
     strcpy(filedescriptor.file_name, file_name);

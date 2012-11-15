@@ -51,8 +51,8 @@ int main( int argc, char *argv[] )
     char command[CMDSIZE], par1[PARSIZE], par2[PARSIZE], par3[PARSIZE];
     char *token;
     //HARDCODING
-    //argc = 2;
-    //argv[1] = "./test/input.txt";
+    argc = 2;
+    argv[1] = "./test/input.txt";
     if( argc != 2 )
     {
         printf("%d",argc);

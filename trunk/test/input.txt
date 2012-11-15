@@ -3,10 +3,20 @@ mountvfs demo
 unmountvfs demo
 mountvfs demo
 makedir /home/Desktop/sub1 sub2
-addfile /home/Desktop/ graphics.c /home/sridhar/Desktop/graphics.c
-addfile /home/ nary.c /home/sridhar/Desktop/nary_tree.c
-listfile /home/Desktop/graphics.c /home/sridhar/Desktop/output_graphics.c
-listfile /home/nary.c /home/sridhar/Desktop/output_nary.c
+addfile /home/Desktop/ aliases.txt /usr/include/aliases.h
+addfile /home/Desktop/ complex.txt /usr/include/complex.h
+addfile /home/Desktop/sub1 alloca.txt /usr/include/alloca.h
+addfile /home/Desktop/sub1 crypt.txt /usr/include/crypt.h
+addfile /home/Desktop/sub1/sub2 error.txt /usr/include/error.h
+addfile /home/Desktop/sub1/sub2 fstab.txt /usr/include/fstab.h
+
+listfile /home/Desktop/aliases.txt /tmp/aliases.txt
+listfile /home/Desktop/complex.txt /tmp/complex.txt
+listfile /home/Desktop/sub1/alloca.txt /tmp/alloca.txt
+listfile /home/Desktop/sub1/crypt.txt /tmp/crypt.txt
+listfile /home/Desktop/sub1/sub2/error.txt /tmp/error.txt
+listfile /home/Desktop/sub1/sub2/fstab.txt /tmp/fstab.txt
+
 searchfile graphics.txt /home/Desktop/output.txt
 exportfile /home/Desktop/graphics.txt /home/Desktop/export.txt
 copyfile /home/Desktop/graphics.txt /home/Desktop/destined.txt
