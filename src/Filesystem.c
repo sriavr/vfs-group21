@@ -215,7 +215,7 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     {
         //printf("\nFailed to read block array");
         fclose(fp);
-        return 1;
+        return -1;
     }
 
     //create an empty block that has to be saved
@@ -229,7 +229,7 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     {
         //copy the contents of file into block structure
         FILE *newfile;
-        newfile = fopen(filename_with_path, "r+b");
+        newfile = fopen(filename_with_path, "rb");
         if(newfile == NULL)
         {
             printf(ERR_VFS_ADDFILE_05);
@@ -256,7 +256,7 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     else
     {
         //printf("FILE SIZE EXCEEDS BLOCK SIZE");
-        return 1;
+        return -1;
     }
 
     fclose(fp);
