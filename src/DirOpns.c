@@ -39,13 +39,13 @@ void delete_dir(char *dir_path)
     {
         delete_dir_nary(nAry_tree, dir_path);
         //delete_bst(bst_tree, filedescriptor);
+        printf("deletedir_SUCCESS\n");
     }
 
     else
     {
         //PRINT ERROR FOR DELETE NOT ALLOWED
     }
-    printf("deletedir_FAILURE\n");
 }
 
 void move_dir(char * src_path, char * dest_path)

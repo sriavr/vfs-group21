@@ -1,3 +1,6 @@
+#ifndef NARY_H_INCLUDED
+#define NARY_H_INCLUDED
+
 #define MAX_LEVELS 20
 #define MAX_LENGTH 50
 
@@ -78,3 +81,4 @@ nNode * traverse_nary(nNode *root, void (*process_nary_node)(nNode * node));
 int directory_exists(nNode * root, char * dir_path);
 
 int file_exists(nNode * root, char * file_path);
+#endif

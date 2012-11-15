@@ -20,6 +20,7 @@
 #include "../include/FileOpns.h"
 #include "../include/DirOpns.h"
 #include "../include/Filesystem.h"
+#include "../include/vfs_errorcodes.h"
 
 #define BUFSIZE 200
 #define CMDSIZE 30
@@ -51,7 +52,7 @@ int main( int argc, char *argv[] )
     char *token;
     //HARDCODING
     argc = 2;
-    argv[1] = "/home/priya/Desktop/VFS-21/svn/test/input.txt";
+    argv[1] = "/home/sridhar/VFS-code/svn/test/input.txt";
     if( argc != 2 )
     {
         printf("%d",argc);
@@ -113,7 +114,12 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         listdir (P1,flag,P3);
     }
     else if( strcmp(command, "addfile") == 0 )
-        addfile (P1,P2,P3);
+    {
+        if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0) || (strcmp(P3, "") == 0))
+            printf(ERR_VFS_LISTFILE_00);
+        else
+            addfile(P1,P2,P3);
+    }
     else if( strcmp(command, "listfile") == 0 )
         listfile (P1,P2);
     else if( strcmp(command, "updatefile") == 0 )
@@ -127,7 +133,16 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     else if( strcmp(command, "exportfile") == 0 )
         exportfile (P1,P2);
     else if( strcmp(command, "searchfile") == 0 )
-        searchfile (P1,P2);
+    {
+        if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
+        {
+            printf(ERR_VFS_SEARCHFILE_00);
+        }
+        else
+        {
+            searchfile (P1,P2);
+        }
+    }
 
     else
         printf("Ignoring invalid command %s\n", command);
@@ -185,20 +200,18 @@ void addfile ( char *P1, char *P2, char *P3 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     add_file(P1 , P2 , P3);
-    printf("addfile_successfully_DONE\n");
 }
 
 void listfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     list_file(P1 , P2);
-   printf("listfile_successfully_DONE\n");
 }
 
 void updatefile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-        //update_file(P1, P2);
+    //update_file(P1, P2);
     //printf("updatefile_TO_BE_DONE\n");
 }
 
@@ -218,21 +231,18 @@ void copyfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     copy_file(P1,P2);
-    printf("Copy_file successfully done");
 }
 
 void exportfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     export_file(P1,P2);
-    printf("export file Successfully done");
 }
 
 void searchfile ( char *P1, char *P2 )
 {
-     /* Call the appropriate function with given arguments and display appropriate output on the screen */
+    /* Call the appropriate function with given arguments and display appropriate output on the screen */
     search_file(P1,P2);
-    printf("searchfile_successfully_DONE\n");
 }
 
 

@@ -1,3 +1,6 @@
+#ifndef HASHTABLE_H_INCLUDED
+#define HASHTABLE_H_INCLUDED
+
 #define HASHSIZE 20
 
 /*By default a local variable of hashtable[] has junk values
@@ -26,3 +29,4 @@ void display_hashtable(struct node * hashtable[]);
 //Test cases for hashtable
 void test_complex_hashtable();
 void test_simple_hashtable();
+#endif

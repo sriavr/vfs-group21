@@ -1,3 +1,6 @@
+#ifndef DSCREATOR_H_INCLUDED
+#define DSCREATOR_H_INCLUDED
+
 //used by file system to create a linked list containing free list of blocks
 //THIS FUNCTION MAY BE SOON DROPPED
 struct node * create_linkedlist();
@@ -13,3 +16,4 @@ nNode * create_nAry_tree(file_descriptor * file_descriptor_list, long int file_d
 
 //open the nary tree and save the nodes of nary tree into fd list
 void update_fd_list();
+#endif

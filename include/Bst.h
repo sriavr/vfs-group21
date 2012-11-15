@@ -1,3 +1,5 @@
+#ifndef BST_H_INCLUDED
+#define BST_H_INCLUDED
 
 typedef struct bst_n{
     char * key;
@@ -45,3 +47,4 @@ void test_simple_bst();
 
 void displaybst( bst *bst_node);
 
+#endif
