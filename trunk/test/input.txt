@@ -3,20 +3,14 @@ mountvfs demo
 unmountvfs demo
 mountvfs demo
 makedir /home/Desktop/sub1 sub2
-addfile /home/Desktop graphics.c /home/priya/Desktop/graphics.c
-
-
-listfile /home/priya/Desktop/graphics.c graph.txt
-
-searchfile graphics.txt output.txt
-
-exportfile /home/Desktop/graphics.txt  /home/Desktop/export.txt
-
+addfile /home/Desktop/ graphics.c /home/sridhar/Desktop/graphics.c
+addfile /home/ nary.c /home/sridhar/Desktop/nary_tree.c
+listfile /home/Desktop/graphics.c /home/sridhar/Desktop/output_graphics.c
+listfile /home/nary.c /home/sridhar/Desktop/output_nary.c
+searchfile graphics.txt /home/Desktop/output.txt
+exportfile /home/Desktop/graphics.txt /home/Desktop/export.txt
 copyfile /home/Desktop/graphics.txt /home/Desktop/destined.txt
-
-searchfile graphics.txt output.txt
-
-
+searchfile graphics.txt /home/sridhar/Desktop/output.txt
 makedir /home/sub1 sub3
 unmountvfs demo
 mountvfs demo

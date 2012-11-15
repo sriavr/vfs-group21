@@ -1,3 +1,6 @@
+#ifndef LINKEDLIST_H_INCLUDED
+#define LINKEDLIST_H_INCLUDED
+
 //TODO make the node in LinkedList generic
 //so that we can reuse code for FreeList and HashTable of file descriptors
 struct node
@@ -23,3 +26,4 @@ void display_linkedlist(struct node *);
 void test_complex_linkedlist();
 void test_simple_linkedlist();
 
+#endif

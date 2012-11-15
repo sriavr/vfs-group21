@@ -105,20 +105,20 @@ nNode * create_nAry_tree()
     file_descriptor_list_size = mh -> file_descriptors_used;
 
     if(file_descriptor_list_size <=0)
-        return NULL;
+        nAryTree = insertNode(nAryTree,"","/");
 
     long int i;
     for(i=0; i < file_descriptor_list_size; i ++)
     {
         if(strcmp(file_descriptor_list[i].file_type, "file"))
         {
-           nAryTree = add_file_nary(nAryTree, file_descriptor_list[i].file_name,
-                                    file_descriptor_list[i].location_full_path);
+            nAryTree = add_file_nary(nAryTree, file_descriptor_list[i].file_name,
+                                     file_descriptor_list[i].location_full_path);
         }
         else if(strcmp(file_descriptor_list[i].file_type, "dir"))
         {
-           nAryTree = add_dir_nary(nAryTree,
-                                     file_descriptor_list[i].location_full_path);
+            nAryTree = add_dir_nary(nAryTree,
+                                    file_descriptor_list[i].location_full_path);
         }
 
     }

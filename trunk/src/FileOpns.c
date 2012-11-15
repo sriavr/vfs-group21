@@ -28,15 +28,32 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     //4)Save to disk
     //5)UPDATE FILEDESCRIPTOR DURING UNMOUNT
 
+    if(hdr == NULL)
+    {
+        printf(ERR_VFS_ADDFILE_07);
+        return -1;
+    }
+
     FILE *fp_data_file = fopen(data_file_path, "rb");
+    if(fp_data_file == NULL)
+    {
+        printf(ERR_VFS_ADDFILE_05);
+        return -1;
+    }
+
     fseek(fp_data_file, 0L, SEEK_END);
     long int size = ftell(fp_data_file);
     fclose(fp_data_file);
 
+    if(size > BLOCK_SIZE)
+    {
+        printf(ERR_VFS_ADDFILE_06);
+        return -1;
+    }
+
     long int block_num = next_free_block();
-    printf("block_num ::%d\n",block_num);
-    int i=update_flist_allocate(block_num);
-    printf("updated_value ::%d\n",i);
+    //printf("block_num ::%d\n",block_num);
+    //printf("updated_value ::%d\n",i);
     //update_flist_deallocate(long int block_num);
     write_to_block(block_num, data_file_path, size);
 
@@ -51,7 +68,7 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     add_file_nary(nAry_tree, filedescriptor.file_name, filedescriptor.location_full_path);
     bst_tree = insert_bst(bst_tree, filedescriptor);
     insert_hashtable(hashtable, filedescriptor);
-    display_file_descriptor(filedescriptor);
+    //display_file_descriptor(filedescriptor);
 
     printf("addfile_SUCCESS\n");
     return 0;
@@ -138,20 +155,18 @@ int list_file(char * file_path , char* output_file)
 
 int search_file(char *filename, char *outputfile)
 {
-    if(outputfile == NULL)
+    if(hdr == NULL)
     {
         printf(ERR_VFS_SEARCHFILE_02);
-        return 1;
     }
 
     struct node *match = NULL;
     match = search_hashtable(hashtable,filename);
 
     FILE *fp;
-    fp = open(outputfile,"r");
+    fp = fopen(outputfile,"r");
     if(fp == NULL)
     {
-        printf(ERR_VFS_SEARCHFILE_01);
         fclose(fp);
         return 1;
     }

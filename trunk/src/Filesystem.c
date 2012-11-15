@@ -13,6 +13,7 @@
 #include "../include/dsCreator.h"
 #include "../include/Commons.h"
 #include "../include/freelist.h"
+#include "../include/vfs_errorcodes.h"
 
 header *hdr =NULL;
 meta_header *mh =NULL;
@@ -97,7 +98,7 @@ int create_vfs(char fullpath[150], int size)
 
     //allocate memory for header
     hdr=(header*) malloc(sizeof(header));
-    strcpy(hdr -> HEADER_TEST_FIELD, "TEST HEADER OK");
+    //strcpy(hdr -> HEADER_TEST_FIELD, "TEST HEADER OK");
 
     //initialize the allocated flag to 0 in free list
     init_free_list();
@@ -229,6 +230,12 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
         //copy the contents of file into block structure
         FILE *newfile;
         newfile = fopen(filename_with_path, "r+b");
+        if(newfile == NULL)
+        {
+            printf(ERR_VFS_ADDFILE_05);
+            return -1;
+        }
+
         if(fread(newfile_block, size, 1, newfile)!=1)
         {
             //printf("SUCCESSFULLY READ");
@@ -475,7 +482,7 @@ void print_meta_header_info(meta_header * mh)
 void print_header_info(header * hdr)
 {
     printf("\ninformation in header:");
-    printf("\nHEADER_TEST_FIELD: %s", hdr -> HEADER_TEST_FIELD);
+    //printf("\nHEADER_TEST_FIELD: %s", hdr -> HEADER_TEST_FIELD);
 }
 
 file_descriptor * create_test_fd_data(file_descriptor * fd_array, long int size)

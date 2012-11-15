@@ -127,10 +127,16 @@ nNode * insertAtEnd( nNode * t , char name[] ) {
 */
 nNode* insertNode( nNode * root , char nPath[] , char name[] )
 {
+    int length = strlen(nPath);
+    if(nPath[length - 1] == '/')
+    {
+        nPath[length - 1] = '\0';
+    }
+
 	nNode *ins;
 	char nName[MAX_LEVELS][MAX_LENGTH];
 	int count = splitPath( nPath, nName );
-	int i,temp = 0;
+	int i = 0;
 	nNode * t, * matchedNode = NULL;
 
 	if( count != 0 && root == NULL ) {
@@ -224,7 +230,6 @@ int addChild(nNode * src, nNode * dest)
 }
 
 nNode * removeLink( nNode * root , char * srcPath ) {
-	nNode *ins;
 	char nName[MAX_LEVELS][MAX_LENGTH];
 	int count = splitPath( srcPath, nName );
 	int i;
@@ -343,7 +348,6 @@ nNode * move_file_nary(nNode * root, char * srcfile_with_dir_path, char * dest_d
 
 nNode * find( nNode * root , char nPath[] )//, char name[] )
 {
-	nNode *ins;
 	char nName[MAX_LEVELS][MAX_LENGTH];
 	int count = splitPath( nPath, nName );
 	int i;
@@ -368,7 +372,6 @@ nNode * find( nNode * root , char nPath[] )//, char name[] )
 }
 int directory_exists(nNode * root, char * nPath)
 {
-	nNode *ins;
 	char nName[MAX_LEVELS][MAX_LENGTH];
 	int count = splitPath( nPath, nName );
 	int i;
@@ -394,8 +397,6 @@ int directory_exists(nNode * root, char * nPath)
 
 int file_exists(nNode * root, char * nPath)
 {
-
-	nNode *ins;
 	char nName[MAX_LEVELS][MAX_LENGTH];
 	int count = splitPath( nPath, nName );
 	int i;
@@ -423,7 +424,7 @@ int freeNode( nNode * root, int level )
 	nNode * t;
 
   if( root == NULL ) {
-     return;
+     return FAILED;
   }
 
   changeLevel( level );
@@ -484,7 +485,7 @@ nNode* add_file_nary(nNode * root, char * filename , char * filepath)
 }
 nNode* add_dir_nary(nNode * root, char * dirpath)
 {
-	char nName[MAX_LEVELS][MAX_LENGTH],dirname[MAX_LENGTH],*dirpath_insert,slash[] = "/";
+	char nName[MAX_LEVELS][MAX_LENGTH],dirname[MAX_LENGTH],*dirpath_insert;
 	int count = splitPath(  dirpath , nName ),length,length_name,i;
 	//printf("-------- %s",nName[count-1]);
 	strcpy(dirname,nName[count-1]);
