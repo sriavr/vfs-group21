@@ -17,10 +17,18 @@ listfile /home/Desktop/sub1/crypt.txt /tmp/crypt.txt
 listfile /home/Desktop/sub1/sub2/error.txt /tmp/error.txt
 listfile /home/Desktop/sub1/sub2/fstab.txt /tmp/fstab.txt
 
-searchfile graphics.txt /home/Desktop/output.txt
-exportfile /home/Desktop/graphics.txt /home/Desktop/export.txt
-copyfile /home/Desktop/graphics.txt /home/Desktop/destined.txt
-searchfile graphics.txt /home/sridhar/Desktop/output.txt
+searchfile aliases.txt /tmp/output1.txt
+searchfile complex.txt /tmp/output2.txt
+searchfile alloca.txt /tmp/output3.txt
+searchfile crypt.txt /tmp/output4.txt
+searchfile error.txt /tmp/output5.txt
+searchfile fstab.txt /tmp/output6.txt
+
+exportfile /home/Desktop/sub1/sub2/fstab.txt /tmp/export_fstab.txt
+addfile /home/Desktop/ test.png /home/sridhar/Desktop/test.png
+exportfile /home/Desktop/test.png /tmp/test.png
+copyfile /home/Desktop/sub1/sub2/fstab.txt /tmp/destination.txt
+searchfile graphics.txt /tmp/output.txt
 makedir /home/sub1 sub3
 unmountvfs demo
 mountvfs demo

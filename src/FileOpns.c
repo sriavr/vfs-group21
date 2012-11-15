@@ -165,19 +165,17 @@ int search_file(char *filename, char *outputfile)
     match = search_hashtable(hashtable,filename);
 
     FILE *fp;
-    fp = fopen(outputfile,"r");
+    fp = fopen(outputfile,"w+");
     if(fp == NULL)
     {
-        fclose(fp);
-        return 1;
+        printf(ERR_VFS_LISTDIR_04);
+        return 0;
     }
-    fclose(fp);
-    fp = fopen(outputfile,"w+");
 
-    fprintf(fp, "%10s %4s %150s %8s\n", "Filename", "Filetype", "Filepath", "Filesize");
+    fprintf(fp, "%s %s %s %s\n", "Filename", "Filetype", "Filepath", "Filesize");
     while(match!=NULL)
     {
-        fprintf(fp, "%10s %4s %150s %8ld\n", match->filedescriptor.file_name, match->filedescriptor.file_type, match->filedescriptor.location_full_path, match->filedescriptor.file_size);
+        fprintf(fp, "%s %s %s %d\n", match->filedescriptor.file_name, match->filedescriptor.file_type, match->filedescriptor.location_full_path, match->filedescriptor.file_size);
         match =  match->next;
     }
 
