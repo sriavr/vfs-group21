@@ -12,6 +12,7 @@ typedef struct nAryTree
     struct nAryTree * child;
     struct nAryTree * sibling;
     char name[10];
+    file_descriptor *fd;
 }nNode;
 
 void display_nary( nNode * root , int level );
