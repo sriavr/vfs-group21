@@ -67,45 +67,49 @@ void fsystem_ui()
 
 int create_vfs(char fullpath[150], int size)
 {
-    FILE *fp;int i=0;
+    FILE *fp;
+    int i=0;
 
     //will find whether size is less then required size
     if(size < 0 && size > 1024)
     {
-    printf(ERR_VFS_CREATE_04);
-    return 0;
+        printf(ERR_VFS_CREATE_04);
+        return 0;
     }
+
+    size  = size * 1024;
 
     int no_of_characters = strlen(fullpath);
     if(no_of_characters > 30)
     {
-    printf(ERR_VFS_CREATE_05);
-    return 0;
+        printf(ERR_VFS_CREATE_05);
+        return 0;
     }
 
-    for(i=0 ;i<no_of_characters ;i++)
+    for(i=0 ; i<no_of_characters ; i++)
     {
         int i=0;
         if(fullpath[i] == '/')
         {
-        printf(ERR_VFS_CREATE_03);
-        return 0;
+            printf(ERR_VFS_CREATE_03);
+            return 0;
         }
     }
 
     // creates the fileSystem file
+    fp=fopen(fullpath,"rb");
+    if(fp!=NULL)
+    {
+        printf(ERR_VFS_CREATE_01);
+        fclose(fp);
+        return 1;
+    }
+
     fp=fopen(fullpath,"w+b");
     if(fp==NULL)
     {
-    printf( ERR_VFS_CREATE_02 );
-    return NULL;
-    }
-
-
-    if(fp!=NULL)
-    {
-        fp=fopen(fullpath,"w+b");
-        printf(ERR_VFS_CREATE_01);
+        printf( ERR_VFS_CREATE_02 );
+        return 1;
     }
 
     //allocates memory for the file system
@@ -114,7 +118,7 @@ int create_vfs(char fullpath[150], int size)
     //save the created memory to disk
     if(fwrite(memory,size,1,fp) != 1)
     {
-        printf("cannot write to a file");
+        printf( ERR_VFS_CREATE_02 );
         return 1;
     }
 
@@ -131,7 +135,11 @@ int create_vfs(char fullpath[150], int size)
     mh->file_descriptors_used = 0;
 
     //write meta header to the file
-    fwrite(mh,sizeof(meta_header),1,fp);
+    if(fwrite(mh,sizeof(meta_header),1,fp) != 1)
+    {
+        printf( ERR_VFS_CREATE_02 );
+        return 1;
+    }
 
     //allocate memory for header
     hdr=(header*) malloc(sizeof(header));
@@ -143,24 +151,29 @@ int create_vfs(char fullpath[150], int size)
     //create_test_fd_data(hdr -> fd_array, size);
 
     //write header to the files
-    fwrite(hdr,sizeof(header),1,fp);
+    if(fwrite(hdr,sizeof(header),1,fp) != 1)
+    {
+        printf( ERR_VFS_CREATE_02 );
+        return 1;
+    }
 
     block *block_array;
     //allocate memory for block_array
     //block_array = calloc(MAX_NUM_OF_BLOCKS, sizeof(block));
     block_array = malloc(size);
 
-    /*TODO: THERE IS A CONFUSION BETWEEN MAX_NUM_BLOCKS AND size
-    long int i;
-    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
-    {
-        block_array[i].next_free_block = -1;
-    }*/
-
     //write the block_array into disk
-    fwrite(block_array,size,1,fp);
+    if(fwrite(block_array,size,1,fp) != 1)
+    {
+        printf( ERR_VFS_CREATE_02 );
+        return 1;
+    }
 
     fclose(fp);
+    free(hdr);
+    free(mh);
+    hdr = NULL;
+    mh = NULL;
 
     printf("createvfs_SUCCESS\n");
 
@@ -181,20 +194,19 @@ int mount_vfs(char fullpath[150])
 
     strcpy(full_path_file_name, fullpath);
 
-    //read meta header, header
-    if(mh==NULL &&  hdr==NULL)
-    {
-    mh = read_meta_header(fullpath);
-    hdr = read_header(fullpath);
-    }
-    //block_array = read_block_array(fullpath); //DONT READ BLOCK ARRAY INTO RAM
-
     if(mh!=NULL  &&  hdr!=NULL)
     {
         printf(ERR_VFS_MOUNT_03);
         return 0;
     }
 
+    //read meta header, header
+    if(mh==NULL &&  hdr==NULL)
+    {
+        mh = read_meta_header(fullpath);
+        hdr = read_header(fullpath);
+    }
+    //block_array = read_block_array(fullpath); //DONT READ BLOCK ARRAY INTO RAM
 
     file_descriptor_list = hdr -> fd_array;
     file_descriptor_used = mh -> file_descriptors_used;
@@ -258,6 +270,16 @@ int unmount_vfs(char filepath[150])
         printf("unmountvfs_FAILURE\n");
         return 1;
     }*/
+    free(mh);
+    free(hdr);
+    mh = NULL;
+    hdr = NULL;
+    free(nAry_tree);
+    nAry_tree = NULL;
+    free(bst_tree);
+    bst_tree = NULL;
+    //clear hash table
+    //hashtable
     printf("unmountvfs_SUCCESS\n");
     return 0;
 }
@@ -404,7 +426,7 @@ meta_header * read_meta_header(char fullpath[150])
 
     fp = fopen(fullpath,"r+b");
     if(fp ==NULL)
-    printf(ERR_VFS_MOUNT_01);
+        printf(ERR_VFS_MOUNT_01);
 
     //read and copy the meta header to mh
     if(fread(mh, sizeof(meta_header), 1, fp) != 1)
@@ -426,7 +448,7 @@ header * read_header(char fullpath[150])
     hdr=(header*) malloc(sizeof(header));
     fp = fopen(fullpath,"r+b");
     if(fp==NULL)
-    printf(ERR_VFS_MOUNT_01);
+        printf(ERR_VFS_MOUNT_01);
     //Set the position indicator of file pointer to the header by offsetting sizeof(meta_header) bytes
     if(fseek(fp, sizeof(meta_header), SEEK_SET) != 0)
     {
@@ -457,7 +479,7 @@ block *read_block_array(char fullpath[150])
 
     fp = fopen(fullpath,"r+b");
     if(fp ==NULL)
-    printf(ERR_VFS_MOUNT_01);
+        printf(ERR_VFS_MOUNT_01);
 
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
     if(fseek(fp, (sizeof(meta_header) + sizeof(header)), SEEK_SET) != 0)
