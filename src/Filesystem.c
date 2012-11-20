@@ -67,9 +67,46 @@ void fsystem_ui()
 
 int create_vfs(char fullpath[150], int size)
 {
-    FILE *fp;
+    FILE *fp;int i=0;
+
+    //will find whether size is less then required size
+    if(size < 0 && size > 1024)
+    {
+    printf(ERR_VFS_CREATE_04);
+    return 0;
+    }
+
+    int no_of_characters = strlen(fullpath);
+    if(no_of_characters > 30)
+    {
+    printf(ERR_VFS_CREATE_05);
+    return 0;
+    }
+
+    for(i=0 ;i<no_of_characters ;i++)
+    {
+        int i=0;
+        if(fullpath[i] == '/')
+        {
+        printf(ERR_VFS_CREATE_03);
+        return 0;
+        }
+    }
+
     // creates the fileSystem file
     fp=fopen(fullpath,"w+b");
+    if(fp==NULL)
+    {
+    printf( ERR_VFS_CREATE_02 );
+    return NULL;
+    }
+
+
+    if(fp!=NULL)
+    {
+        fp=fopen(fullpath,"w+b");
+        printf(ERR_VFS_CREATE_01);
+    }
 
     //allocates memory for the file system
     char *memory=(char*) malloc(size + sizeof(header) + sizeof(meta_header));
@@ -77,7 +114,7 @@ int create_vfs(char fullpath[150], int size)
     //save the created memory to disk
     if(fwrite(memory,size,1,fp) != 1)
     {
-        printf("createvfs_FAILURE\n");
+        printf("cannot write to a file");
         return 1;
     }
 
@@ -145,9 +182,19 @@ int mount_vfs(char fullpath[150])
     strcpy(full_path_file_name, fullpath);
 
     //read meta header, header
+    if(mh==NULL &&  hdr==NULL)
+    {
     mh = read_meta_header(fullpath);
     hdr = read_header(fullpath);
+    }
     //block_array = read_block_array(fullpath); //DONT READ BLOCK ARRAY INTO RAM
+
+    if(mh!=NULL  &&  hdr!=NULL)
+    {
+        printf(ERR_VFS_MOUNT_03);
+        return 0;
+    }
+
 
     file_descriptor_list = hdr -> fd_array;
     file_descriptor_used = mh -> file_descriptors_used;
@@ -182,15 +229,26 @@ int unmount_vfs(char filepath[150])
 
     FILE *fp;
     fp=fopen(full_path_file_name, "r+b");
+    if(fp==NULL)
+    {
+
+        printf(ERR_VFS_UNMOUNT_01);
+    }
+    if(mh ==NULL  && hdr ==NULL)
+    {
+
+        printf(ERR_VFS_UNMOUNT_03);
+        return 0;
+    }
     if(fwrite(mh,sizeof(meta_header),1,fp)!=1)
     {
-        printf("not able to unmount meta_header");
+        printf(ERR_VFS_UNMOUNT_02 );
         return 1;
     }
     //printf("successfully unmount meta_header");
     if(fwrite(hdr,sizeof(header),1,fp)!=1)
     {
-        printf("unmountvfs_FAILURE\n");
+        printf(ERR_VFS_UNMOUNT_02 );
         return 1;
     }
     //printf("successfully unmount header");
@@ -209,6 +267,8 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     FILE *fp;
     //fp is file pointer to VFS
     fp = fopen(full_path_file_name,"r+b");
+
+    //search_bst(bst_node,file_name,location_full_path);
 
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
     if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num), SEEK_SET) != 0)
@@ -343,11 +403,13 @@ meta_header * read_meta_header(char fullpath[150])
     mh=(meta_header*) malloc(sizeof(meta_header));
 
     fp = fopen(fullpath,"r+b");
+    if(fp ==NULL)
+    printf(ERR_VFS_MOUNT_01);
 
     //read and copy the meta header to mh
     if(fread(mh, sizeof(meta_header), 1, fp) != 1)
     {
-        printf("Failed to read meta header");
+        printf(ERR_VFS_UNMOUNT_02);
         fclose(fp);
         return NULL;
     }
@@ -363,10 +425,12 @@ header * read_header(char fullpath[150])
     //allocate memory for header
     hdr=(header*) malloc(sizeof(header));
     fp = fopen(fullpath,"r+b");
+    if(fp==NULL)
+    printf(ERR_VFS_MOUNT_01);
     //Set the position indicator of file pointer to the header by offsetting sizeof(meta_header) bytes
     if(fseek(fp, sizeof(meta_header), SEEK_SET) != 0)
     {
-        printf("\nFailed to read header");
+        printf("CANNOT SEEK INTO FILE");
         fclose(fp);
         return NULL;
     }
@@ -374,7 +438,7 @@ header * read_header(char fullpath[150])
     //read and copy the header to hdr
     if(fread(hdr, sizeof(header), 1, fp) != 1)
     {
-        printf("\nFailed to read header");
+        printf(ERR_VFS_MOUNT_02);
         fclose(fp);
         return NULL;
     }
@@ -392,11 +456,13 @@ block *read_block_array(char fullpath[150])
     block_array = calloc(MAX_NUM_OF_BLOCKS, sizeof(block));
 
     fp = fopen(fullpath,"r+b");
+    if(fp ==NULL)
+    printf(ERR_VFS_MOUNT_01);
 
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
     if(fseek(fp, (sizeof(meta_header) + sizeof(header)), SEEK_SET) != 0)
     {
-        printf("\nFailed to read block array");
+        printf("CANNOT SEEK INTO FILE");
         fclose(fp);
         return NULL;
     }
@@ -404,7 +470,7 @@ block *read_block_array(char fullpath[150])
     //read and copy the block_array to array
     if(fread(block_array, sizeof(MAX_NUM_OF_BLOCKS), 1, fp) != 1)
     {
-        printf("\nFailed to read block_array");
+        printf(ERR_VFS_MOUNT_02);
         fclose(fp);
         return NULL;
     }

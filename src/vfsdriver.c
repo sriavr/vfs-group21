@@ -95,13 +95,47 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
 {
     if( strcmp(command, "createvfs") == 0 )
     {
-        int size = atoi(P2);
-        createvfs (P1,size);
+        if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
+        {
+            printf(ERR_VFS_CREATE_00);
+        }
+        else if(strcmp(P2,"")==0)
+        {
+            printf(ERR_VFS_CREATE_04);
+
+        }
+        else
+        {
+            int size = atoi(P2);
+            createvfs (P1,size);
+
+        }
+
     }
     else if( strcmp(command, "mountvfs") == 0 )
+    {
+        if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
+        {
+            printf(ERR_VFS_MOUNT_00);
+        }
+        else
+        {
         mountvfs (P1);
+
+        }
+    }
     else if( strcmp(command, "unmountvfs") == 0 )
+    {
+        if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
+        {
+            printf(ERR_VFS_UNMOUNT_00);
+        }
+        else
+        {
         unmountvfs (P1);
+
+        }
+    }
     else if( strcmp(command, "makedir") == 0 )
         makedir (P1,P2);
     else if( strcmp(command, "deletedir") == 0 )
@@ -116,12 +150,24 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     else if( strcmp(command, "addfile") == 0 )
     {
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0) || (strcmp(P3, "") == 0))
-            printf(ERR_VFS_LISTFILE_00);
+            printf(ERR_VFS_ADDFILE_00);
         else
             addfile(P1,P2,P3);
     }
     else if( strcmp(command, "listfile") == 0 )
+    {
+
+        if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
+        {
+            printf(ERR_VFS_LISTFILE_00);
+        }
+        else
+        {
         listfile (P1,P2);
+
+        }
+
+    }
     else if( strcmp(command, "updatefile") == 0 )
         updatefile (P1,P2);
     else if( strcmp(command, "removefile") == 0 )
@@ -131,9 +177,20 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     else if( strcmp(command, "copyfile") == 0 )
         copyfile (P1,P2);
     else if( strcmp(command, "exportfile") == 0 )
-        exportfile (P1,P2);
-    else if( strcmp(command, "searchfile") == 0 )
     {
+        if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
+        {
+            printf(ERR_VFS_EXPORTFILE_00);
+        }
+        else
+        {
+        exportfile(P1,P2);
+
+        }
+
+    }
+    else if( strcmp(command, "searchfile") == 0 )
+        {
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
         {
             printf(ERR_VFS_SEARCHFILE_00);
@@ -142,7 +199,10 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         {
             searchfile (P1,P2);
         }
+
+
     }
+
 
     else
         printf("Ignoring invalid command %s\n", command);
