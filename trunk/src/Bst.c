@@ -197,10 +197,34 @@ void displaybst(bst *bst_node)
 
 }
 
+
+void delete_bst(bst *bst_tree, char * node_path)
+{
+
+   if((bst_tree==NULL))
+   {
+       printf("BST IS EMPTY");
+
+   }
+   else
+   {
+
+
+
+
+
+
+   }
+}
+
+
+
+
+
 /*void delete_bst(bst *bst_node , file_descriptor filedescriptor)
 {
 
-      if (value < this->value) {
+      if(value < this->value) {
 
             if (left != NULL)
 
