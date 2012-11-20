@@ -17,9 +17,12 @@ void make_dir(char *parent_path, char *dir_name)
         1) Add a node to NaryTree with directory name
     */
     nAry_tree = insertNode(nAry_tree, parent_path, dir_name);
+
 //    file_descriptor filedescriptor;
-//    strcpy(filedescriptor.location_full_path, dir_name);
-//    nAryNode = insertNode(nAry_tree, filedescriptor);
+//    filedescriptor.file_size = 0;
+//    bst_tree = insert_bst(bst_tree, filedescriptor);
+//    strcpy(filedescriptor.location_full_path, parent_path);
+//    strcpy(filedescriptor.file_name, dir_name);
     printf("makedir_SUCCESS\n");
 }
 

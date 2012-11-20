@@ -108,32 +108,29 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         {
             int size = atoi(P2);
             createvfs (P1,size);
-
         }
 
     }
     else if( strcmp(command, "mountvfs") == 0 )
     {
-        if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
+        if(strcmp(P1,"")==0)
         {
             printf(ERR_VFS_MOUNT_00);
         }
         else
         {
-        mountvfs (P1);
-
+            mountvfs (P1);
         }
     }
     else if( strcmp(command, "unmountvfs") == 0 )
     {
-        if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
+        if(strcmp(P1,"")==0)
         {
             printf(ERR_VFS_UNMOUNT_00);
         }
         else
         {
-        unmountvfs (P1);
-
+            unmountvfs (P1);
         }
     }
     else if( strcmp(command, "makedir") == 0 )
@@ -163,7 +160,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         }
         else
         {
-        listfile (P1,P2);
+            listfile (P1,P2);
 
         }
 
@@ -184,13 +181,13 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         }
         else
         {
-        exportfile(P1,P2);
+            exportfile(P1,P2);
 
         }
 
     }
     else if( strcmp(command, "searchfile") == 0 )
-        {
+    {
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
         {
             printf(ERR_VFS_SEARCHFILE_00);
@@ -199,7 +196,6 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         {
             searchfile (P1,P2);
         }
-
 
     }
 
