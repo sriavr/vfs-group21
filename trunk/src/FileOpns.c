@@ -23,6 +23,7 @@ extern char full_path_file_name[150];
 
 int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 {
+    int i=0;
     //1)CHECK IF DIRECTORY EXISTS IN NARY
     //3)ADD THE FILE TO BST & HASH TABLE
     //4)Save to disk
@@ -35,10 +36,21 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     }
 
     FILE *fp_data_file = fopen(data_file_path, "rb");
+    char * no_of_characters;
     if(fp_data_file == NULL)
     {
         printf(ERR_VFS_ADDFILE_05);
         return -1;
+    }
+
+    for( i=0 ;i< no_of_characters ;i++)
+    {
+
+        if(file_name[i] == '/')
+        {
+        printf(ERR_VFS_ADDFILE_02 );
+        return -1;
+        }
     }
 
     fseek(fp_data_file, 0L, SEEK_END);
@@ -52,6 +64,10 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     }
 
     long int block_num = next_free_block();
+    if(block_num == -1)
+    {
+    printf(ERR_VFS_ADDFILE_04);
+    }
     //printf("block_num ::%d\n",block_num);
     //printf("updated_value ::%d\n",i);
     //update_flist_deallocate(long int block_num);
@@ -68,6 +84,7 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     //create a directory if doesn't exist and modify data structures
     add_file_nary(nAry_tree, filedescriptor.file_name, filedescriptor.location_full_path);
     bst_tree = insert_bst(bst_tree, filedescriptor);
+    search_hashtable(hashtable, file_name )  ;        //pass filedescriptor file_name in this
     insert_hashtable(hashtable, filedescriptor);
     //display_file_descriptor(filedescriptor);
 
@@ -78,19 +95,41 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 int list_file(char * file_path , char* output_file)
 {
     int flag = 1;
-    int block_number ;
+    int block_number =9;
     long int filesize;
+    if(file_path == NULL)
+    {
+        printf(ERR_VFS_LISTFILE_01);
+
+    }
+
+    char * found =strstr(output_file , ".txt");
+    if(found== NULL)
+    {
+        printf( ERR_VFS_LISTFILE_02);
+    }
+
+
     block *read_block;
     file_descriptor filedescriptor;
     filedescriptor = search_bst_full(bst_tree, file_path);
 
     //display_file_descriptor(filedescriptor);
     block_number = filedescriptor.location_block_num;
+    if(block_number ==9)
+    {
+        printf(ERR_VFS_LISTFILE_04);
+    }
     filesize = filedescriptor.file_size;
     read_block = read_from_block(block_number, filesize , flag);
 
     FILE *fp;
     fp = fopen(output_file , "w+");
+    if(fp ==NULL)
+    {
+
+        printf(ERR_VFS_LISTFILE_03);
+    }
     fwrite(read_block,filesize,1,fp);
     fclose(fp);
     printf("listfile_SUCCESS\n");
@@ -193,20 +232,36 @@ void remove_file(char *file_path)
 void export_file(char *source_file_path, char *destination_file_path)
 {
     int flag = 0;
-    int block_number ;
+    int block_number =9;
     long int filesize;
     block *read_block;
     file_descriptor filedescriptor;
-    filedescriptor = search_bst_full(bst_tree , source_file_path);
+    filedescriptor = search_bst_full(bst_tree, source_file_path);
+
+
+    int find =directory_exists(nAry_tree,source_file_path);
+    if(find==0)
+    {
+        printf(ERR_VFS_EXPORTFILE_03);
+    }
     //TODO
     // implement searh_bst in Bst.c
 
     block_number = filedescriptor.location_block_num;
+    if(block_number ==9)
+    {
+        printf(ERR_VFS_EXPORTFILE_04);
+    }
     filesize = filedescriptor.file_size;
     read_block = read_from_block(block_number, filesize , flag);
 
     FILE *fp;
     fp = fopen(destination_file_path , "wb+");
+    if(fp==NULL)
+    {
+
+        printf(ERR_VFS_EXPORTFILE_02);
+    }
     fwrite(read_block,filesize,1,fp);
     printf("exportfile_SUCCESS\n");
     fclose(fp);
