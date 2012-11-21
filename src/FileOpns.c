@@ -21,38 +21,52 @@ extern struct node *hashtable[HASHSIZE];
 extern header *hdr;
 extern char full_path_file_name[150];
 
+//1)CHECK IF DIRECTORY EXISTS IN NARY
+//3)ADD THE FILE TO BST & HASH TABLE
+//4)Save to disk
+//5)UPDATE FILEDESCRIPTOR DURING UNMOUNT
 int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 {
-    int i=0;
-    //1)CHECK IF DIRECTORY EXISTS IN NARY
-    //3)ADD THE FILE TO BST & HASH TABLE
-    //4)Save to disk
-    //5)UPDATE FILEDESCRIPTOR DURING UNMOUNT
-
-    if(hdr == NULL)
+    if(!physical_file_exists(data_file_path))
     {
-        printf(ERR_VFS_ADDFILE_07);
-        return -1;
+        printf(ERR_VFS_LISTFILE_01);
+        return 1;
     }
+
+    int i=0;
+
+    //if filename is not a valid name
+    if(!is_valid_name(file_name))
+    {
+        printf(ERR_VFS_ADDFILE_02);
+        return 1;
+    }
+
+    //if file already exists
+    char temp[150];
+    strcpy(temp, dest_dir_path);
+    strcat(temp, file_name);
+    if(is_file(temp))
+    {
+        printf(ERR_VFS_ADDFILE_03);
+        return 1;
+    }
+
+    //filesystem full
+    long int block_num = next_free_block();
+    if(block_num == -1)
+    {
+        printf(ERR_VFS_ADDFILE_04);
+        return 1;
+    }
+
+//    if(physical_file_canwrite(data_file_path))
+//    {
+//        printf(ERR_VFS_ADDFILE_05);
+//        return 1;
+//    }
 
     FILE *fp_data_file = fopen(data_file_path, "rb");
-    char * no_of_characters;
-    if(fp_data_file == NULL)
-    {
-        printf(ERR_VFS_ADDFILE_05);
-        return -1;
-    }
-
-    for( i=0 ;i< no_of_characters ;i++)
-    {
-
-        if(file_name[i] == '/')
-        {
-        printf(ERR_VFS_ADDFILE_02 );
-        return -1;
-        }
-    }
-
     fseek(fp_data_file, 0L, SEEK_END);
     long int size = ftell(fp_data_file);
     fclose(fp_data_file);
@@ -60,19 +74,23 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     if(size > BLOCK_SIZE)
     {
         printf(ERR_VFS_ADDFILE_06);
-        return -1;
+        return 1;
     }
 
-    long int block_num = next_free_block();
-    if(block_num == -1)
+    if(!is_mounted())
     {
-    printf(ERR_VFS_ADDFILE_04);
+        printf(ERR_VFS_ADDFILE_07);
+        return 1;
     }
+
     //printf("block_num ::%d\n",block_num);
     //printf("updated_value ::%d\n",i);
     //update_flist_deallocate(long int block_num);
     if(write_to_block(block_num, data_file_path, size) < 0)
-        return -1;
+    {
+        printf(ERR_VFS_ADDFILE_05);
+        return 1;
+    }
 
     file_descriptor filedescriptor;
     strcpy(filedescriptor.file_name, file_name);
@@ -95,41 +113,43 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 int list_file(char * file_path , char* output_file)
 {
     int flag = 1;
-    int block_number =9;
+    int block_number = -1;
     long int filesize;
-    if(file_path == NULL)
+
+    if(!is_file(file_path))
     {
         printf(ERR_VFS_LISTFILE_01);
-
+        return 1;
     }
 
-    char * found =strstr(output_file , ".txt");
-    if(found== NULL)
+    char * found = strstr(file_path , ".txt");
+    if(found == NULL)
     {
-        printf( ERR_VFS_LISTFILE_02);
+        printf(ERR_VFS_LISTFILE_02);
+        return 1;
     }
 
+    if(!physical_file_canwrite(output_file))
+    {
+        printf(ERR_VFS_LISTFILE_03);
+        return 1;
+    }
+
+    if(!is_mounted())
+    {
+        printf(ERR_VFS_LISTFILE_04);
+        return 1;
+    }
 
     block *read_block;
     file_descriptor filedescriptor;
     filedescriptor = search_bst_full(bst_tree, file_path);
-
-    //display_file_descriptor(filedescriptor);
     block_number = filedescriptor.location_block_num;
-    if(block_number ==9)
-    {
-        printf(ERR_VFS_LISTFILE_04);
-    }
     filesize = filedescriptor.file_size;
     read_block = read_from_block(block_number, filesize , flag);
 
     FILE *fp;
     fp = fopen(output_file , "w+");
-    if(fp ==NULL)
-    {
-
-        printf(ERR_VFS_LISTFILE_03);
-    }
     fwrite(read_block,filesize,1,fp);
     fclose(fp);
     printf("listfile_SUCCESS\n");
@@ -195,9 +215,10 @@ int list_file(char * file_path , char* output_file)
 
 int search_file(char *filename, char *outputfile)
 {
-    if(hdr == NULL)
+    if(!is_mounted())
     {
         printf(ERR_VFS_SEARCHFILE_02);
+        return 1;
     }
 
     struct node *match = NULL;
@@ -208,7 +229,7 @@ int search_file(char *filename, char *outputfile)
     if(fp == NULL)
     {
         printf(ERR_VFS_LISTDIR_04);
-        return 0;
+        return 1;
     }
 
     fprintf(fp, "%s %s %s %s\n", "Filename", "Filetype", "Filepath", "Filesize");
@@ -223,51 +244,62 @@ int search_file(char *filename, char *outputfile)
     return 0;
 }
 
-void remove_file(char *file_path)
+int remove_file(char *file_path)
 {
     //TODO
-
+    return 0;
 }
 
-void export_file(char *source_file_path, char *destination_file_path)
+int export_file(char *source_file_path, char *destination_file_path)
 {
+    //can't export directory
+    if(is_dir(source_file_path))
+    {
+        printf(ERR_VFS_EXPORTFILE_03);
+        return 1;
+    }
+
+    //source file not found
+    if(!is_file(source_file_path))
+    {
+        printf(ERR_VFS_EXPORTFILE_01);
+        return 1;
+    }
+
+    //can't create output file
+    if(!physical_file_canwrite(destination_file_path))
+    {
+        printf(ERR_VFS_EXPORTFILE_02);
+        return 1;
+    }
+
+    //vfs is not mounted
+    if(!is_mounted())
+    {
+        printf(ERR_VFS_EXPORTFILE_04);
+        return 1;
+    }
+
     int flag = 0;
-    int block_number =9;
+    int block_number = -1;
     long int filesize;
     block *read_block;
     file_descriptor filedescriptor;
     filedescriptor = search_bst_full(bst_tree, source_file_path);
 
-
-    int find =directory_exists(nAry_tree,source_file_path);
-    if(find==0)
-    {
-        printf(ERR_VFS_EXPORTFILE_03);
-    }
-    //TODO
-    // implement searh_bst in Bst.c
-
     block_number = filedescriptor.location_block_num;
-    if(block_number ==9)
-    {
-        printf(ERR_VFS_EXPORTFILE_04);
-    }
     filesize = filedescriptor.file_size;
     read_block = read_from_block(block_number, filesize , flag);
 
     FILE *fp;
     fp = fopen(destination_file_path , "wb+");
-    if(fp==NULL)
-    {
-
-        printf(ERR_VFS_EXPORTFILE_02);
-    }
     fwrite(read_block,filesize,1,fp);
     printf("exportfile_SUCCESS\n");
     fclose(fp);
+    return 0;
 }
 
-void copy_file(char *source_file_with_path , char *destination_file_path)
+int copy_file(char *source_file_with_path , char *destination_file_path)
 {
     int block_num = -1;
     file_descriptor filedescriptor , new_filedescriptor;
@@ -286,15 +318,17 @@ void copy_file(char *source_file_with_path , char *destination_file_path)
     insert_bst(bst_tree, new_filedescriptor);
     insert_hashtable(hashtable, new_filedescriptor);
     printf("copyfile_SUCCESS\n");
+    return 0;
 }
 
-void move_file(char *source_file_with_path , char *destination_with_path )
+int move_file(char *source_file_with_path , char *destination_with_path )
 {
     copy_file(source_file_with_path , destination_with_path);
     remove_file(source_file_with_path);
     //TODO
     // implement remove_file
     printf("searchfile_FAILURE\n");
+    return 0;
 }
 
 /*void test()
@@ -327,7 +361,7 @@ int  main()
 }
 */
 
-void update_file( char *source_file_with_path, char *data_file)
+int update_file( char *source_file_with_path, char *data_file)
 {
     FILE *source_file, *new_data_file;
     int MAX = 500;
@@ -342,4 +376,5 @@ void update_file( char *source_file_with_path, char *data_file)
     }
     fclose (new_data_file);
     fclose (source_file);
+    return 0;
 }

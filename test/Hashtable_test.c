@@ -123,7 +123,6 @@ void test_complex_search_hashtable()
 {
     int size = 5000, i, j;
     file_descriptor arr[size];
-    char temp[20];
     for(j=0; j<size; j++)
     {
         strcpy(arr[j].file_name, generate_rand_string());

@@ -35,7 +35,7 @@ void delete_dir(char *dir_path)
     */
 
     file_descriptor filedescriptor;
-    int is_exists = directory_exists(nAry_tree, dir_path);
+    int is_exists = node_exists(nAry_tree, dir_path);
     if(is_exists ==1)
     {
         delete_dir_nary(nAry_tree, dir_path);

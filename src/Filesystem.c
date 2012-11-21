@@ -96,22 +96,20 @@ int create_vfs(char fullpath[150], int size)
         }
     }
 
-    // creates the fileSystem file
-    fp=fopen(fullpath,"rb");
-    if(fp!=NULL)
+    if(physical_file_exists(fullpath))
     {
         printf(ERR_VFS_CREATE_01);
-        fclose(fp);
         return 1;
     }
 
-    fp=fopen(fullpath,"w+b");
-    if(fp==NULL)
+
+    if(!physical_file_canwrite(fullpath))
     {
         printf( ERR_VFS_CREATE_02 );
         return 1;
     }
 
+    fp=fopen(fullpath,"w+b");
     //allocates memory for the file system
     char *memory=(char*) malloc(size + sizeof(header) + sizeof(meta_header));
 
@@ -194,14 +192,14 @@ int mount_vfs(char fullpath[150])
 
     strcpy(full_path_file_name, fullpath);
 
-    if(mh!=NULL  &&  hdr!=NULL)
+    if(is_mounted())
     {
         printf(ERR_VFS_MOUNT_03);
         return 0;
     }
 
     //read meta header, header
-    if(mh==NULL &&  hdr==NULL)
+    if(!is_mounted())
     {
         mh = read_meta_header(fullpath);
         hdr = read_header(fullpath);
@@ -233,32 +231,43 @@ int mount_vfs(char fullpath[150])
     return 0;
 }
 
-
 int unmount_vfs(char filepath[150])
 {
     //update the fd_list using the nary tree
     update_fd_list(nAry_tree);
 
+    //if vfs file is not found
+    if(!physical_file_exists(filepath))
+    {
+        printf(ERR_VFS_UNMOUNT_01);
+        return 1;
+    }
+
+    //if vfs file can't be written to
+    if(!physical_file_canwrite(filepath))
+    {
+        printf(ERR_VFS_UNMOUNT_02);
+        return 1;
+    }
+
+    //if vfs is not mounted
+    if(!is_mounted())
+    {
+        printf(ERR_VFS_UNMOUNT_03);
+        return 1;
+    }
+
     FILE *fp;
     fp=fopen(full_path_file_name, "r+b");
-    if(fp==NULL)
-    {
 
-        printf(ERR_VFS_UNMOUNT_01);
-    }
-    if(mh ==NULL  && hdr ==NULL)
-    {
-
-        printf(ERR_VFS_UNMOUNT_03);
-        return 0;
-    }
-    if(fwrite(mh,sizeof(meta_header),1,fp)!=1)
+    if((fwrite(mh,sizeof(meta_header),1,fp))!=1)
     {
         printf(ERR_VFS_UNMOUNT_02 );
         return 1;
     }
     //printf("successfully unmount meta_header");
-    if(fwrite(hdr,sizeof(header),1,fp)!=1)
+
+    if((fwrite(hdr,sizeof(header),1,fp))!=1)
     {
         printf(ERR_VFS_UNMOUNT_02 );
         return 1;
@@ -270,6 +279,7 @@ int unmount_vfs(char filepath[150])
         printf("unmountvfs_FAILURE\n");
         return 1;
     }*/
+    fclose(fp);
     free(mh);
     free(hdr);
     mh = NULL;
@@ -290,12 +300,9 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     //fp is file pointer to VFS
     fp = fopen(full_path_file_name,"r+b");
 
-    //search_bst(bst_node,file_name,location_full_path);
-
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
     if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num), SEEK_SET) != 0)
     {
-        //printf("\nFailed to read block array");
         fclose(fp);
         return -1;
     }
@@ -307,52 +314,38 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
 
     //check the size of the file, if it is more than size of block
     //print error and return 1
-    if(size <= sizeof(block))
+//    if(size <= sizeof(block))
+//    {
+    //copy the contents of file into block structure
+    FILE *newfile;
+    newfile = fopen(filename_with_path, "rb");
+    if(newfile == NULL)
     {
-        //copy the contents of file into block structure
-        FILE *newfile;
-        newfile = fopen(filename_with_path, "rb");
-        if(newfile == NULL)
-        {
-            printf(ERR_VFS_ADDFILE_05);
-            return -1;
-        }
-
-        if(fread(newfile_block, size, 1, newfile)!=1)
-        {
-            //printf("SUCCESSFULLY READ");
-            return 1;
-        }
-        fclose(newfile);
-
-        //write the new block into the vfs (hard disk)
-        if(fwrite(newfile_block, size, 1, fp)!=1)
-        {
-            return 1;
-        }
-        else
-        {
-            //printf("SUCCESSFULLY WRITTEN TO DISK");
-        }
-    }
-    else
-    {
-        //printf("FILE SIZE EXCEEDS BLOCK SIZE");
         return -1;
     }
 
-    fclose(fp);
-    return 0;
+    if(fread(newfile_block, size, 1, newfile)!=1)
+    {
+        return -1;
+    }
+    fclose(newfile);
 
-    //read and copy the block_array to array
-    //if( fwrite(hdr,sizeof(header),1,fp)!= 1)
-    //{
-    //printf("\nFailed to read block_array");
-    //fclose(fp);
-    //return 1;
-    //}
+    //write the new block into the vfs (hard disk)
+    if(fwrite(newfile_block, size, 1, fp)!=1)
+    {
+        return -1;
+    }
+//    }
+//    else
+//    {
+//        return -1;
+//    }
+
+    fclose(fp);
+    return 1;
 }
 
+//if flag is 1 it is text file, else if flag is 0, it is binary file
 block* read_from_block(long int block_num, int size , int flag)
 {
     FILE *fp;
@@ -363,7 +356,7 @@ block* read_from_block(long int block_num, int size , int flag)
     }
     else if(flag==0)
     {
-        fp = fopen(full_path_file_name,"rb+");
+        fp = fopen(full_path_file_name,"rb");
     }
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
     if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num), SEEK_SET) != 0)
@@ -424,7 +417,7 @@ meta_header * read_meta_header(char fullpath[150])
     //allocate memory for meta header
     mh=(meta_header*) malloc(sizeof(meta_header));
 
-    fp = fopen(fullpath,"r+b");
+    fp = fopen(fullpath,"rb");
     if(fp ==NULL)
         printf(ERR_VFS_MOUNT_01);
 
@@ -446,7 +439,7 @@ header * read_header(char fullpath[150])
 
     //allocate memory for header
     hdr=(header*) malloc(sizeof(header));
-    fp = fopen(fullpath,"r+b");
+    fp = fopen(fullpath,"rb");
     if(fp==NULL)
         printf(ERR_VFS_MOUNT_01);
     //Set the position indicator of file pointer to the header by offsetting sizeof(meta_header) bytes
@@ -618,3 +611,82 @@ void display_file_descriptor(file_descriptor output)
 
 }
 
+//returns 1 if mounted else returns 0
+int is_mounted()
+{
+    if(hdr != NULL && mh != NULL)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+//if file exists, return 1 or return 0
+int physical_file_exists(const char *fname)
+{
+    FILE *file;
+    if ((file = fopen(fname, "rb")) != NULL)
+    {
+        fclose(file);
+        return 1;
+    }
+    return 0;
+}
+
+//if we can write return 1, else return 0
+int physical_file_canwrite(const char *fname)
+{
+    FILE *file;
+    if ((file = fopen(fname, "wb")) != NULL)
+    {
+        fclose(file);
+        return 1;
+    }
+    return 0;
+}
+
+//returns 1 if the vfs dir_path is a directory, else 0
+int is_dir(char * dir_path)
+{
+    file_descriptor filedescriptor = search_bst_full(bst_tree, dir_path);
+    if(strcmp(filedescriptor.file_type, "dir") == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+//returns 1 if vfs file_path is a file, else 0
+int is_file(char * file_path)
+{
+    file_descriptor filedescriptor = search_bst_full(bst_tree, file_path);
+    if(strcmp(filedescriptor.file_type, "file") == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+//returns 1 if valid, 0 if invalid
+int is_valid_name( char * file_name )
+{
+    int no_of_characters = strlen(file_name);
+    int i;
+    for( i=0 ; i< no_of_characters ; i++)
+    {
+        if(file_name[i] == '/')
+        {
+            return 0;
+        }
+    }
+    return 1;
+}

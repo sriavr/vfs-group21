@@ -124,4 +124,19 @@ int write_to_block(long int block_num, char * filename_with_path, int size);
 block* read_from_block(long int block_num, int size , int flag);
 
 void display_file_descriptor(file_descriptor output);
+
+//returns 1 if mounted, else returns 0
+int is_mounted();
+
+//returns 1 if file exists or 0 if file does not exists
+int physical_file_exists(const char *fname);
+
+//if we can write return 1, else return 0
+int physical_file_canwrite(const char *fname);
+
+int is_dir(char * dir_path);
+
+int is_file(char * file_path);
+
+int is_valid_name( char * file_name );
 #endif
