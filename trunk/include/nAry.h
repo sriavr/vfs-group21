@@ -78,8 +78,8 @@ nNode * display(nNode * root);
 //similar to traversal in BST
 nNode * traverse_nary(nNode *root, void (*process_nary_node)(nNode * node));
 
-//returns 0 if the directory doesn't exist, returns 1 if directory exists
-int directory_exists(nNode * root, char * dir_path);
+//returns 0 if the node doesn't exist, returns 1 if node exists. Node can be file or directory
+int node_exists(nNode * root, char * nPath);
 
-int file_exists(nNode * root, char * file_path);
+//int file_exists(nNode * root, char * file_path);
 #endif

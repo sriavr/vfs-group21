@@ -153,7 +153,6 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     }
     else if( strcmp(command, "listfile") == 0 )
     {
-
         if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
         {
             printf(ERR_VFS_LISTFILE_00);
@@ -161,9 +160,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         else
         {
             listfile (P1,P2);
-
         }
-
     }
     else if( strcmp(command, "updatefile") == 0 )
         updatefile (P1,P2);
@@ -175,16 +172,14 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         copyfile (P1,P2);
     else if( strcmp(command, "exportfile") == 0 )
     {
-        if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
+        if(strcmp(P1, "")==0 || strcmp(P2, "")==0)
         {
             printf(ERR_VFS_EXPORTFILE_00);
         }
         else
         {
             exportfile(P1,P2);
-
         }
-
     }
     else if( strcmp(command, "searchfile") == 0 )
     {
@@ -198,7 +193,6 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         }
 
     }
-
 
     else
         printf("Ignoring invalid command %s\n", command);

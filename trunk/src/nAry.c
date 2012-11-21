@@ -470,7 +470,9 @@ nNode * find( nNode * root , char nPath[] )//, char name[] )
 
     return matchedNode;
 }
-int directory_exists(nNode * root, char * nPath)
+
+//returns 1 if node path exists in nary tree, else returns 0
+int node_exists(nNode * root, char * nPath)
 {
     char nName[MAX_LEVELS][MAX_LENGTH];
     int count = splitPath( nPath, nName );
@@ -479,7 +481,7 @@ int directory_exists(nNode * root, char * nPath)
 
     if( count != 0 && root == NULL )
     {
-        fprintf(stderr,"Invalid Path");
+        //fprintf(stderr,"Invalid Path");
         return 0;
     }
 
@@ -489,42 +491,46 @@ int directory_exists(nNode * root, char * nPath)
         matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
         if( matchedNode == NULL )
         {
-            fprintf( stderr, "Invalid path");
-            return FAILED;
+            //fprintf( stderr, "Invalid path");
+            return 0;
         }
         t = matchedNode;
     }
 
-    return SUCCESS;
+    return 1;
 }
 
-int file_exists(nNode * root, char * nPath)
-{
-    char nName[MAX_LEVELS][MAX_LENGTH];
-    int count = splitPath( nPath, nName );
-    int i;
-    nNode * t, * matchedNode = NULL;
 
-    if( count != 0 && root == NULL )
-    {
-        fprintf(stderr,"Invalid Path");
-        return 0;
-    }
+//file_exists and dir_exists
+//int file_exists(nNode * root, char * nPath)
+//{
+//    char nName[MAX_LEVELS][MAX_LENGTH];
+//    int count = splitPath( nPath, nName );
+//    int i;
+//    nNode * t, * matchedNode = NULL;
+//
+//    if( count != 0 && root == NULL )
+//    {
+//        fprintf(stderr,"Invalid Path");
+//        return 0;
+//    }
+//
+//    t = root;
+//    for( i = 0; i < count ; i++ )
+//    {
+//        matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
+//        if( matchedNode == NULL )
+//        {
+//            fprintf( stderr, "Invalid path");
+//            return FAILED;
+//        }
+//        t = matchedNode;
+//    }
+//
+//    return SUCCESS;
+//}
 
-    t = root;
-    for( i = 0; i < count ; i++ )
-    {
-        matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
-        if( matchedNode == NULL )
-        {
-            fprintf( stderr, "Invalid path");
-            return FAILED;
-        }
-        t = matchedNode;
-    }
 
-    return SUCCESS;
-}
 int freeNode( nNode * root, int level )
 {
     nNode * t;

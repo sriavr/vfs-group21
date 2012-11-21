@@ -1,36 +1,62 @@
 createvfs demo 1024
 mountvfs demo
 unmountvfs demo
+createvfs demo 1024
 mountvfs demo
-makedir /home/Desktop/sub1 sub2
+mountvfs demo
+makedir / sub
+makedir /home/Desktop/sub1/ sub2
+makedir /home/Desktop/sub3/ sub4
+makedir /usr/hello/ sridhar
+makedir /temp/pavan/ bhaiyya
 addfile /home/Desktop/ aliases.txt /usr/include/aliases.h
-addfile /home/Desktop/ complex.txt /usr/include/complex.h
+addfile
+addfile /home/
+addfile /home/ /abc/abc /usr/include/aliases.h
+addfile /home/Desktop/ aliases.txt /usr/include/aliases.h
+addfile /home/Desktop/ elf.txt /usr/include/elf.h
+addfile /home/Desktop/sub2 crypt.txt /usr/inclde/crypt.h
 addfile /home/Desktop/sub1 alloca.txt /usr/include/alloca.h
 addfile /home/Desktop/sub1 crypt.txt /usr/include/crypt.h
 addfile /home/Desktop/sub1/sub2 error.txt /usr/include/error.h
 addfile /home/Desktop/sub1/sub2 fstab.txt /usr/include/fstab.h
-
 listfile /home/Desktop/aliases.txt /tmp/aliases.txt
 listfile /home/Desktop/complex.txt /tmp/complex.txt
 listfile /home/Desktop/sub1/alloca.txt /tmp/alloca.txt
 listfile /home/Desktop/sub1/crypt.txt /tmp/crypt.txt
 listfile /home/Desktop/sub1/sub2/error.txt /tmp/error.txt
 listfile /home/Desktop/sub1/sub2/fstab.txt /tmp/fstab.txt
-
-searchfile aliases.txt /tmp/output1.txt
-searchfile complex.txt /tmp/output2.txt
-searchfile alloca.txt /tmp/output3.txt
-searchfile crypt.txt /tmp/output4.txt
+searchfile alias /tmp/output1.txt
+searchfile comple /tmp/output2.txt
+searchfile alloca /tmp/output3.txt
+searchfile crypt /tmp/output4.txt
 searchfile error.txt /tmp/output5.txt
 searchfile fstab.txt /tmp/output6.txt
-
 exportfile /home/Desktop/sub1/sub2/fstab.txt /tmp/export_fstab.txt
-addfile /home/Desktop/ test.png /home/sridhar/Desktop/test.png
-exportfile /home/Desktop/test.png /tmp/test.png
+addfile /home/Desktop/ test.svg /home/pavan/Desktop/test.svg
+listfile /home/Desktop/test.svg
+listfile
+listfile /home/Desktop/sub1/sub2/fstab.txt /usr/bin/fstab.txt
+listfile /home/Desktop/test.svg /tmp/test.txt
+exportfile /home/Desktop/test.svg /tmp/test.svg
+exportfile /tmp/test.svg
+exportfile
+exportfile /home/Desktop/neverfindmehaha.svg /tmp/test.svg
+exportfile /home/Desktop/test.svg /usr/bin/test.svg
+exportfile /home/Desktop/ /tmp/hello.txt
 copyfile /home/Desktop/sub1/sub2/fstab.txt /tmp/destination.txt
 searchfile graphics.txt /tmp/output.txt
 makedir /home/sub1 sub3
+mountvfs demo
 unmountvfs demo
 mountvfs demo
-displaynary
+listfile /home/Desktop/aliases.txt /tmp/aliases.txt
+listfile /home/Desktop/complex.txt /tmp/complex.txt
+listfile /home/Desktop/sub1/alloca.txt /tmp/alloca.txt
+listfile /home/Desktop/sub1/crypt.txt /tmp/crypt.txt
+listfile /home/Desktop/sub1/sub2/error.txt /tmp/error.txt
+listfile /home/Desktop/sub1/sub2/fstab.txt /tmp/fstab.txt
+unmountvfs demo
+unmountvfs demo
+mountvfs demo
 unmountvfs demo
