@@ -13,7 +13,7 @@ addfile /home/Desktop/ aliases.txt /usr/include/aliases.h
 addfile
 addfile /home/
 addfile /home/ /abc/abc /usr/include/aliases.h
-addfile /home/Desktop/ aliases.txt /usr/include/aliases.h
+addfile /home/Desktop/ aliases.txt /usr/include/aliases.h    
 addfile /home/Desktop/ elf.txt /usr/include/elf.h
 addfile /home/Desktop/sub2 crypt.txt /usr/inclde/crypt.h
 addfile /home/Desktop/sub1 alloca.txt /usr/include/alloca.h
@@ -36,7 +36,7 @@ searchfile error.txt /tmp/output5.txt
 searchfile fstab.txt /tmp/output6.txt
 exportfile /home/Desktop/sub1/sub2/fstab.txt /tmp/export_fstab.txt
 addfile /home/Desktop/ test.svg /home/pavan/Desktop/test.svg
-listfile /home/Desktop/test.svg
+listfile /home/Desktop/test.svg 
 listfile
 listfile /home/Desktop/sub1/sub2/fstab.txt /usr/bin/fstab.txt
 listfile /home/Desktop/test.svg /tmp/test.txt
@@ -46,13 +46,14 @@ exportfile
 exportfile /home/Desktop/neverfindmehaha.svg /tmp/test.svg
 exportfile /home/Desktop/test.svg /usr/bin/test.svg
 exportfile /home/Desktop/ /tmp/hello.txt
-copyfile /home/Desktop/sub1/sub2/fstab.txt /tmp/destination.txt
+copyfile /home/Desktop/sub1/sub2/fstab.txt /home/Desktop/sub1/fstab_1.txt
 searchfile graphics.txt /tmp/output.txt
+removefile /home/Desktop/sub1/alloca.txt
 makedir /home/sub1 sub3
 mountvfs demo
 unmountvfs demo
 mountvfs demo
-listfile /home/Desktop/aliases.txt /tmp/aliases.txt
+listfile /home/Desktop/aliases.txt /tmp/aliases_deleted.txt
 listfile /home/Desktop/complex.txt /tmp/complex.txt
 listfile /home/Desktop/sub1/alloca.txt /tmp/alloca.txt
 listfile /home/Desktop/sub1/crypt.txt /tmp/crypt.txt
@@ -61,4 +62,4 @@ listfile /home/Desktop/sub1/sub2/fstab.txt /tmp/fstab.txt
 unmountvfs demo
 unmountvfs demo
 mountvfs demo
-unmountvfs demo
+unmountvfs demo	

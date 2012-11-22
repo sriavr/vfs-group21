@@ -33,8 +33,6 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
         return 1;
     }
 
-    int i=0;
-
     //if filename is not a valid name
     if(!is_valid_name(file_name))
     {
@@ -235,7 +233,7 @@ int search_file(char *filename, char *outputfile)
     fprintf(fp, "%s %s %s %s\n", "Filename", "Filetype", "Filepath", "Filesize");
     while(match!=NULL)
     {
-        fprintf(fp, "%s %s %s %d\n", match->filedescriptor.file_name, match->filedescriptor.file_type, match->filedescriptor.location_full_path, match->filedescriptor.file_size);
+        fprintf(fp, "%s %s %s %ld\n", match->filedescriptor.file_name, match->filedescriptor.file_type, match->filedescriptor.location_full_path, match->filedescriptor.file_size);
         match =  match->next;
     }
 
@@ -244,11 +242,35 @@ int search_file(char *filename, char *outputfile)
     return 0;
 }
 
+// delete_bst not implemented
 int remove_file(char *file_path)
 {
-    //TODO
+    if(hdr == NULL)
+    {
+        printf(ERR_VFS_ADDFILE_07);
+        return -1;
+    }
+
+    file_descriptor filedescriptor;
+    filedescriptor = search_bst_full(bst_tree,file_path);
+        if(strcmp(filedescriptor.location_full_path ,"0")==0){
+        printf(ERR_VFS_REMOVEFILE_01);
+        return -1;
+    }
+    else {
+        delete_hashtable(hashtable,filedescriptor);
+        //delete_bst not implemented yet
+        delete_file_nary(nAry_tree, file_path);
+        update_flist_deallocate(filedescriptor.location_block_num);
+/*        strcpy(filedescriptor.file_name,"");
+        strcpy(filedescriptor.location_full_path,"");
+        strcpy(filedescriptor.file_type,"");
+        filedescriptor.file_size = 0;
+        filedescriptor.location_block_num = 0;
+*/
+    }
     return 0;
-}
+ }
 
 int export_file(char *source_file_path, char *destination_file_path)
 {
@@ -299,17 +321,43 @@ int export_file(char *source_file_path, char *destination_file_path)
     return 0;
 }
 
+// TODO
+// implementation of search nAry missing and hence error_code_02
+// assumption made(correct me if i am wrong), file_type is either "directory" or "file"
 int copy_file(char *source_file_with_path , char *destination_file_path)
 {
+    if(hdr == NULL)
+    {
+        printf(ERR_VFS_COPYFILE_05);
+        return -1;
+    }
     int block_num = -1;
     file_descriptor filedescriptor , new_filedescriptor;
     filedescriptor = search_bst_full(bst_tree , source_file_with_path);
-
+    if(strcmp(filedescriptor.location_full_path ,"0")==0){
+        printf(ERR_VFS_COPYFILE_01);
+        return -1;
+    }
+    if(strcmp(filedescriptor.file_type,"directory")==0){
+        printf(ERR_VFS_COPYFILE_03);
+        return -1;
+    }
     block_num = next_free_block();
+    if(block_num == -1){
+        printf(ERR_VFS_COPYFILE_04);
+        return -1;
+    }
+char nName[MAX_LEVELS][MAX_LENGTH],
+    dirname[MAX_LENGTH],
+    *dirpath_insert;
+    int count = splitPath(destination_file_path, nName),
+                length,
+                length_name,
+                i;
+    strcpy(dirname,nName[count-1]);
 
     strcpy(new_filedescriptor.file_name , filedescriptor.file_name);
-    strcpy(new_filedescriptor.location_full_path , destination_file_path);
-    //assuming location_file_path is containing only file path and not file name
+    strcpy(new_filedescriptor.location_full_path , dirname);
     strcpy(new_filedescriptor.file_type , filedescriptor.file_type);
     new_filedescriptor.file_size = filedescriptor.file_size;
     new_filedescriptor.location_block_num = block_num;
@@ -317,18 +365,20 @@ int copy_file(char *source_file_with_path , char *destination_file_path)
     //adding to datastructures except nAry
     insert_bst(bst_tree, new_filedescriptor);
     insert_hashtable(hashtable, new_filedescriptor);
-    printf("copyfile_SUCCESS\n");
     return 0;
 }
 
 int move_file(char *source_file_with_path , char *destination_with_path )
 {
-    copy_file(source_file_with_path , destination_with_path);
-    remove_file(source_file_with_path);
-    //TODO
-    // implement remove_file
-    printf("searchfile_FAILURE\n");
-    return 0;
+    int i,k;
+    i = copy_file(source_file_with_path , destination_with_path);
+    k = remove_file(source_file_with_path);
+    if(i != 0 || k != 0){
+        return -1;
+    }
+    else{
+        return 0;
+    }
 }
 
 /*void test()
@@ -363,7 +413,7 @@ int  main()
 
 int update_file( char *source_file_with_path, char *data_file)
 {
-    int i;
+
     if(!is_mounted())
     {
         printf(ERR_VFS_UPDATEFILE_04);
