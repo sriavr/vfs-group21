@@ -26,6 +26,8 @@ listfile /home/Desktop/sub1/alloca.txt /tmp/alloca.txt
 listfile /home/Desktop/sub1/crypt.txt /tmp/crypt.txt
 listfile /home/Desktop/sub1/sub2/error.txt /tmp/error.txt
 listfile /home/Desktop/sub1/sub2/fstab.txt /tmp/fstab.txt
+updatefile /home/Desktop/sub1/alloca.txt /usr/include/getopt.h
+listfile /home/Desktop/sub1/alloca.txt /tmp/alloca_updated.txt
 searchfile alias /tmp/output1.txt
 searchfile comple /tmp/output2.txt
 searchfile alloca /tmp/output3.txt

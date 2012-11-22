@@ -640,7 +640,7 @@ int physical_file_exists(const char *fname)
 int physical_file_canwrite(const char *fname)
 {
     FILE *file;
-    if ((file = fopen(fname, "wb")) != NULL)
+    if ((file = fopen(fname, "ab")) != NULL)
     {
         fclose(file);
         return 1;
