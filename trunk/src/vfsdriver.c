@@ -163,7 +163,16 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         }
     }
     else if( strcmp(command, "updatefile") == 0 )
-        updatefile (P1,P2);
+        {
+        if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
+        {
+            printf(ERR_VFS_UPDATEFILE_00);
+        }
+        else
+        {
+            updatefile (P1,P2);
+        }
+    }
     else if( strcmp(command, "removefile") == 0 )
         removefile (P1);
     else if( strcmp(command, "movefile") == 0 )
@@ -261,8 +270,13 @@ void listfile ( char *P1, char *P2 )
 void updatefile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    //update_file(P1, P2);
-    //printf("updatefile_TO_BE_DONE\n");
+    int i;
+    i = update_file(P1, P2);
+    if(i!=0){
+        printf("\nUPDATE_FAILURE\n");
+    }
+    else
+    printf("\nUPDATE_SUCCESS\n");
 }
 
 void removefile ( char *P1 )

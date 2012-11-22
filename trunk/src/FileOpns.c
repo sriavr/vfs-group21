@@ -363,18 +363,45 @@ int  main()
 
 int update_file( char *source_file_with_path, char *data_file)
 {
-    FILE *source_file, *new_data_file;
-    int MAX = 500;
-    char line[MAX];
-
-    new_data_file = fopen(data_file, "r");
-    source_file = fopen(source_file_with_path, "w");
-    while (fgets(line,sizeof(line),new_data_file) != NULL)
+    int i;
+    if(!is_mounted())
     {
-        /*Write the line */
-        fputs(line, source_file);
+        printf(ERR_VFS_UPDATEFILE_04);
+        return 1;
     }
-    fclose (new_data_file);
-    fclose (source_file);
+
+
+    file_descriptor filedescriptor;
+    filedescriptor = search_bst_full(bst_tree,source_file_with_path);
+    if(strcmp(filedescriptor.file_type ,"file")!=0){
+        printf(ERR_VFS_UPDATEFILE_01);
+        return 1;
+    }
+
+    FILE *fp_data_file = fopen(data_file, "rb");
+    if(!physical_file_exists(data_file)){
+        printf(ERR_VFS_UPDATEFILE_02);
+        return 1;
+    }
+/*
+    if(fp_data_file== NULL){
+        printf(ERR_VFS_UPDATEFILE_02);
+        return -1;
+    }
+*/    fseek(fp_data_file, 0L, SEEK_END);
+    long int size = ftell(fp_data_file);
+
+    if(size > BLOCK_SIZE)
+    {
+        printf(ERR_VFS_UPDATEFILE_03);
+        return 1;
+    }
+
+    long int block_num = filedescriptor.location_block_num;
+    if(write_to_block(block_num, data_file, size) < 0)
+        return 1;
+
+    filedescriptor.file_size = size;
+    fclose(fp_data_file);
     return 0;
 }
