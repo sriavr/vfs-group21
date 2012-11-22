@@ -174,11 +174,34 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         }
     }
     else if( strcmp(command, "removefile") == 0 )
-        removefile (P1);
+        if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") != 0))
+        {
+            printf(ERR_VFS_REMOVEFILE_00);
+        }
+        else
+        {
+            removefile (P1);
+        }
     else if( strcmp(command, "movefile") == 0 )
-        movefile (P1,P2);
+        {
+        if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
+        {
+            printf(ERR_VFS_MOVEFILE_00);
+        }
+        else
+        {
+            movefile (P1,P2);
+        }
+    }
     else if( strcmp(command, "copyfile") == 0 )
-        copyfile (P1,P2);
+        if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
+        {
+            printf(ERR_VFS_COPYFILE_00);
+        }
+        else
+        {
+            copyfile (P1,P2);
+        }
     else if( strcmp(command, "exportfile") == 0 )
     {
         if(strcmp(P1, "")==0 || strcmp(P2, "")==0)
@@ -283,18 +306,39 @@ void removefile ( char *P1 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("removefile_TO_BE_DONE\n");
+     int i;
+    i = remove_file(P1);
+    if(i!=0){
+        printf("\nREMOVEFILE_FAILURE\n");
+    }
+    else
+    printf("\nREMOVEFILE_SUCCESS\n");
 }
 
 void movefile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //move_file(P1,P2);
+    int i;
+    i = move_file(P1,P2);
+    if(i!=0){
+        printf("\nMOVEFILE_FAILURE\n");
+    }
+    else
+    printf("\nMOVEFILE_SUCCESS\n");
 }
 
 void copyfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    copy_file(P1,P2);
+     int i;
+    i = copy_file(P1,P2);
+    if(i!=0){
+        printf("\nCOPYFILE_FAILURE\n");
+    }
+    else
+    printf("\nCOPYFILE_SUCCESS\n");
+
 }
 
 void exportfile ( char *P1, char *P2 )
