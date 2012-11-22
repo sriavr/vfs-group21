@@ -98,6 +98,34 @@ int splitPath(  char nPath[] , char nName[][MAX_LENGTH] )
     return count;
 }
 
+
+char * splitPath(  char nPath[] , char nName[][MAX_LENGTH] )
+{
+    int startIndex = 0;
+    int endIndex = -1;
+    int length = strlen( nPath );
+    int count = 0;
+    do
+    {
+        endIndex = indexOf( nPath , '/' , startIndex + 1 );
+        if( endIndex == -1 )
+            endIndex = length;
+
+        char * substr = substring( nPath, startIndex + 1 , endIndex );
+        if( substr != NULL )
+        {
+            strcpy( nName[count] , substr );
+            count++;
+        }
+
+        startIndex = endIndex ;
+    }
+    while( endIndex != length );
+
+    return nName[count];
+}
+
+
 nNode * searchForNodeInAllSiblings( nNode * t , char name[] )
 {
 
