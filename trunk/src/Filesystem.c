@@ -214,7 +214,7 @@ int mount_vfs(char fullpath[150])
 
     //Create Hashtable storing all the file names without path (for search based on file name without path)
     init_hashtable(hashtable);
-    fill_hashtable(hashtable, file_descriptor_list, file_descriptor_used);
+    fill_hashtable(hashtable);
 
     //BST storing all the file names with absolute path of file (for search based on absolute path of file)
     bst_tree = create_bst(file_descriptor_list, file_descriptor_used);
@@ -234,7 +234,7 @@ int mount_vfs(char fullpath[150])
 int unmount_vfs(char filepath[150])
 {
     //update the fd_list using the nary tree
-    update_fd_list(nAry_tree);
+    update_fd_list(bst_tree);
 
     //if vfs file is not found
     if(!physical_file_exists(filepath))

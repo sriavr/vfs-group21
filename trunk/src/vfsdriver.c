@@ -21,6 +21,8 @@
 #include "../include/DirOpns.h"
 #include "../include/Filesystem.h"
 #include "../include/vfs_errorcodes.h"
+#include "../include/all_tests.h"
+
 
 #define BUFSIZE 200
 #define CMDSIZE 30
@@ -41,6 +43,7 @@ void movefile ( char *P1, char *P2 );
 void copyfile ( char *P1, char *P2 );
 void exportfile ( char *P1, char *P2 );
 void searchfile ( char *P1, char *P2 );
+void printds();
 
 void processcommand( char *command, char *P1, char *P2, char *P3 );
 
@@ -163,7 +166,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         }
     }
     else if( strcmp(command, "updatefile") == 0 )
-        {
+    {
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
         {
             printf(ERR_VFS_UPDATEFILE_00);
@@ -183,7 +186,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
             removefile (P1);
         }
     else if( strcmp(command, "movefile") == 0 )
-        {
+    {
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
         {
             printf(ERR_VFS_MOVEFILE_00);
@@ -225,7 +228,14 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         }
 
     }
-
+    else if(strcmp(command, "testbst") == 0 )
+    {
+        bst_test_main();
+    }
+    else if(strcmp(command, "printds") == 0 )
+    {
+        printds();
+    }
     else
         printf("Ignoring invalid command %s\n", command);
 }
@@ -276,6 +286,7 @@ void listdir ( char *P1, int P2, char *P3 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("listdir_TO_BE_DONE\n");
+    list_dir(P1, P2, P3);
 }
 
 void addfile ( char *P1, char *P2, char *P3 )
@@ -295,24 +306,26 @@ void updatefile ( char *P1, char *P2 )
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     int i;
     i = update_file(P1, P2);
-    if(i!=0){
+    if(i!=0)
+    {
         printf("\nUPDATE_FAILURE\n");
     }
     else
-    printf("\nUPDATE_SUCCESS\n");
+        printf("\nUPDATE_SUCCESS\n");
 }
 
 void removefile ( char *P1 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("removefile_TO_BE_DONE\n");
-     int i;
+    int i;
     i = remove_file(P1);
-    if(i!=0){
+    if(i!=0)
+    {
         printf("\nREMOVEFILE_FAILURE\n");
     }
     else
-    printf("\nREMOVEFILE_SUCCESS\n");
+        printf("\nREMOVEFILE_SUCCESS\n");
 }
 
 void movefile ( char *P1, char *P2 )
@@ -321,23 +334,25 @@ void movefile ( char *P1, char *P2 )
     //move_file(P1,P2);
     int i;
     i = move_file(P1,P2);
-    if(i!=0){
+    if(i!=0)
+    {
         printf("\nMOVEFILE_FAILURE\n");
     }
     else
-    printf("\nMOVEFILE_SUCCESS\n");
+        printf("\nMOVEFILE_SUCCESS\n");
 }
 
 void copyfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-     int i;
+    int i;
     i = copy_file(P1,P2);
-    if(i!=0){
+    if(i!=0)
+    {
         printf("\nCOPYFILE_FAILURE\n");
     }
     else
-    printf("\nCOPYFILE_SUCCESS\n");
+        printf("\nCOPYFILE_SUCCESS\n");
 
 }
 
@@ -351,6 +366,11 @@ void searchfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     search_file(P1,P2);
+}
+
+void printds()
+{
+    print_ds();
 }
 
 

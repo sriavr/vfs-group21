@@ -10,21 +10,15 @@ void test_simple_bst()
     char *a[2]= {"file" ,"dir"};
     char temp_string[5];
     bst *start=NULL;
-    //int i=0 , j=0;
     file_descriptor arr , output;
 
-
-    //for(i=0; i<10; i++)
-    //{
     strcpy(arr.file_name,"pinnacle" );
     strcpy(arr.location_full_path, "/home/desktop");
     strcpy(temp_string, a[rand()%2]);
     strcpy(arr.file_type, temp_string);
     arr.file_size =rand();
     arr.location_block_num=rand();
-    //}
 
-    //for(j=0; j<10; j++)
     start = insert_bst(start, arr);
     if(start!=NULL)
     {
@@ -35,14 +29,90 @@ void test_simple_bst()
         printf(" UNsuccessful inserted");
     }
 
-    displaybst(start);
+    strcpy(arr.file_name,"srikanth" );
+    strcpy(arr.location_full_path, "/home/desktop/new_folder/");
+    strcpy(temp_string, a[rand()%2]);
+    strcpy(arr.file_type, temp_string);
+    arr.file_size =rand();
+    arr.location_block_num=rand();
+
+    start = insert_bst(start, arr);
+    if(start!=NULL)
+    {
+        printf("sucessfull  inserted");
+    }
+    else
+    {
+        printf(" Unsuccessful inserted");
+    }
+
+    strcpy(arr.file_name,"superduper" );
+    strcpy(arr.location_full_path, "/home/hello/vfs/works/");
+    strcpy(temp_string, a[rand()%2]);
+    strcpy(arr.file_type, temp_string);
+    arr.file_size =rand();
+    arr.location_block_num=rand();
+
+    start = insert_bst(start, arr);
+    if(start!=NULL)
+    {
+        printf("sucessfull  inserted");
+    }
+    else
+    {
+        printf(" UNsuccessful inserted");
+    }
+
     inorder_traversal(start, displaybst);
-    output= search_bst(start, arr.location_full_path, arr.file_name);
+
+    output= search_bst(start, "superduper" , "/home/hello/vfs/works/");
     printf("Filename: %s\n" , output.file_name);
     printf("Location: %s\n" , output.location_full_path);
     printf("Filetype: %s\n" , output.file_type);
     printf("Block Num: %d\n" , output.location_block_num);
     printf("Size: %ld\n" , output.file_size);
+
+    output= search_bst(start, "superduper" , "/home/hello/vfs/works");
+    printf("Filename: %s\n" , output.file_name);
+    printf("Location: %s\n" , output.location_full_path);
+    printf("Filetype: %s\n" , output.file_type);
+    printf("Block Num: %d\n" , output.location_block_num);
+    printf("Size: %ld\n" , output.file_size);
+
+    output= search_bst_full(start , "/home/hello/vfs/works/superduper");
+    printf("Filename: %s\n" , output.file_name);
+    printf("Location: %s\n" , output.location_full_path);
+    printf("Filetype: %s\n" , output.file_type);
+    printf("Block Num: %d\n" , output.location_block_num);
+    printf("Size: %ld\n" , output.file_size);
+
+    output= search_bst_full(start , "/home/desktop/pinnacle");
+    printf("Filename: %s\n" , output.file_name);
+    printf("Location: %s\n" , output.location_full_path);
+    printf("Filetype: %s\n" , output.file_type);
+    printf("Block Num: %d\n" , output.location_block_num);
+    printf("Size: %ld\n" , output.file_size);
+
+    printf("deleting node /home/desktop/pinnacle\n");
+    delete_bst(start, "/home/desktop/pinnacle");
+
+    output= search_bst_full(start , "/home/desktop/pinnacle");
+    printf("Filename: %s\n" , output.file_name);
+    printf("Location: %s\n" , output.location_full_path);
+    printf("Filetype: %s\n" , output.file_type);
+    printf("Block Num: %d\n" , output.location_block_num);
+    printf("Size: %ld\n" , output.file_size);
+
+    printf("deleting node /home/hello/vfs/works/superduper/\n");
+    delete_bst(start, "/home/hello/vfs/works/superduper/");
+    output= search_bst_full(start , "/home/hello/vfs/works/superduper");
+    printf("Filename: %s\n" , output.file_name);
+    printf("Location: %s\n" , output.location_full_path);
+    printf("Filetype: %s\n" , output.file_type);
+    printf("Block Num: %d\n" , output.location_block_num);
+    printf("Size: %ld\n" , output.file_size);
+
+    inorder_traversal(start, displaybst);
 }
 
 
@@ -72,7 +142,7 @@ void test_simple_bst()
 
 
 
-int Bst_main()
+int bst_test_main()
 {
     test_simple_bst();
     //test_complex_bst();

@@ -36,7 +36,7 @@ nNode * insertAtEnd( nNode * t , char name[] );
 nNode* insertNode( nNode * root , char nPath[] , char name[] );
 //nNode* insertNode( nNode * root , file_descriptor filedescriptor );
 
-void changeLevel( int level );
+void changeLevel( int level, FILE * fp );
 
 void print( char str[][MAX_LENGTH], int count );
 
@@ -51,7 +51,7 @@ typedef struct lst{
 
 //returns all the sub-directories & files inside a specified directory
 //in form of a linkedlist of file_descriptors (not recursive)
-node_list listall_nary(nNode * root, char * dir_path, int is_recursive);
+void listall_nary(nNode * root, char * dir_path, int flag, FILE * fp);
 
 /* add a file_descriptor node to existing nary tree.
 If root is null, create the root node. Check if the node currently added is dir or file.

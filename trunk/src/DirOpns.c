@@ -33,13 +33,11 @@ void delete_dir(char *dir_path)
     If a directory contains files, don’t delete, throw error
     Delete directory from bst
     */
-
-    file_descriptor filedescriptor;
     int is_exists = node_exists(nAry_tree, dir_path);
     if(is_exists ==1)
     {
         delete_dir_nary(nAry_tree, dir_path);
-        //delete_bst(bst_tree, filedescriptor);
+        delete_bst(bst_tree, dir_path);
         printf("deletedir_SUCCESS\n");
     }
 
@@ -66,6 +64,12 @@ void move_dir(char * src_path, char * dest_path)
 
 void list_dir(char *dir_path, int flag, char * txt_file_path)
 {
+    FILE *fp;
+    fp = fopen(txt_file_path,"w+");
+    listall_nary(nAry_tree, dir_path, flag, fp);
+    fclose(fp);
+    printf("listdir_SUCCESS\n");
+
 //    printf("listdir_FAILURE\n");
 //    node_list nlist = listall_nary(nAry_tree, dir_path, flag);
 //
