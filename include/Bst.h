@@ -2,7 +2,7 @@
 #define BST_H_INCLUDED
 
 typedef struct bst_n{
-    char * key;
+    //char * key;
     //int value;
     int is_deleted;
     struct bst_n * left;
