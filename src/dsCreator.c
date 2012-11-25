@@ -7,11 +7,17 @@
 #include "../include/Hashtable.h"
 #include "../include/dsCreator.h"
 
-void process_file_desc(nNode* node);
+void update_filedes(bst *bst_node);
 extern header *hdr;
 extern meta_header *mh;
 extern nNode * nAry_tree;
 extern bst   * bst_tree;
+
+int arr_index = 0;
+file_descriptor *file_descriptor_list;
+long int file_descriptor_list_size;
+file_descriptor empty_file_desc;
+int i = 0;
 
 //THIS FUNCTION MAY BE SOON DROPPED
 struct node * create_linkedlist()
@@ -61,8 +67,8 @@ bst* create_bst()
 
 void test_create_bst()
 {
-    file_descriptor *file_descriptor_list;
-    long int file_descriptor_list_size;
+//    file_descriptor *file_descriptor_list;
+//    long int file_descriptor_list_size;
     file_descriptor_list = hdr -> fd_array;
     file_descriptor_list_size = mh -> file_descriptors_used;
 
@@ -107,8 +113,8 @@ nNode * create_nAry_tree()
     file_descriptor_list = hdr -> fd_array;
     file_descriptor_list_size = mh -> file_descriptors_used;
 
-    if(file_descriptor_list_size <=0)
-        nAryTree = insertNode(nAryTree,"","/");
+    //if(file_descriptor_list_size <=0)
+    nAryTree = insertNode(nAryTree,"","/");
 
     long int i;
     for(i=0; i < file_descriptor_list_size; i ++)
@@ -129,45 +135,59 @@ nNode * create_nAry_tree()
     return nAryTree;
 }
 
-int arr_index = 0;
-file_descriptor *file_descriptor_list;
-long int file_descriptor_list_size;
-
 void update_fd_list(bst* bst_root)
 {
     file_descriptor_list = hdr -> fd_array;
     file_descriptor_list_size = mh -> file_descriptors_used;
 
     //create an empty file descriptor
-    file_descriptor empty_file_desc;
-    strcpy(empty_file_desc.file_name, "");
-    strcpy(empty_file_desc.location_full_path, "");
-    strcpy(empty_file_desc.file_type, "");
+    strcpy(empty_file_desc.file_name, "0");
+    strcpy(empty_file_desc.location_full_path, "0");
+    strcpy(empty_file_desc.file_type, "0");
     empty_file_desc.file_size = 0;
     empty_file_desc.location_block_num = -1;
+    //clear all the file descriptors
+    clear_file_desc_list();
+    inorder_traversal(bst_tree, update_filedes);
 
-    //clear existing file_descriptor array
-    int i;
-    for(i = 0; i< file_descriptor_list_size; i++)
-    {
-        file_descriptor_list[i] = empty_file_desc;
-    }
+//    //clear existing file_descriptor array
+//    for(i = 0; i< file_descriptor_list_size; i++)
+//    {
+//        file_descriptor_list[i] = empty_file_desc;
+//    }
 
     //traverse each node of nary tree and add a file descriptor for each node
     //traverse_nary(root, process_file_desc);
 
     //update the number of file descriptors used
-    mh -> file_descriptors_used = arr_index;
+    //mh -> file_descriptors_used = arr_index;
 }
 
-void process_file_desc(nNode* node)
+void update_filedes(bst *bst_node)
 {
-    //add to a file descriptor array
-    //file_descriptor_list[arr_index++] = node -> filedescriptor;
+    if (bst_node -> is_deleted != 1)
+    {
+        if(i < MAX_NUM_OF_BLOCKS)
+        {
+            file_descriptor_list[i] = bst_node -> filedescriptor;
+            i++;
+            mh -> file_descriptors_used  = i;
+        }
+    }
+}
+
+void clear_file_desc_list()
+{
+    int j;
+    for(j = 0; j < MAX_NUM_OF_BLOCKS; j++)
+    {
+        file_descriptor_list[j] = empty_file_desc;
+    }
+    mh -> file_descriptors_used = 0;
 }
 
 void print_ds()
 {
     display_nary(nAry_tree, 1);
-    inorder_traversal(bst_tree, displaybst);
+    //inorder_traversal(bst_tree, displaybst);
 }
