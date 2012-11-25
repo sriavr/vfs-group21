@@ -6,6 +6,29 @@
 #include "../include/nAry.h"
 #include "../include/Bst.h"
 
+char * generate_key (bst * bst_node)
+{
+    int length = 0;
+    int fullpath_length;
+    int filename_length;
+    char * key;
+    file_descriptor filedescriptor;
+    if(bst_node!=NULL)
+    {
+        filedescriptor = bst_node -> filedescriptor;
+        fullpath_length = strlen(filedescriptor.location_full_path);
+        filename_length = strlen(filedescriptor.file_name);
+        length = fullpath_length + filename_length;
+        key = calloc((length+1),sizeof(char));
+        strcat(key, filedescriptor.location_full_path);
+        strcat(key, filedescriptor.file_name);
+        return key;
+    }
+    else
+    {
+        return NULL;
+    }
+}
 
 bst * insert_bst(bst* bst_root, file_descriptor filedescriptor)
 {
@@ -25,18 +48,18 @@ bst * insert_bst(bst* bst_root, file_descriptor filedescriptor)
 
     if(filedescriptor.location_full_path[fullpath_length - 1] == '/')
     {
-        length = fullpath_length + filename_length;
-        fresh -> key = calloc((length+1),sizeof(char));
-        strcat(fresh -> key, filedescriptor.location_full_path);
-        strcat(fresh -> key, filedescriptor.file_name);
+//        length = fullpath_length + filename_length;
+//        fresh -> key = calloc((length+1),sizeof(char));
+//        strcat(fresh -> key, filedescriptor.location_full_path);
+//        strcat(fresh -> key, filedescriptor.file_name);
     }
     else
     {
-        length = fullpath_length + filename_length;
-        fresh -> key = calloc((length+2),sizeof(char));
-        strcat(fresh -> key, filedescriptor.location_full_path);
-        strcat(fresh -> key, "/");
-        strcat(fresh -> key, filedescriptor.file_name);
+//        length = fullpath_length + filename_length;
+//        fresh -> key = calloc((length+2),sizeof(char));
+//        strcat(fresh -> key, filedescriptor.location_full_path);
+//        strcat(fresh -> key, "/");
+//        strcat(fresh -> key, filedescriptor.file_name);
         //CORRECT THE FILE DESCRIPTOR LOCATION
         strcat(filedescriptor.location_full_path, "/");
         //CORRECT THE FILE DESCRIPTOR LOCATION
@@ -58,7 +81,7 @@ bst * insert_bst(bst* bst_root, file_descriptor filedescriptor)
 
         while(1)
         {
-            if(strcmp(fresh -> key, temp -> key) < 0)
+            if(strcmp(generate_key(fresh), generate_key(temp)) < 0 )
             {
                 if(temp -> left == NULL)
                 {
@@ -70,7 +93,7 @@ bst * insert_bst(bst* bst_root, file_descriptor filedescriptor)
                     temp = temp -> left;
                 }
             }
-            else if(strcmp(fresh -> key, temp -> key) > 0)
+            else if(generate_key(fresh), generate_key(temp) > 0)
             {
                 if(temp -> right == NULL)
                 {
@@ -82,7 +105,7 @@ bst * insert_bst(bst* bst_root, file_descriptor filedescriptor)
                     temp = temp -> right;
                 }
             }
-            else if(strcmp(fresh -> key, temp -> key) == 0)
+            else if(strcmp(generate_key(fresh), generate_key(temp)) == 0)
             {
                 //fprintf(stderr, "Duplicate key insertion is not allowed.");
                 break;
@@ -119,7 +142,7 @@ bst* search_bst_node(bst* bst_node, char* file_name,
 
     while(1)
     {
-        if(strcmp(bst_node -> key, key) > 0)
+        if(strcmp(generate_key(bst_node), key) > 0)
         {
             if(bst_node -> left == NULL)
             {
@@ -130,7 +153,7 @@ bst* search_bst_node(bst* bst_node, char* file_name,
                 bst_node = bst_node -> left;
             }
         }
-        else if(strcmp(bst_node -> key, key) < 0)
+        else if(strcmp(generate_key(bst_node), key) < 0)
         {
             if(bst_node -> right == NULL)
             {
@@ -141,7 +164,8 @@ bst* search_bst_node(bst* bst_node, char* file_name,
                 bst_node = bst_node-> right;
             }
         }
-        else if ((strcmp(bst_node -> key, key) ==  0) && (bst_node -> is_deleted != 1))
+        else if ((strcmp(generate_key(bst_node), key) ==  0) &&
+                 (bst_node -> is_deleted != 1))
         {
             return bst_node;
         }
@@ -267,7 +291,7 @@ void displaybst(bst *bst_node)
 {
     if(bst_node -> is_deleted != 1)
     {
-        printf("Key: %s\t Filetype: %s\t Block No: %d\t Filepath:%s\n", bst_node -> key,
+        printf("Key: %s\t Filetype: %s\t Block No: %d\t Filepath:%s\n", generate_key(bst_node),
                bst_node -> filedescriptor.file_type,
                bst_node -> filedescriptor.location_block_num,
                bst_node -> filedescriptor.location_full_path);
