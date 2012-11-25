@@ -3,7 +3,7 @@
 
 #define MAX_NUM_OF_BLOCKS 100 //assuming one block has one file
 #define FILE_SYSTEM_LABEL_MAX_SIZE 30
-#define FILENAME_MAX_SIZE 50
+#define FILENAME_MAX_SIZE 128
 #define FILETYPE_MAX_SIZE 10
 #define FULLPATH_MAX_SIZE 150
 #define BLOCK_SIZE 10240

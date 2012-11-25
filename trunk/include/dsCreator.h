@@ -13,6 +13,7 @@ void print_ds();
 //used by file system to create a binary search tree with filenames with absolute path
 bst* create_bst();
 
+void clear_file_desc_list();
 //nAry Tree representing directory structure
 nNode * create_nAry_tree();
 
