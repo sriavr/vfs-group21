@@ -4,14 +4,13 @@
 typedef struct bst_n{
     char * key;
     //int value;
+    int is_deleted;
     struct bst_n * left;
     struct bst_n * right;
     file_descriptor filedescriptor;
 } bst;
 
-void delete_bst(bst *bst_node, char * node_path);
-
-
+int delete_bst(bst *bst_tree, char * node_path);
 
 //Initialize the basic bst tree
 //struct bst* init_bst(struct bst*, file_descriptor filedescriptor);
@@ -38,8 +37,17 @@ void inorder_traversal(bst* bst_root,
 file_descriptor search_bst(bst* bst_node, char* file_name,
                            char* location_full_path);
 
+//perform search and return bst node
+bst * search_bst_node(bst* bst_node, char* file_name,
+                           char* location_full_path);
+
+//perform search based on filename with full path
 file_descriptor search_bst_full(bst* bst_node,
                                 char* filename_with_full_path);
+
+//perform search and return bst node
+bst * search_bst_full_node(bst* bst_node,
+                           char* filename_with_full_path);
 
 //Test cases for bst
 void test_complex_bst();

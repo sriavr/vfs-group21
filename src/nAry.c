@@ -4,8 +4,8 @@
 
 #include "../include/Filesystem.h"
 #include "../include/Commons.h"
-#include "../include/nAry.h"
 #include "../include/Bst.h"
+#include "../include/nAry.h"
 
 #define MAX_LEVELS 20
 #define MAX_LENGTH 50
@@ -13,9 +13,11 @@
 #define SUCCESS 0
 #define FAILED 1
 extern bst   * bst_tree;
+extern header *hdr;
 void display_nary( nNode * root , int level );
 nNode * find( nNode * root , char nPath[] );
 nNode * removeLinkFromList( nNode * list , char * nodeName );
+void update_fd_bst(bst* bst_node);
 /*
 * Creates a node and returns a pointer to it.
 * name -  Name to be set as the node name.
@@ -97,34 +99,6 @@ int splitPath(  char nPath[] , char nName[][MAX_LENGTH] )
 
     return count;
 }
-
-
-char * splitPath(  char nPath[] , char nName[][MAX_LENGTH] )
-{
-    int startIndex = 0;
-    int endIndex = -1;
-    int length = strlen( nPath );
-    int count = 0;
-    do
-    {
-        endIndex = indexOf( nPath , '/' , startIndex + 1 );
-        if( endIndex == -1 )
-            endIndex = length;
-
-        char * substr = substring( nPath, startIndex + 1 , endIndex );
-        if( substr != NULL )
-        {
-            strcpy( nName[count] , substr );
-            count++;
-        }
-
-        startIndex = endIndex ;
-    }
-    while( endIndex != length );
-
-    return nName[count];
-}
-
 
 nNode * searchForNodeInAllSiblings( nNode * t , char name[] )
 {
@@ -285,11 +259,26 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
 
 }
 
-void changeLevel( int level )
+void changeLevel( int level, FILE * fp )
 {
     int i;
     for( i = 1; i <= level ; i++ )
-        printf("         ");
+    {
+        fprintf(fp,"  ");
+        //printf("  ");
+    }
+
+}
+
+void changeLevel_dis( int level )
+{
+    int i;
+    for( i = 1; i <= level ; i++ )
+    {
+        //fprintf(fp,"  ");
+        printf("  ");
+    }
+
 }
 
 /* Initial call
@@ -305,7 +294,7 @@ void display_nary( nNode * root , int level )
         return;
     }
 
-    changeLevel( level );
+    changeLevel_dis(level);//( level,fp );
     printf("%s \n", root->name );
 
     if( root->child != NULL )   // condition not required.
@@ -313,6 +302,34 @@ void display_nary( nNode * root , int level )
         // for each child node
         for( t = root->child ; t != NULL ; t = t->sibling )
             display_nary( t , level + 1 );
+    }
+}
+
+void listall_nary_child(nNode * root , int level , FILE * fp)
+{
+    nNode * t;
+    t = root;
+    fprintf(fp,"%s\n",t->name);
+    for(t = t->child; t != NULL; t = t->sibling)
+        fprintf(fp,"%s\t\t",t->name);
+}
+void listall_nary_recur(nNode * root,int level, FILE * fp)
+{
+    nNode * t;
+
+    if( root == NULL )
+    {
+        return;
+    }
+
+    changeLevel( level,fp );
+    fprintf(fp,"%s \n", root->name );
+
+    if( root->child != NULL )   // condition not required.
+    {
+        // for each child node
+        for( t = root->child ; t != NULL ; t = t->sibling )
+            listall_nary_recur( t , level + 1, fp );
     }
 }
 
@@ -409,6 +426,71 @@ nNode * removeLinkFromList( nNode * list , char * nodeName )
     return list;
 }
 
+char *dest_path_temp, *src_path_temp;
+int length_src;
+void change_path_fd(nNode * root, nNode * src, char src_path[], char * dest_path, int level)//,file_descriptor fd)
+{
+    dest_path_temp = dest_path;
+    src_path_temp = src_path;
+    nNode *src_node,*t;
+    file_descriptor fd;
+    int count,i,length_dest;
+    char src_npath[30];
+    file_descriptor temp;
+    //src = find(root,src_path);
+
+    if( root == NULL  || src == NULL)
+    {
+        return;
+    }
+    length_src = strlen(src_path);
+    length_dest = strlen(dest_path);
+//    printf("%p fd->",hdr);
+//    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
+//    {
+//        if(strncmp(src_path,  hdr->fd_array[i].location_full_path,length_src)==0)
+//        {
+//            strncpy(hdr->fd_array[i].location_full_path,dest_path,length_src);
+//        }
+//    }
+
+    inorder_traversal(bst_tree, update_fd_bst);
+
+//    changeLevel( level );
+//    fd = search_bst_full(bst_tree,src_path);
+//    temp = fd;
+//    strcpy(fd.location_full_path,dest_path);
+//    //strncmp(source,dest,n);
+//    //{
+//    //strncpy(source,destdest_path,n);
+//    //fdescopy
+//    insert_bst(bst_tree,fd);
+//    //deletebst(bst_tree,temp);
+//    //printf("%s \n", root->name );
+//    strcpy(src_npath,src_path);
+//
+//    if( src->child != NULL )   // condition not required.
+//    {
+//        // for each child node
+//        for( t = src->child ; t != NULL ; t = t->sibling )
+//        {
+//            src_node = find(root,src_path);
+//            strcat(src_path,src_node->name);
+//            strcat(dest_path,src_node->name);
+//            change_path_fd( root, t , src_path, dest_path , level + 1 );
+//        }
+//
+//    }
+
+}
+
+void update_fd_bst(bst *bst_node)
+{
+    if(strncmp(src_path_temp, bst_node -> filedescriptor.location_full_path, length_src)==0)
+    {
+        strncpy(bst_node -> filedescriptor.location_full_path, dest_path_temp, length_src);
+    }
+}
 
 /*
 E.g. :-
@@ -432,8 +514,11 @@ E.g. :-
 nNode * moveDir(nNode * root ,char * src_path, char * dest_path)
 {
     nNode * src, *dest;
+    char new_path[30],nName[20][50],new_node[10];
+    int count = splitPath( src_path, nName );
     int retCode = FAILED;
     src = find( root, src_path );
+
     if ( src == NULL )
     {
         printf("Invalid Source Path");
@@ -449,7 +534,9 @@ nNode * moveDir(nNode * root ,char * src_path, char * dest_path)
 
     if( src != NULL && dest != NULL )   // both src and dest exist.
     {
+        //src->fd = search_bst_full(bst_tree,src_path);
         retCode = addChild( src , dest );   // add src node to dest list of child nodes.
+        change_path_fd(root,src,src_path,dest_path,count);//src->fd);
         if( retCode == SUCCESS )   // Only if successfully added
         {
             root = removeLink( root , src_path );  // remove only link ( i.e. do not free memory )
@@ -568,7 +655,7 @@ int freeNode( nNode * root, int level )
         return FAILED;
     }
 
-    changeLevel( level );
+//    changeLevel( level );
     //printf("%s \n", root->name );
 
 
@@ -645,6 +732,16 @@ nNode* add_dir_nary(nNode * root, char * dirpath)
     return root;
 }
 
+void listall_nary(nNode * root, char * dir_path, int flag, FILE * fp)
+{
+    // printf("%s fd->",header.fd_array[3].location_full_path);
+    root = find(root,dir_path);
+    if (flag == 0)
+        listall_nary_child(root,0,fp);
+    else if (flag == 1)
+        listall_nary_recur(root,1,fp);
+}
+
 void print( char str[][MAX_LENGTH], int count )
 {
     int i;
@@ -701,4 +798,3 @@ void mainr()
     printf("\n");
     display_nary( root , 1 );
 }
-

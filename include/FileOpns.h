@@ -8,5 +8,5 @@ int list_file(char * file_path , char* output_file);
 int copy_file(char *source_file_with_path , char *destination_file_path);
 int move_file(char *source_file_with_path , char *destination_with_path);
 int update_file( char *souce_file_with_path, char *data_file);
-
+int remove_file(char *file_path);
 #endif

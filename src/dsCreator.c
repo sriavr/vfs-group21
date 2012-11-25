@@ -1,14 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 #include "../include/Filesystem.h"
+#include "../include/nAry.h"
+#include "../include/Bst.h"
 #include "../include/LinkedList.h"
 #include "../include/Hashtable.h"
-#include "../include/Bst.h"
-#include "../include/nAry.h"
+#include "../include/dsCreator.h"
 
 void process_file_desc(nNode* node);
 extern header *hdr;
 extern meta_header *mh;
+extern nNode * nAry_tree;
+extern bst   * bst_tree;
 
 //THIS FUNCTION MAY BE SOON DROPPED
 struct node * create_linkedlist()
@@ -130,7 +133,7 @@ int arr_index = 0;
 file_descriptor *file_descriptor_list;
 long int file_descriptor_list_size;
 
-void update_fd_list(nNode* root)
+void update_fd_list(bst* bst_root)
 {
     file_descriptor_list = hdr -> fd_array;
     file_descriptor_list_size = mh -> file_descriptors_used;
@@ -161,4 +164,10 @@ void process_file_desc(nNode* node)
 {
     //add to a file descriptor array
     //file_descriptor_list[arr_index++] = node -> filedescriptor;
+}
+
+void print_ds()
+{
+    display_nary(nAry_tree, 1);
+    inorder_traversal(bst_tree, displaybst);
 }
