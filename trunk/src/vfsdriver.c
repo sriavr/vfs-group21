@@ -137,15 +137,51 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         }
     }
     else if( strcmp(command, "makedir") == 0 )
-        makedir (P1,P2);
+    {
+        if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
+        {
+            printf(ERR_VFS_MAKEDIR_00);
+        }
+        else
+        {
+            makedir (P1,P2);
+        }
+    }
+
     else if( strcmp(command, "deletedir") == 0 )
-        deletedir (P1);
+    {
+        if(strcmp(P1,"")==0)
+        {
+            printf(ERR_VFS_DELETEDIR_00);
+        }
+        else
+        {
+            deletedir (P1);
+        }
+
+    }
     else if( strcmp(command, "movedir") == 0 )
-        movedir (P1,P2);
+    {
+        if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
+        {
+            printf(ERR_VFS_MOVEDIR_00);
+        }
+        else
+        {
+            movedir (P1,P2);
+        }
+    }
     else if( strcmp(command, "listdir") == 0 )
     {
         int flag = atoi(P2);
-        listdir (P1,flag,P3);
+        if(strcmp(P1,"")==0 || strcmp(P3 , "")==0 || strcmp(P2,"")==0)
+        {
+            printf(ERR_VFS_MOVEDIR_00);
+        }
+        else
+        {
+            listdir (P1,flag,P3);
+        }
     }
     else if( strcmp(command, "addfile") == 0 )
     {
@@ -372,5 +408,6 @@ void printds()
 {
     print_ds();
 }
+
 
 
