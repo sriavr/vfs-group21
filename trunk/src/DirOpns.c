@@ -1,22 +1,25 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "../include/DirOpns.h"
 #include "../include/Filesystem.h"
 #include "../include/Bst.h"
 #include "../include/nAry.h"
+#include "../include/freelist.h"
 #include "../include/vfs_errorcodes.h"
 
 extern nNode * nAry_tree;
 extern bst   * bst_tree;
 extern header *hdr;
 
-
-void make_dir(char *parent_path, char *dir_name)
+int make_dir(char *parent_path, char *dir_name)
 {
-    /*
-        1) Add a node to NaryTree with directory name
-    */
-    //filesystem full
+    if(!is_mounted())
+    {
+        printf(ERR_VFS_MAKEDIR_05);
+        return 1;
+    }
+
     nNode * dir_exists;
     long int block_num = next_free_block();
     if(block_num == -1)
@@ -55,11 +58,6 @@ void make_dir(char *parent_path, char *dir_name)
     if(node_exists(nAry_tree, key))
     {
         printf(ERR_VFS_MAKEDIR_03);
-    }
-
-    if(!is_mounted())
-    {
-        printf(ERR_VFS_MAKEDIR_05);
         return 1;
     }
 
@@ -71,15 +69,23 @@ void make_dir(char *parent_path, char *dir_name)
 //    strcpy(filedescriptor.location_full_path, parent_path);
 //    strcpy(filedescriptor.file_name, dir_name);
     printf("makedir_SUCCESS\n");
+    return 0;
 }
 
-void delete_dir(char *dir_path)
+int delete_dir(char *dir_path)
 {
     /*
     Delete a node in nary tree (see nary tree documentation)
     If a directory contains files, don’t delete, throw error
     Delete directory from bst
     */
+
+    if(!is_mounted())
+    {
+        printf(ERR_VFS_DELETEDIR_04);
+        return 1;
+    }
+
     nNode * dir_exists;
     int is_exists = node_exists(nAry_tree, dir_path);
 
@@ -88,13 +94,7 @@ void delete_dir(char *dir_path)
     if(dir_exists->child != NULL)
     {
         printf(ERR_VFS_DELETEDIR_02);
-        return;
-    }
-
-    if(!is_mounted())
-    {
-        printf(ERR_VFS_DELETEDIR_04);
-        return;
+        return 1;
     }
 
     if(is_exists ==1)
@@ -107,10 +107,12 @@ void delete_dir(char *dir_path)
     {
         printf(ERR_VFS_DELETEDIR_01);
         //PRINT ERROR FOR DELETE NOT ALLOWED
+        return 1;
     }
+    return 0;
 }
 
-void move_dir(char * src_path, char * dest_path)
+int move_dir(char * src_path, char * dest_path)
 {
     /*
     Perform move directory operation in nary tree (see nary tree documentation)
@@ -119,6 +121,12 @@ void move_dir(char * src_path, char * dest_path)
     BST (need to write a function to update the filepaths of existing files)
     Hashtable (need to write a function to update the filepaths of existing files)    */
 
+    if(!is_mounted())
+    {
+        printf(ERR_VFS_MOVEDIR_08);
+        return 1;
+    }
+
     nNode * dir_exists , * dest_dir;
 
     //dir_exists = find(nAry_tree,src_path);
@@ -126,7 +134,7 @@ void move_dir(char * src_path, char * dest_path)
     if(!node_exists(nAry_tree, src_path))
     {
         printf(ERR_VFS_MOVEDIR_01);
-        return;
+        return 1;
     }
 
     //dir_exists = find(nAry_tree,dest_path);
@@ -134,13 +142,13 @@ void move_dir(char * src_path, char * dest_path)
     if(!node_exists(nAry_tree, dest_path))
     {
         printf(ERR_VFS_MOVEDIR_02);
-        return;
+        return 1;
     }
 
     if(is_file(src_path))
     {
         printf(ERR_VFS_MOVEDIR_04);
-        return;
+        return 1;
     }
 // TODO DESTINATION_ALREADY_HAVE_SOURCE_DIR
 //    dir_exists = find(nAry_tree,src_path);
@@ -154,33 +162,28 @@ void move_dir(char * src_path, char * dest_path)
     if(is_file(dest_path) == 1)
     {
         printf(ERR_VFS_MOVEDIR_07);
-        return;
+        return 1;
     }
 
     if(strncmp(src_path,dest_path,strlen(src_path))!=0)
     {
         printf(ERR_VFS_MOVEDIR_07);
-        return;
-    }
-
-    if(!is_mounted())
-    {
-        printf(ERR_VFS_MOVEDIR_08);
-        return;
+        return 1;
     }
 
     move_dir_nary(nAry_tree, src_path, dest_path);
 
     //TODO UPDATE DATA STRUCTURES
     printf("movedir_SUCCESS\n");
+    return 0;
 }
 
-void list_dir(char *dir_path, int flag, char * txt_file_path)
+int list_dir(char *dir_path, int flag, char * txt_file_path)
 {
     if(!is_mounted())
     {
         printf(ERR_VFS_LISTDIR_03);
-        return;
+        return 1;
     }
 
     FILE *fp;
@@ -191,14 +194,13 @@ void list_dir(char *dir_path, int flag, char * txt_file_path)
         listall_nary(nAry_tree, dir_path, flag, fp);
         fclose(fp);
         printf("listdir_SUCCESS\n");
-
     }
     else
     {
         printf(ERR_VFS_LISTDIR_02);
-        return;
+        return 1;
     }
-
+    return 0;
 //    printf("listdir_FAILURE\n");
 //    node_list nlist = listall_nary(nAry_tree, dir_path, flag);
 //

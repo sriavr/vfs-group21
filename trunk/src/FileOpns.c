@@ -27,6 +27,12 @@ extern char full_path_file_name[150];
 //5)UPDATE FILEDESCRIPTOR DURING UNMOUNT
 int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 {
+    if(!is_mounted())
+    {
+        printf(ERR_VFS_ADDFILE_07);
+        return 1;
+    }
+
     if(!physical_file_exists(data_file_path))
     {
         printf(ERR_VFS_LISTFILE_01);
@@ -75,12 +81,6 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
         return 1;
     }
 
-    if(!is_mounted())
-    {
-        printf(ERR_VFS_ADDFILE_07);
-        return 1;
-    }
-
     //printf("block_num ::%d\n",block_num);
     //printf("updated_value ::%d\n",i);
     //update_flist_deallocate(long int block_num);
@@ -110,6 +110,12 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 
 int list_file(char * file_path , char* output_file)
 {
+    if(!is_mounted())
+    {
+        printf(ERR_VFS_LISTFILE_04);
+        return 1;
+    }
+
     int flag = 1;
     int block_number = -1;
     long int filesize;
@@ -130,12 +136,6 @@ int list_file(char * file_path , char* output_file)
     if(!physical_file_canwrite(output_file))
     {
         printf(ERR_VFS_LISTFILE_03);
-        return 1;
-    }
-
-    if(!is_mounted())
-    {
-        printf(ERR_VFS_LISTFILE_04);
         return 1;
     }
 
@@ -293,6 +293,13 @@ int remove_file(char *file_path)
 
 int export_file(char *source_file_path, char *destination_file_path)
 {
+    //vfs is not mounted
+    if(!is_mounted())
+    {
+        printf(ERR_VFS_EXPORTFILE_04);
+        return 1;
+    }
+
     //can't export directory
     if(is_dir(source_file_path))
     {
@@ -311,13 +318,6 @@ int export_file(char *source_file_path, char *destination_file_path)
     if(!physical_file_canwrite(destination_file_path))
     {
         printf(ERR_VFS_EXPORTFILE_02);
-        return 1;
-    }
-
-    //vfs is not mounted
-    if(!is_mounted())
-    {
-        printf(ERR_VFS_EXPORTFILE_04);
         return 1;
     }
 
@@ -445,13 +445,11 @@ int  main()
 
 int update_file( char *source_file_with_path, char *data_file)
 {
-
     if(!is_mounted())
     {
         printf(ERR_VFS_UPDATEFILE_04);
         return 1;
     }
-
 
     file_descriptor filedescriptor;
     filedescriptor = search_bst_full(bst_tree,source_file_with_path);
