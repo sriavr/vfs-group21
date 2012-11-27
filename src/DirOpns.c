@@ -16,7 +16,7 @@ void make_dir(char *parent_path, char *dir_name)
     /*
         1) Add a node to NaryTree with directory name
     */
-       //filesystem full
+    //filesystem full
     nNode * dir_exists;
     long int block_num = next_free_block();
     if(block_num == -1)
@@ -30,9 +30,29 @@ void make_dir(char *parent_path, char *dir_name)
         printf(ERR_VFS_MAKEDIR_02);
         return 1;
     }
-    dir_exists = find(nAry_tree,parent_path);
+    //dir_exists = find(nAry_tree,parent_path);
+    int fullpath_length = strlen(parent_path);
+    int filename_length = strlen(dir_name);
+    int length = 0;
+    char * key = NULL;
 
-    if(strcmp(dir_exists->name,dir_name) == 0)
+    if(parent_path[fullpath_length - 1] == '/')
+    {
+        length = fullpath_length + filename_length;
+        key = calloc((length+1),sizeof(char));
+        strcat(key, parent_path);
+        strcat(key, dir_name);
+    }
+    else
+    {
+        length = fullpath_length + filename_length;
+        key = calloc((length+2),sizeof(char));
+        strcat(key, parent_path);
+        strcat(key, "/");
+        strcat(key, dir_name);
+    }
+
+    if(node_exists(nAry_tree, key))
     {
         printf(ERR_VFS_MAKEDIR_03);
     }
@@ -101,36 +121,36 @@ void move_dir(char * src_path, char * dest_path)
 
     nNode * dir_exists , * dest_dir;
 
-    dir_exists = find(nAry_tree,src_path);
+    //dir_exists = find(nAry_tree,src_path);
 
-    if(dir_exists->child == NULL)
+    if(!node_exists(nAry_tree, src_path))
     {
         printf(ERR_VFS_MOVEDIR_01);
         return;
     }
 
-    dir_exists = find(nAry_tree,dest_path);
+    //dir_exists = find(nAry_tree,dest_path);
 
-    if(dir_exists->child == NULL)
+    if(!node_exists(nAry_tree, dest_path))
     {
         printf(ERR_VFS_MOVEDIR_02);
         return;
     }
 
-    if(is_file(src_path) == 1)
+    if(is_file(src_path))
     {
         printf(ERR_VFS_MOVEDIR_04);
         return;
     }
-
-    dir_exists = find(nAry_tree,src_path);
-    dest_dir   = find(nAry_tree,dest_path);
-
-    if(strcmp(dir_exists->name,dest_dir->name) == 0)
-    {
-        printf(ERR_VFS_MOVEDIR_05);
-    }
-
+// TODO DESTINATION_ALREADY_HAVE_SOURCE_DIR
+//    dir_exists = find(nAry_tree,src_path);
+//    dest_dir   = find(nAry_tree,dest_path);
+//
+//    if(strcmp(dir_exists->name,dest_dir->name) == 0)
+//    {
+//        printf(ERR_VFS_MOVEDIR_05);
+//    }
+//
     if(is_file(dest_path) == 1)
     {
         printf(ERR_VFS_MOVEDIR_07);
@@ -195,3 +215,4 @@ void list_dir(char *dir_path, int flag, char * txt_file_path)
 //    fclose(fp);
 //    printf("listdir_SUCCESS\n");
 }
+
