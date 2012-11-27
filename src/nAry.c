@@ -29,7 +29,7 @@ nNode* createNode(char name[])
 
     if(node == NULL)
     {
-        fprintf(stderr,"Cannot allocate memory please free some amount of memory if possible");
+        //fprintf(stderr,"Cannot allocate memory please free some amount of memory if possible");
         return NULL;
     }
 
@@ -158,7 +158,7 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
 
     if( count != 0 && root == NULL )
     {
-        fprintf(stderr,"Invalid Path");
+        //fprintf(stderr,"Invalid Path");
         return NULL;
     }
 
@@ -368,7 +368,7 @@ nNode * removeLink( nNode * root , char * srcPath )
 
     if( count <= 0 || root == NULL )
     {
-        fprintf(stderr,"Invalid Path");
+        //fprintf(stderr,"Invalid Path");
         return root;
     }
 
@@ -379,7 +379,7 @@ nNode * removeLink( nNode * root , char * srcPath )
         matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
         if( matchedNode == NULL )
         {
-            fprintf( stderr, "Invalid path");
+            //fprintf( stderr, "Invalid path");
             return root;
         }
         t = matchedNode;
@@ -567,8 +567,8 @@ nNode * find( nNode * root , char nPath[] )//, char name[] )
 
     if( count != 0 && root == NULL )
     {
-        fprintf(stderr,"Invalid Path");
-        return 0;
+        //fprintf(stderr,"Invalid Path");
+        return NULL;
     }
 
     t = root;
@@ -577,7 +577,7 @@ nNode * find( nNode * root , char nPath[] )//, char name[] )
         matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
         if( matchedNode == NULL )
         {
-            fprintf( stderr, "Invalid path");
+            //fprintf( stderr, "Invalid path");
             return NULL;
         }
         t = matchedNode;
@@ -687,12 +687,12 @@ nNode * deleteDir(nNode * root,char path[])
     }
     else
     {
-        printf("Cannot delete node ");
+        //printf("Cannot delete node ");
     }
     //retCode = freeNode(delPathNode,0);
     if (retCode == FAILED)
     {
-        fprintf(stderr,"ERROR IN FREEING OF NODES");
+        //fprintf(stderr,"ERROR IN FREEING OF NODES");
         return root;
     }
     return root;

@@ -55,7 +55,7 @@ int main( int argc, char *argv[] )
     char *token;
     //HARDCODING
     argc = 2;
-    argv[1] = "./test/operations/createvfs";
+    argv[1] = "./test/test02.txt";
     if( argc != 2 )
     {
         printf("%d",argc);
@@ -309,7 +309,7 @@ void deletedir ( char *P1 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("deletedir_TO_BE_DONE\n");
-//    delete_dir(P1);
+    delete_dir(P1);
 }
 
 void movedir ( char *P1, char *P2 )

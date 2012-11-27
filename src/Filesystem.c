@@ -411,6 +411,7 @@ meta_header * read_meta_header(char fullpath[150])
         return NULL;
     }
 
+    fp = fopen(fullpath, "rb");
     //read and copy the meta header to mh
     if(fread(mh, sizeof(meta_header), 1, fp) != 1)
     {
@@ -436,6 +437,7 @@ header * read_header(char fullpath[150])
         return NULL;
     }
 
+    fp = fopen(fullpath, "rb");
     //Set the position indicator of file pointer to the header by offsetting sizeof(meta_header) bytes
     if(fseek(fp, sizeof(meta_header), SEEK_SET) != 0)
     {
