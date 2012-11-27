@@ -195,7 +195,7 @@ int mount_vfs(char fullpath[150])
     if(is_mounted())
     {
         printf(ERR_VFS_MOUNT_03);
-        return 0;
+        return 1;
     }
 
     //read meta header, header
@@ -203,6 +203,10 @@ int mount_vfs(char fullpath[150])
     {
         mh = read_meta_header(fullpath);
         hdr = read_header(fullpath);
+        if(mh == NULL || hdr == NULL)
+        {
+            return 1;
+        }
     }
     //block_array = read_block_array(fullpath); //DONT READ BLOCK ARRAY INTO RAM
 
@@ -419,7 +423,10 @@ meta_header * read_meta_header(char fullpath[150])
 
     fp = fopen(fullpath,"rb");
     if(fp ==NULL)
+    {
         printf(ERR_VFS_MOUNT_01);
+        return NULL;
+    }
 
     //read and copy the meta header to mh
     if(fread(mh, sizeof(meta_header), 1, fp) != 1)
