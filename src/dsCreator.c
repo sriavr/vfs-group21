@@ -189,5 +189,5 @@ void clear_file_desc_list()
 void print_ds()
 {
     display_nary(nAry_tree, 1);
-    //inorder_traversal(bst_tree, displaybst);
+    inorder_traversal(bst_tree, displaybst);
 }
