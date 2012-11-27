@@ -55,7 +55,7 @@ int main( int argc, char *argv[] )
     char *token;
     //HARDCODING
     argc = 2;
-    argv[1] = "./test/input.txt";
+    argv[1] = "./test/test02.txt";
     if( argc != 2 )
     {
         printf("%d",argc);
