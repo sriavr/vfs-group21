@@ -93,7 +93,7 @@ bst * insert_bst(bst* bst_root, file_descriptor filedescriptor)
                     temp = temp -> left;
                 }
             }
-            else if(generate_key(fresh), generate_key(temp) > 0)
+            else if(strcmp(generate_key(fresh), generate_key(temp)) > 0)
             {
                 if(temp -> right == NULL)
                 {

@@ -86,15 +86,21 @@ int create_vfs(char fullpath[150], int size)
         return 0;
     }
 
-    for(i=0 ; i<no_of_characters ; i++)
+    if(!is_valid_name(fullpath))
     {
-        int i=0;
-        if(fullpath[i] == '/')
-        {
-            printf(ERR_VFS_CREATE_03);
-            return 0;
-        }
+        printf(ERR_VFS_CREATE_03);
+        return 1;
     }
+
+//    for(i=0 ; i<no_of_characters ; i++)
+//    {
+//        int i=0;
+//        if(fullpath[i] == '/')
+//        {
+//            printf(ERR_VFS_CREATE_03);
+//            return 0;
+//        }
+//    }
 
     if(physical_file_exists(fullpath))
     {
