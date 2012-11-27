@@ -25,6 +25,11 @@ struct node * insert_hashtable(
 //    int index = 0;
     // Makes sure the key is not already present in the hashtable.
     int hash_code = get_hash_code(filedescriptor.file_name);
+    int full_path_length = strlen(filedescriptor.location_full_path);
+    if(filedescriptor.location_full_path[full_path_length - 1] != '/')
+    {
+        strcat(filedescriptor.location_full_path, "/");
+    }
 //    index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
     struct node *temp = NULL;
     temp = hashtable[hash_code];
@@ -62,7 +67,7 @@ struct node * delete_hashtable(
         if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code
                 && (strcmp(temp -> filedescriptor.location_full_path , filedescriptor.location_full_path)==0))
         {
-            delete_linkedlist(temp, filedescriptor);
+           hashtable[hash_code] = delete_linkedlist(temp, filedescriptor);
         }
         temp = temp -> next;
     }
