@@ -342,26 +342,24 @@ void updatefile ( char *P1, char *P2 )
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     int i;
     i = update_file(P1, P2);
-    if(i!=0)
-    {
-        printf("\nUPDATE_FAILURE\n");
+    if(i!=0){
+        printf("\tUPDATE_FAILURE\n");
     }
     else
-        printf("\nUPDATE_SUCCESS\n");
+    printf("\tUPDATE_SUCCESS\n");
 }
 
 void removefile ( char *P1 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("removefile_TO_BE_DONE\n");
-    int i;
+     int i;
     i = remove_file(P1);
-    if(i!=0)
-    {
-        printf("\nREMOVEFILE_FAILURE\n");
+    if(i!=0){
+        printf("\tREMOVEFILE_FAILURE\n");
     }
     else
-        printf("\nREMOVEFILE_SUCCESS\n");
+    printf("\tREMOVEFILE_SUCCESS\n");
 }
 
 void movefile ( char *P1, char *P2 )
@@ -370,25 +368,23 @@ void movefile ( char *P1, char *P2 )
     //move_file(P1,P2);
     int i;
     i = move_file(P1,P2);
-    if(i!=0)
-    {
-        printf("\nMOVEFILE_FAILURE\n");
+    if(i!=0){
+        printf("\tMOVEFILE_FAILURE\n");
     }
     else
-        printf("\nMOVEFILE_SUCCESS\n");
+    printf("\tMOVEFILE_SUCCESS\n");
 }
 
 void copyfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    int i;
+     int i;
     i = copy_file(P1,P2);
-    if(i!=0)
-    {
-        printf("\nCOPYFILE_FAILURE\n");
+    if(i!=0){
+        printf("\tCOPYFILE_FAILURE\n");
     }
     else
-        printf("\nCOPYFILE_SUCCESS\n");
+    printf("\tCOPYFILE_SUCCESS\n");
 
 }
 
