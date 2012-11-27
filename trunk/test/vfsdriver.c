@@ -55,7 +55,7 @@ int main( int argc, char *argv[] )
     char *token;
     //HARDCODING
     argc = 2;
-    argv[1] = "./test/test02.txt";
+    argv[1] = "./test/input.txt";
     if( argc != 2 )
     {
         printf("%d",argc);
@@ -288,121 +288,134 @@ void mountvfs ( char *P1 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
 //	printf("mountvfs_TO_BE_DONE\n");
-    mount_vfs(P1);
+    if (mount_vfs(P1) == 0)
+    {
+        printf("\nmountvfs_SUCCESS");
+    }
 }
 
 void unmountvfs ( char *P1 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
 //	printf("unmountvfs_TO_BE_DONE\n");
-    unmount_vfs(P1);
+    if (unmount_vfs(P1) == 0)
+    {
+        printf("\nunmountvfs_SUCCESS");
+    }
 }
 
 void makedir ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("makedir_TO_BE_DONE\n");
-    make_dir(P1, P2);
+    if (make_dir(P1, P2) == 0)
+    {
+        printf("\nmakedir_SUCCESS");
+    }
 }
 
 void deletedir ( char *P1 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("deletedir_TO_BE_DONE\n");
-    delete_dir(P1);
+    if (delete_dir(P1) == 0)
+    {
+        printf("\ndeletedir_SUCCESS");
+    }
 }
 
 void movedir ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("movedir_TO_BE_DONE\n");
-    move_dir(P1, P2);
+    if (move_dir(P1, P2) == 0)
+    {
+        printf("\nmovedir_SUCCESS");
+    }
 }
 
 void listdir ( char *P1, int P2, char *P3 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("listdir_TO_BE_DONE\n");
-    list_dir(P1, P2, P3);
+    if (list_dir(P1, P2, P3) == 0)
+    {
+        printf("\nlistdir_SUCCESS");
+    }
 }
 
 void addfile ( char *P1, char *P2, char *P3 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    add_file(P1 , P2 , P3);
+    if (add_file(P1, P2, P3) == 0)
+    {
+        printf("\naddfile_SUCCESS");
+    }
 }
 
 void listfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    list_file(P1 , P2);
+    if (list_file(P1, P2) == 0)
+    {
+        printf("\nlistfile_SUCCESS");
+    }
 }
 
 void updatefile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    int i;
-    i = update_file(P1, P2);
-    if(i!=0)
+    if (update_file(P1, P2) == 0)
     {
-        printf("\tUPDATE_FAILURE\n");
+        printf("\nupdatefile_SUCCESS");
     }
-    else
-        printf("\tUPDATE_SUCCESS\n");
 }
 
 void removefile ( char *P1 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //printf("removefile_TO_BE_DONE\n");
-    int i;
-    i = remove_file(P1);
-    if(i!=0)
+    if (remove_file(P1) == 0)
     {
-        printf("\tREMOVEFILE_FAILURE\n");
+        printf("\nremovefile_SUCCESS");
     }
-    else
-        printf("\tREMOVEFILE_SUCCESS\n");
 }
 
 void movefile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     //move_file(P1,P2);
-    int i;
-    i = move_file(P1,P2);
-    if(i!=0)
+    if (move_file(P1, P2) == 0)
     {
-        printf("\tMOVEFILE_FAILURE\n");
+        printf("\nmovefile_SUCCESS");
     }
-    else
-        printf("\tMOVEFILE_SUCCESS\n");
 }
 
 void copyfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    int i;
-    i = copy_file(P1,P2);
-    if(i!=0)
+   if (copy_file(P1, P2) == 0)
     {
-        printf("\tCOPYFILE_FAILURE\n");
+        printf("\ncopyfile_SUCCESS");
     }
-    else
-        printf("\tCOPYFILE_SUCCESS\n");
-
 }
 
 void exportfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    export_file(P1,P2);
+    if (export_file(P1, P2) == 0)
+    {
+        printf("\nexportfile_SUCCESS");
+    }
 }
 
 void searchfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    search_file(P1,P2);
+    if (search_file(P1, P2) == 0)
+    {
+        printf("\nsearchfile_SUCCESS");
+    }
 }
 
 void printds()

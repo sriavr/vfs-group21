@@ -229,7 +229,7 @@ int unmount_vfs(char filepath[150])
     //if vfs is not mounted
     if(!is_mounted())
     {
-        printf(ERR_VFS_UNMOUNT_03);
+        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_03);
         return 1;
     }
 
@@ -239,14 +239,14 @@ int unmount_vfs(char filepath[150])
     //if vfs file is not found
     if(!physical_file_exists(filepath))
     {
-        printf(ERR_VFS_UNMOUNT_01);
+        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_01);
         return 1;
     }
 
     //if vfs file can't be written to
     if(!physical_file_canwrite(filepath))
     {
-        printf(ERR_VFS_UNMOUNT_02);
+        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_02);
         return 1;
     }
 
@@ -255,14 +255,14 @@ int unmount_vfs(char filepath[150])
 
     if((fwrite(mh,sizeof(meta_header),1,fp))!=1)
     {
-        printf(ERR_VFS_UNMOUNT_02 );
+        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_02 );
         return 1;
     }
     //printf("successfully unmount meta_header");
 
     if((fwrite(hdr,sizeof(header),1,fp))!=1)
     {
-        printf(ERR_VFS_UNMOUNT_02 );
+        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_02 );
         return 1;
     }
 
@@ -278,7 +278,7 @@ int unmount_vfs(char filepath[150])
     bst_tree = NULL;
     //clear hash table
     //hashtable
-    printf("unmountvfs_SUCCESS\n");
+    //printf("unmountvfs_SUCCESS\n");
     return 0;
 }
 
@@ -468,7 +468,7 @@ block *read_block_array(char fullpath[150])
 
     fp = fopen(fullpath,"r+b");
     if(fp ==NULL)
-        printf(ERR_VFS_MOUNT_01);
+        printf("\nmountvfs_FAILURE "ERR_VFS_MOUNT_01);
 
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
     if(fseek(fp, (sizeof(meta_header) + sizeof(header)), SEEK_SET) != 0)
@@ -481,7 +481,7 @@ block *read_block_array(char fullpath[150])
     //read and copy the block_array to array
     if(fread(block_array, sizeof(MAX_NUM_OF_BLOCKS), 1, fp) != 1)
     {
-        printf(ERR_VFS_MOUNT_02);
+        printf("\nmountvfs_FAILURE "ERR_VFS_MOUNT_02);
         fclose(fp);
         return NULL;
     }
