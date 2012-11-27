@@ -1,4 +1,4 @@
---createvfs demo 1024 
+createvfs demo 1024 
 createvfs demo 1024 --already exists
 createvfs /home/demo 1024 --cannot create datafile
 createvfs demo 10000000000

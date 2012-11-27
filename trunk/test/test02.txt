@@ -5,8 +5,7 @@ addfile /home/ aliases.txt /usr/include/aliases.h
 addfile /home/ complex.txt /usr/include/complex.h
 addfile /home/sub1/ alloca.txt /usr/include/alloca.h
 unmountvfs demo
-mountvfs demo
-printds
+mountvfs demoz
 unmountvfs demo
 mountvfs demo
 unmountvfs demo
