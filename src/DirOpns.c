@@ -195,4 +195,3 @@ void list_dir(char *dir_path, int flag, char * txt_file_path)
 //    fclose(fp);
 //    printf("listdir_SUCCESS\n");
 }
-
