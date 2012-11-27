@@ -1,0 +1,3 @@
+mountvfs demo
+printds
+unmountvfs demo
