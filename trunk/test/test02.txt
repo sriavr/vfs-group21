@@ -1,0 +1,12 @@
+createvfs demo 1024
+mountvfs demo
+makedir /home/ sub2
+addfile /home/ aliases.txt /usr/include/aliases.h
+addfile /home/ complex.txt /usr/include/complex.h
+addfile /home/sub1/ alloca.txt /usr/include/alloca.h
+unmountvfs demo
+mountvfs demo
+printds
+unmountvfs demo
+mountvfs demo
+unmountvfs demo
