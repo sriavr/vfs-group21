@@ -16,7 +16,7 @@ int make_dir(char *parent_path, char *dir_name)
 {
     if(!is_mounted())
     {
-        printf(ERR_VFS_MAKEDIR_05);
+        printf("\nmakedir_FAILURE "ERR_VFS_MAKEDIR_05);
         return 1;
     }
 
@@ -24,13 +24,13 @@ int make_dir(char *parent_path, char *dir_name)
     long int block_num = next_free_block();
     if(block_num == -1)
     {
-        printf(ERR_VFS_MAKEDIR_01);
+        printf("\nmakedir_FAILURE "ERR_VFS_MAKEDIR_01);
         return 1;
     }
 
     if(!is_valid_name(dir_name))
     {
-        printf(ERR_VFS_MAKEDIR_02);
+        printf("\nmakedir_FAILURE "ERR_VFS_MAKEDIR_02);
         return 1;
     }
     //dir_exists = find(nAry_tree,parent_path);
@@ -57,7 +57,7 @@ int make_dir(char *parent_path, char *dir_name)
 
     if(node_exists(nAry_tree, key))
     {
-        printf(ERR_VFS_MAKEDIR_03);
+        printf("\nmakedir_FAILURE "ERR_VFS_MAKEDIR_03);
         return 1;
     }
 
@@ -82,7 +82,7 @@ int delete_dir(char *dir_path)
 
     if(!is_mounted())
     {
-        printf(ERR_VFS_DELETEDIR_04);
+        printf("\ndeletedir_FAILURE "ERR_VFS_DELETEDIR_04);
         return 1;
     }
 
@@ -93,7 +93,7 @@ int delete_dir(char *dir_path)
 
     if(dir_exists->child != NULL)
     {
-        printf(ERR_VFS_DELETEDIR_02);
+        printf("\ndeletedir_FAILURE "ERR_VFS_DELETEDIR_02);
         return 1;
     }
 
@@ -105,7 +105,7 @@ int delete_dir(char *dir_path)
     }
     else
     {
-        printf(ERR_VFS_DELETEDIR_01);
+        printf("\ndeletedir_FAILURE "ERR_VFS_DELETEDIR_01);
         //PRINT ERROR FOR DELETE NOT ALLOWED
         return 1;
     }
@@ -123,7 +123,7 @@ int move_dir(char * src_path, char * dest_path)
 
     if(!is_mounted())
     {
-        printf(ERR_VFS_MOVEDIR_08);
+        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_08);
         return 1;
     }
 
@@ -133,7 +133,7 @@ int move_dir(char * src_path, char * dest_path)
 
     if(!node_exists(nAry_tree, src_path))
     {
-        printf(ERR_VFS_MOVEDIR_01);
+        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_01);
         return 1;
     }
 
@@ -141,13 +141,13 @@ int move_dir(char * src_path, char * dest_path)
 
     if(!node_exists(nAry_tree, dest_path))
     {
-        printf(ERR_VFS_MOVEDIR_02);
+        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_02);
         return 1;
     }
 
     if(is_file(src_path))
     {
-        printf(ERR_VFS_MOVEDIR_04);
+        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_04);
         return 1;
     }
 // TODO DESTINATION_ALREADY_HAVE_SOURCE_DIR
@@ -161,20 +161,20 @@ int move_dir(char * src_path, char * dest_path)
 //
     if(is_file(dest_path) == 1)
     {
-        printf(ERR_VFS_MOVEDIR_07);
+        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_07);
         return 1;
     }
 
     if(strncmp(src_path,dest_path,strlen(src_path))!=0)
     {
-        printf(ERR_VFS_MOVEDIR_07);
+        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_07);
         return 1;
     }
 
     move_dir_nary(nAry_tree, src_path, dest_path);
 
     //TODO UPDATE DATA STRUCTURES
-    printf("movedir_SUCCESS\n");
+    //printf("\nmovedir_SUCCESS");
     return 0;
 }
 
@@ -182,7 +182,7 @@ int list_dir(char *dir_path, int flag, char * txt_file_path)
 {
     if(!is_mounted())
     {
-        printf(ERR_VFS_LISTDIR_03);
+        printf("\nlistdir_FAILURE "ERR_VFS_LISTDIR_03);
         return 1;
     }
 
@@ -197,7 +197,7 @@ int list_dir(char *dir_path, int flag, char * txt_file_path)
     }
     else
     {
-        printf(ERR_VFS_LISTDIR_02);
+        printf("\nlistdir_FAILURE "ERR_VFS_LISTDIR_02);
         return 1;
     }
     return 0;
