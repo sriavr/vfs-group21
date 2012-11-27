@@ -226,7 +226,7 @@ int search_file(char *filename, char *outputfile)
     fp = fopen(outputfile,"w+");
     if(fp == NULL)
     {
-        printf(ERR_VFS_LISTDIR_04);
+        // printf(ERR_VFS_LISTDIR_04);
         return 1;
     }
 
@@ -245,32 +245,51 @@ int search_file(char *filename, char *outputfile)
 // delete_bst not implemented
 int remove_file(char *file_path)
 {
-    if(hdr == NULL)
+    if(!is_mounted())
     {
-        printf(ERR_VFS_ADDFILE_07);
-        return -1;
+        printf(ERR_VFS_REMOVEFILE_02);
+        return 1;
     }
 
     file_descriptor filedescriptor;
     filedescriptor = search_bst_full(bst_tree,file_path);
-        if(strcmp(filedescriptor.location_full_path ,"0")==0){
+    if(strcmp(filedescriptor.location_full_path ,"0")==0)
+    {
         printf(ERR_VFS_REMOVEFILE_01);
-        return -1;
+        return 1;
     }
-    else {
-        delete_hashtable(hashtable,filedescriptor);
-        //delete_bst not implemented yet
+    else
+    {
+        int full_path_length = strlen(filedescriptor.location_full_path);
+        int file_name_length = strlen(filedescriptor.file_name);
+        char * temp_node_path = NULL;
+        if(filedescriptor.location_full_path[full_path_length - 1] == '/')
+        {
+            temp_node_path = (char *) malloc(sizeof(char) * (full_path_length + file_name_length));
+            strcat(temp_node_path, filedescriptor.location_full_path);
+            strcat(temp_node_path, filedescriptor.file_name);
+        }
+        else
+        {
+            temp_node_path = (char *) malloc(sizeof(char) * (full_path_length + file_name_length + 1));
+            strcat(temp_node_path, filedescriptor.location_full_path);
+            strcat(temp_node_path, "/");
+            strcat(temp_node_path, filedescriptor.file_name);
+        }
+
+        delete_hashtable(hashtable, filedescriptor);
+        delete_bst(bst_tree, temp_node_path);
         delete_file_nary(nAry_tree, file_path);
         update_flist_deallocate(filedescriptor.location_block_num);
-/*        strcpy(filedescriptor.file_name,"");
-        strcpy(filedescriptor.location_full_path,"");
-        strcpy(filedescriptor.file_type,"");
-        filedescriptor.file_size = 0;
-        filedescriptor.location_block_num = 0;
-*/
+        /*        strcpy(filedescriptor.file_name,"");
+                strcpy(filedescriptor.location_full_path,"");
+                strcpy(filedescriptor.file_type,"");
+                filedescriptor.file_size = 0;
+                filedescriptor.location_block_num = 0;
+        */
     }
     return 0;
- }
+}
 
 int export_file(char *source_file_path, char *destination_file_path)
 {
@@ -326,35 +345,40 @@ int export_file(char *source_file_path, char *destination_file_path)
 // assumption made(correct me if i am wrong), file_type is either "directory" or "file"
 int copy_file(char *source_file_with_path , char *destination_file_path)
 {
-    if(hdr == NULL)
+    if(!is_mounted())
     {
-        printf(ERR_VFS_COPYFILE_05);
-        return -1;
+        printf("\n"ERR_VFS_COPYFILE_05);
+        return 1;
     }
+
     int block_num = -1;
     file_descriptor filedescriptor , new_filedescriptor;
     filedescriptor = search_bst_full(bst_tree , source_file_with_path);
-    if(strcmp(filedescriptor.location_full_path ,"0")==0){
+    if(strcmp(filedescriptor.location_full_path ,"0")==0)
+    {
         printf(ERR_VFS_COPYFILE_01);
-        return -1;
+        return 1;
     }
-    if(strcmp(filedescriptor.file_type,"directory")==0){
+    if(strcmp(filedescriptor.file_type,"dir")==0)
+    {
         printf(ERR_VFS_COPYFILE_03);
-        return -1;
+        return 1;
     }
     block_num = next_free_block();
-    if(block_num == -1){
+    if(block_num == -1)
+    {
         printf(ERR_VFS_COPYFILE_04);
-        return -1;
+        return 1;
     }
-char nName[MAX_LEVELS][MAX_LENGTH],
-    dirname[MAX_LENGTH],
-    *dirpath_insert;
-    int count = splitPath(destination_file_path, nName),
-                length,
-                length_name,
-                i;
+    char nName[MAX_LEVELS][MAX_LENGTH],
+    dirname[MAX_LENGTH];
+    int count = splitPath(destination_file_path, nName);
     strcpy(dirname,nName[count-1]);
+    int full_path_length = strlen(dirname);
+    if(dirname[full_path_length - 1] != '/')
+    {
+        strcat(dirname, "/");
+    }
 
     strcpy(new_filedescriptor.file_name , filedescriptor.file_name);
     strcpy(new_filedescriptor.location_full_path , dirname);
@@ -362,7 +386,13 @@ char nName[MAX_LEVELS][MAX_LENGTH],
     new_filedescriptor.file_size = filedescriptor.file_size;
     new_filedescriptor.location_block_num = block_num;
 
+    if(!node_exists(nAry_tree, filedescriptor.location_full_path))
+    {
+        printf(ERR_VFS_COPYFILE_02);
+        return 1;
+    }
     //adding to datastructures except nAry
+    add_file_nary(nAry_tree, filedescriptor.file_name, filedescriptor.location_full_path);
     insert_bst(bst_tree, new_filedescriptor);
     insert_hashtable(hashtable, new_filedescriptor);
     return 0;
@@ -373,10 +403,12 @@ int move_file(char *source_file_with_path , char *destination_with_path )
     int i,k;
     i = copy_file(source_file_with_path , destination_with_path);
     k = remove_file(source_file_with_path);
-    if(i != 0 || k != 0){
-        return -1;
+    if(i != 0 || k != 0)
+    {
+        return 1;
     }
-    else{
+    else
+    {
         return 0;
     }
 }
@@ -423,22 +455,24 @@ int update_file( char *source_file_with_path, char *data_file)
 
     file_descriptor filedescriptor;
     filedescriptor = search_bst_full(bst_tree,source_file_with_path);
-    if(strcmp(filedescriptor.file_type ,"file")!=0){
+    if(strcmp(filedescriptor.file_type ,"file")!=0)
+    {
         printf(ERR_VFS_UPDATEFILE_01);
         return 1;
     }
 
     FILE *fp_data_file = fopen(data_file, "rb");
-    if(!physical_file_exists(data_file)){
+    if(!physical_file_exists(data_file))
+    {
         printf(ERR_VFS_UPDATEFILE_02);
         return 1;
     }
-/*
-    if(fp_data_file== NULL){
-        printf(ERR_VFS_UPDATEFILE_02);
-        return -1;
-    }
-*/    fseek(fp_data_file, 0L, SEEK_END);
+    /*
+        if(fp_data_file== NULL){
+            printf(ERR_VFS_UPDATEFILE_02);
+            return -1;
+        }
+    */    fseek(fp_data_file, 0L, SEEK_END);
     long int size = ftell(fp_data_file);
 
     if(size > BLOCK_SIZE)
