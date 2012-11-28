@@ -36,13 +36,13 @@ nNode * insertAtEnd( nNode * t , char name[] );
 nNode* insertNode( nNode * root , char nPath[] , char name[] );
 //nNode* insertNode( nNode * root , file_descriptor filedescriptor );
 
+nNode* insertNode_filedesc(nNode * root , file_descriptor filedescriptor);
+
 void changeLevel( int level, FILE * fp );
 
 void print( char str[][MAX_LENGTH], int count );
 
 void testSplit();
-
-
 
 typedef struct lst{
     char ** dirnames;

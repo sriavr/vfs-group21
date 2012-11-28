@@ -98,7 +98,8 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     filedescriptor.location_block_num = block_num;
 
     //create a directory if doesn't exist and modify data structures
-    add_file_nary(nAry_tree, filedescriptor.file_name, filedescriptor.location_full_path);
+    //add_file_nary(nAry_tree, filedescriptor.file_name, filedescriptor.location_full_path);
+    insertNode_filedesc(nAry_tree, filedescriptor);
     bst_tree = insert_bst(bst_tree, filedescriptor);
     search_hashtable(hashtable, file_name )  ;        //pass filedescriptor file_name in this
     insert_hashtable(hashtable, filedescriptor);
@@ -389,8 +390,9 @@ int copy_file(char *source_file_with_path , char *destination_file_path)
         printf("\ncopyfile_FAILURE "ERR_VFS_COPYFILE_02);
         return 1;
     }
-
-    add_file_nary(nAry_tree, new_filedescriptor.file_name, new_filedescriptor.location_full_path);
+    //adding to datastructures except nAry
+    //add_file_nary(nAry_tree, filedescriptor.file_name, filedescriptor.location_full_path);
+    insertNode_filedesc(nAry_tree,new_filedescriptor);
     insert_bst(bst_tree, new_filedescriptor);
     insert_hashtable(hashtable, new_filedescriptor);
     return 0;
@@ -534,7 +536,7 @@ int update_file( char *source_file_with_path, char *data_file)
     /*
         if(fp_data_file== NULL){
             printf(ERR_VFS_UPDATEFILE_02);
-            return -1;
+            return 1;
         }
     */    fseek(fp_data_file, 0L, SEEK_END);
     long int size = ftell(fp_data_file);

@@ -59,7 +59,9 @@ bst* create_bst()
     long int i;
     for(i=0; i < file_descriptor_list_size; i ++)
     {
-        tree = insert_bst(tree, file_descriptor_list[i]);
+        if((strcmp(file_descriptor_list[i].file_type,"file") ==0)
+                || (strcmp(file_descriptor_list[i].file_type,"dir") == 0))
+            tree = insert_bst(tree, file_descriptor_list[i]);
     }
 
     return tree;
@@ -119,15 +121,19 @@ nNode * create_nAry_tree()
     long int i;
     for(i=0; i < file_descriptor_list_size; i ++)
     {
-        if(strcmp(file_descriptor_list[i].file_type, "file"))
+        if(strcmp(file_descriptor_list[i].file_type, "file") == 0)
         {
-            nAryTree = add_file_nary(nAryTree, file_descriptor_list[i].file_name,
-                                     file_descriptor_list[i].location_full_path);
+            nAryTree = insertNode_filedesc(nAryTree, file_descriptor_list[i]);
+            //nAryTree = add_file_nary(nAryTree, file_descriptor_list[i].file_name,
+            //                        file_descriptor_list[i].location_full_path);
         }
-        else if(strcmp(file_descriptor_list[i].file_type, "dir"))
+        else if(strcmp(file_descriptor_list[i].file_type, "dir") == 0)
         {
-            nAryTree = add_dir_nary(nAryTree,
-                                    file_descriptor_list[i].location_full_path);
+            if(strcmp(file_descriptor_list[i].location_full_path, "/") !=0)
+            {
+                nAryTree = add_dir_nary(nAryTree,
+                                        file_descriptor_list[i].location_full_path);
+            }
         }
 
     }

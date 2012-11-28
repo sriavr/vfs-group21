@@ -37,7 +37,7 @@ struct node * insert_hashtable(
     {
         if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code                  //requirement of this???
                 && (strcmp(temp -> filedescriptor.file_name, filedescriptor.file_name)==0)
-                && (strcmp(temp->filedescriptor.location_full_path, filedescriptor.location_full_path)==0))
+                && (strcmp(temp -> filedescriptor.location_full_path, filedescriptor.location_full_path)==0))
         {
             return temp;
         }
