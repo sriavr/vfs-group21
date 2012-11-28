@@ -67,27 +67,27 @@ bst* create_bst()
     return tree;
 }
 
-void test_create_bst()
-{
-//    file_descriptor *file_descriptor_list;
-//    long int file_descriptor_list_size;
-    file_descriptor_list = hdr -> fd_array;
-    file_descriptor_list_size = mh -> file_descriptors_used;
-
-    long int size = 5;
-    file_descriptor* fd_array = NULL;
-    fd_array = create_test_fd_data(fd_array, size);
-    bst * bst_tree = create_bst(fd_array, size);
-
-    printf("\nInorder traversal\n");
-    inorder_traversal(bst_tree, &displaybst);
-
-    printf("\nPreorder traversal\n");
-    preorder_traversal(bst_tree, &displaybst);
-
-    printf("\nPostorder traversal\n");
-    postorder_traversal(bst_tree);
-}
+//void test_create_bst()
+//{
+////    file_descriptor *file_descriptor_list;
+////    long int file_descriptor_list_size;
+//    file_descriptor_list = hdr -> fd_array;
+//    file_descriptor_list_size = mh -> file_descriptors_used;
+//
+//    long int size = 5;
+//    file_descriptor* fd_array = NULL;
+//    fd_array = create_test_fd_data(fd_array, size);
+//    bst * bst_tree = create_bst(fd_array, size);
+//
+//    printf("\nInorder traversal\n");
+//    inorder_traversal(bst_tree, &displaybst);
+//
+//    printf("\nPreorder traversal\n");
+//    preorder_traversal(bst_tree, &displaybst);
+//
+//    printf("\nPostorder traversal\n");
+//    postorder_traversal(bst_tree);
+//}
 
 struct node* fill_hashtable(struct node * hashtable[])
 {
