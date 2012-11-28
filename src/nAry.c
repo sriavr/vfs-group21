@@ -403,7 +403,6 @@ void changeLevel_dis( int level )
  */
 void display_nary( nNode * root , int level )
 {
-
     nNode * t;
 
     if( root == NULL )
@@ -638,14 +637,14 @@ nNode * moveDir(nNode * root ,char * src_path, char * dest_path)
 
     if ( src == NULL )
     {
-        printf("Invalid Source Path");
+        //printf("Invalid Source Path");
         return root;
     }
 
     dest = find( root, dest_path );
     if ( dest == NULL )
     {
-        printf("Invalid Destination Path");
+        //printf("Invalid Destination Path");
         return root;
     }
 
@@ -794,7 +793,7 @@ nNode * deleteDir(nNode * root,char path[])
     delPathNode = find( root,path );
     if ( delPathNode == NULL )
     {
-        printf("Invalid Path");
+        //printf("Invalid Path");
         return root;
     }
     if (delPathNode->child == NULL)
@@ -804,12 +803,12 @@ nNode * deleteDir(nNode * root,char path[])
     }
     else
     {
-        //printf("Cannot delete node ");
+        ////printf("Cannot delete node ");
     }
     //retCode = freeNode(delPathNode,0);
     if (retCode == FAILED)
     {
-        //fprintf(stderr,"ERROR IN FREEING OF NODES");
+        //f//printf(stderr,"ERROR IN FREEING OF NODES");
         return root;
     }
     return root;
@@ -912,6 +911,6 @@ void mainr()
     root = add_dir_nary(root,"/home/demo/Sridhar");
     root = add_file_nary(root,"yele","/home/demo/Pavan");
     root = deleteDir(root,"/home/demo/Pavan");
-    printf("\n");
+    //printf("\n");
     display_nary( root , 1 );
 }

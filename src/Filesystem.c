@@ -38,7 +38,7 @@ int create_vfs(char vfs_label[150], int size)
     size  = size * 1024;
 
     int no_of_characters = strlen(vfs_label);
-    if(no_of_characters > 30)
+    if(no_of_characters > FILE_SYSTEM_LABEL_MAX_SIZE)
     {
         printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_05);
         return 1;
@@ -483,7 +483,9 @@ int is_valid_name( char * file_name )
     int i;
     for( i=0 ; i< no_of_characters ; i++)
     {
-        if(file_name[i] == '/')
+        if((file_name[i] == '/') ||
+                (file_name[i] == '\\')||
+                (file_name[i] == '\0'))
         {
             return 0;
         }
