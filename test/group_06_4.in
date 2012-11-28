@@ -1,0 +1,57 @@
+createvfs vfs_group06 1
+createvfs vfs_group06 100
+mountvfs vfs_group06
+unmountvfs vfs_group06
+mountvfs vfs_group06
+makedir /home subdir2
+makedir /home subdir3
+makedir /home/subdir2 subdir4
+addfile /home/subdir2 newfile2.txt /tmp/addfile2.txt
+addfile /home/subdir2 newfile.txt /usr/include/addfile.txt
+addfile /home/subdir3 newfile2.txt /usr/include/addfile10.txt
+movedir /home/dir1 /home/subdir2
+deletedir /home/dir1/subdir2/newfile.txt
+mountvfs vfs_group06
+makedir /home/dir1/dir2/dir3 newdir
+makedir /home subdir1
+makedir /home subdir2
+makedir /home subdir3
+makedir /home/subdir2 subdir4
+makedir /home/dir1/dir2 subdir5
+makedir /home/dir1 dir2
+addfile /home/subdir2 newfile1.txt /usr/include/addfile3.txt
+addfile /home/subdir2 newfile2.txt /usr/include/addfile2.txt
+addfile /home/subdir2 newfile.txt /usr/include/addfile.txt
+addfile /home/subdir3 newfile2.txt /usr/include/addfile2.txt
+addfile /home/subdir2/subdir4 newfile.txt /usr/include/addfile.txt
+addfile /home/dir1/dir2 addfile.txt /usr/include/addfile.txt
+addfile /home/dir1/dir2/subdir5 addfile.txt /usr/include/addfile.txt
+movedir /home/dir1 /home/subdir2
+deletedir /home/dir1/subdir2/newfile.txt
+addfile /home/dir1/subdir2 newfile4.txt /usr/include/addfile4.txt
+listfile /home/dir1/subdir2/newfile3.txt /tmp/listfile1.txt
+listdir /home 0 /tmp/listdiroutput.txt
+movedir /home /home/dir1/subdir2
+deletedir /home/subdir3
+searchfile newfile.txt /tmp/search1.txt
+searchfile newfile4.txt /tmp/search2.txt
+searchfile newfile2.txt /tmp/search3.txt
+listfile /home/subdir2/newfile4.txt /tmp/listfile2.txt
+updatefile /home/subdir2/newfile4.txt /tmp/addfile.txt
+listfile /home/subdir2/newfile4.txt /tmp/listfile3.txt
+exportfile /home/subdir2/newfile4.txt /tmp/exportedfile.txt
+copyfile /home/dir1 /home/subdir2/file4.txt
+copyfile /home/dir1 /home/subdir2/newfile4.txt
+listfile /home/dir1/addfile4.txt /tmp/listfile4.txt
+movefile /home/subdir1 /home/dir1/newfile4.txt
+searchfile newfile4.txt /tmp/search4.txt
+listfile /home/subdir1/newfile4.txt /tmp/listfile5.txt
+searchfile file4.txt /tmp/search5.txt
+listfile /home/newfile4.txt /tmp/listfile6.txt
+movefile /home /home/subdir1/newfile4.txt
+unmountvfs vfs_group06
+mountvfs vfs_group06
+searchfile newfile.txt /tmp/searchfile1.txt
+searchfile newfile3.txt /tmp/searchfile2.txt
+searchfile newfile2.txt /tmp/searchfile3.txt
+unmountvfs vfs_group06

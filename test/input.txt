@@ -1,4 +1,4 @@
-createvfs demo 1000
+createvfs demo 30
 mountvfs demo
 makedir /home/Desktop/sub1/ sub2
 addfile /home/Desktop/ aliases.txt /usr/include/aliases.h
@@ -24,12 +24,12 @@ movedir /home/Desktop/sub1/ /bin/usr/
 exportfile /home/Desktop/sub1/sub2/fstab.txt /tmp/export_fstab.txt
 addfile /home/Desktop/ test.png /home/sridhar/Desktop/test.png
 exportfile /home/Desktop/test.png /tmp/test.png
-copyfile /home/Desktop/sub1/sub2/fstab.txt /tmp/destination.txt
+#copyfile /home/Desktop/sub1/sub2/fstab.txt /tmp/destination.txt
 searchfile graphics.txt /tmp/output.txt
 makedir /home/sub1/ sub3
 listdir /home/ 1 /tmp/list_op1.txt
 listdir /home/ 0 /tmp/list_op2.txt
-%%printds
+printds
 unmountvfs demo
 mountvfs demo
 unmountvfs demo

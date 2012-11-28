@@ -4,4 +4,8 @@
 //generates a random string of random length 6 to 15
 const char * generate_rand_string();
 
+void split_name_path(char * name_with_path, char * path, char * name);
+
+char* join_name_path(char * name_with_path, char * path, char * name);
+
 #endif
