@@ -1,0 +1,46 @@
+createvfs vfs_group06 1024
+mountvfs vfs_group06
+unmountvfs vfs_group06
+makedir /sub1/forfun/hello hi
+makedir / sub2
+makedir / sub3
+makedir / sub4
+makedir /sub3 sub5
+makedir /sub1/forfun check
+makedir /sub1 forfun
+addfile /sub3 addfile3.txt /usr/include/addfile3.txt
+addfile /sub3 addfile2.txt /usr/include/addfile2.txt
+addfile /sub3 addfile.txt /usr/include/addfile.txt
+addfile /sub4 addfile2.txt /usr/include/addfile2.txt
+addfile /sub3/sub5 addfile.txt /usr/include/addfile.txt
+addfile /sub1/forfun addfile.txt /usr/include/addfile.txt
+addfile /sub1/forfun/check addfile.txt /usr/include/addfile.txt
+deletedir /sub1/sub3/addfile.txt
+addfile /sub1/sub3 addfile4.txt /usr/include/addfile4.txt
+listfile /sub1/sub3/addfile3.txt /tmp/listfile.txt
+listdir / 0 /tmp/listdiroutput.txt
+deletedir /sub4
+listdir /sub4 1 /tmp/listdiroutput.txt
+searchfile addfile.txt /tmp/search.txt
+searchfile addfile4.txt /tmp/search.txt
+searchfile addfile2.txt /tmp/search.txt
+listfile /sub3/addfile4.txt /tmp/listfile.txt
+updatefile /sub3/addfile4.txt /tmp/addfile.txt
+listfile /sub3/addfile4.txt /tmp/listfile.txt
+exportfile /sub3/addfile4.txt /tmp/export.txt
+copyfile /sub1 /sub3/addfile4.txt
+listfile /sub1/addfile4.txt /tmp/listfile.txt
+movefile /sub2 /sub1/addfile4.txt
+searchfile addfile4.txt /tmp/search.txt
+listfile /sub2/addfile4.txt /tmp/listfile.txt
+searchfile addfile4.txt /tmp/search.txt
+movefile / /sub2/addfile4.txt
+listfile /addfile4.txt /tmp/listfile.txt
+movefile / /sub2/addfile4.txt
+listfile /addfile4.txt /tmp/listfile.txt
+listdir / 1 /tmp/listdiroutput.txt
+unmountvfs vfs_group06
+mountvfs vfs_group06
+searchfile addfile.txt /tmp/search.txt
+searchfile addfile4.txt /tmp/search.txt
+searchfile addfile2.txt /tmp/search.txt

@@ -6,6 +6,7 @@
 #include "../include/Commons.h"
 #include "../include/Bst.h"
 #include "../include/nAry.h"
+#include "../include/Commons.h"
 
 #define MAX_LEVELS 20
 #define MAX_LENGTH 50
@@ -828,23 +829,25 @@ nNode* add_file_nary(nNode * root, char * filename , char * filepath)
 {
     return insertNode( root , filepath , filename );
 }
-nNode* add_dir_nary(nNode * root, char * dirpath)
+nNode* add_dir_nary(nNode * root, char * dir_path)
 {
-    char nName[MAX_LEVELS][MAX_LENGTH],dirname[MAX_LENGTH],*dirpath_insert;
-    int count = splitPath(  dirpath , nName ),length,length_name,i;
-    //printf("-------- %s",nName[count-1]);
-    strcpy(dirname,nName[count-1]);
-    length_name = strlen(nName[count-1]);
-    length = strlen(dirpath);
-    length = length - length_name;
-    dirpath_insert = malloc(sizeof(char)*(length+1));
-    for(i=0; i<length; i++)
-    {
-        dirpath_insert[i] = dirpath[i];
-    }
-    dirpath_insert[i] = '\0';
-    //printf("--------> %s",dirpath_insert);
-    root = insertNode( root , dirpath_insert , dirname );
+//    char nName[MAX_LEVELS][MAX_LENGTH],dirname[MAX_LENGTH],*dirpath_insert;
+//    int count = splitPath(  dirpath , nName ),length,length_name,i;
+//    //printf("-------- %s",nName[count-1]);
+//    strcpy(dirname,nName[count-1]);
+//    length_name = strlen(nName[count-1]);
+//    length = strlen(dirpath);
+//    length = length - length_name;
+//    dirpath_insert = malloc(sizeof(char)*(length+1));
+//    for(i=0; i<length; i++)
+//    {
+//        dirpath_insert[i] = dirpath[i];
+//    }
+//    dirpath_insert[i] = '\0';
+//    //printf("--------> %s",dirpath_insert);
+    char parent_path[FULLPATH_MAX_SIZE],dir_name[FILENAME_MAX_SIZE];
+    split_name_path(dir_path, parent_path, dir_name);
+    root = insertNode(root , parent_path , dir_name);
     return root;
 }
 

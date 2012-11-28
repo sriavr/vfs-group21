@@ -14,7 +14,7 @@ nAry.o: ../src/nAry.c ../include/nAry.h ../include/Filesystem.h ../include/Commo
 	gcc -c ../src/nAry.c
 Bst.o: ../src/Bst.c ../include/Bst.h ../include/Filesystem.h ../include/Commons.h ../include/nAry.h
 	gcc -c ../src/Bst.c
-dsCreator.o: ../src/dsCreator.c ../include/dsCreator.h ../include/Filesystem.h ../include/LinkedList.h ../include/Hashtable.h ../include/Bst.h ../include/nAry.h
+dsCreator.o: ../src/dsCreator.c ../include/dsCreator.h ../include/Filesystem.h ../include/LinkedList.h ../include/Hashtable.h ../include/Bst.h ../include/nAry.h ../include/Commons.h
 	gcc -c ../src/dsCreator.c
 Commons.o: ../src/Commons.c ../include/Commons.h
 	gcc -c ../src/Commons.c
