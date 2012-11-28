@@ -1,5 +1,5 @@
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include "../include/DirOpns.h"
 #include "../include/Filesystem.h"
@@ -21,12 +21,6 @@ int make_dir(char *parent_path, char *dir_name)
     }
 
     nNode * dir_exists;
-    long int block_num = next_free_block();
-    if(block_num == -1)
-    {
-        printf("\nmakedir_FAILURE "ERR_VFS_MAKEDIR_01);
-        return 1;
-    }
 
     if(!is_valid_name(dir_name))
     {
@@ -55,9 +49,16 @@ int make_dir(char *parent_path, char *dir_name)
         strcat(key, dir_name);
     }
 
-    if(node_exists(nAry_tree, key))
+    if(is_dir(key))
     {
         printf("\nmakedir_FAILURE "ERR_VFS_MAKEDIR_03);
+        return 1;
+    }
+
+    long int block_num = next_free_block();
+    if(block_num == -1)
+    {
+        printf("\nmakedir_FAILURE "ERR_VFS_MAKEDIR_01);
         return 1;
     }
 
@@ -68,7 +69,7 @@ int make_dir(char *parent_path, char *dir_name)
 //    bst_tree = insert_bst(bst_tree, filedescriptor);
 //    strcpy(filedescriptor.location_full_path, parent_path);
 //    strcpy(filedescriptor.file_name, dir_name);
-    printf("makedir_SUCCESS\n");
+    //printf("makedir_SUCCESS\n");
     return 0;
 }
 

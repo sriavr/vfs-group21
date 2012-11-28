@@ -211,6 +211,9 @@ int mount_vfs(char fullpath[150])
         file_descriptor_list = hdr -> fd_array;
         file_descriptor_used = mh -> file_descriptors_used;
 
+        //BST storing all the file names with absolute path of file (for search based on absolute path of file)
+        bst_tree = create_bst(file_descriptor_list, file_descriptor_used);
+
         //Create nAry Tree representing directory structure
         nAry_tree = (nNode *) create_nAry_tree(file_descriptor_list, file_descriptor_used);
 
@@ -218,8 +221,6 @@ int mount_vfs(char fullpath[150])
         init_hashtable(hashtable);
         fill_hashtable(hashtable);
 
-        //BST storing all the file names with absolute path of file (for search based on absolute path of file)
-        bst_tree = create_bst(file_descriptor_list, file_descriptor_used);
     }
     return 0;
 }
@@ -292,7 +293,7 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num), SEEK_SET) != 0)
     {
         fclose(fp);
-        return -1;
+        return 1;
     }
 
     //create an empty block that has to be saved
@@ -309,24 +310,24 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     newfile = fopen(filename_with_path, "rb");
     if(newfile == NULL)
     {
-        return -1;
+        return 1;
     }
 
     if(fread(newfile_block, size, 1, newfile)!=1)
     {
-        return -1;
+        return 1;
     }
     fclose(newfile);
 
     //write the new block into the vfs (hard disk)
     if(fwrite(newfile_block, size, 1, fp)!=1)
     {
-        return -1;
+        return 1;
     }
 //    }
 //    else
 //    {
-//        return -1;
+//        return 1;
 //    }
 
     fclose(fp);

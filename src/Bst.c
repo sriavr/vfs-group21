@@ -40,9 +40,9 @@ bst * insert_bst(bst* bst_root, file_descriptor filedescriptor)
     fresh -> left = NULL;
     fresh -> is_deleted = 0;
     //int length = strlen(filedescriptor.location_full_path) + strlen(filedescriptor.file_name);
-    int length = 0;
+    //int length = 0;
     int fullpath_length = strlen(filedescriptor.location_full_path);
-    int filename_length = strlen(filedescriptor.file_name);
+    //int filename_length = strlen(filedescriptor.file_name);
 
     //fresh -> key = calloc((length+2),sizeof(char));
 
