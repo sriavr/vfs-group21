@@ -19,7 +19,6 @@ extern nNode * nAry_tree;
 extern bst *bst_tree;
 extern struct node *hashtable[HASHSIZE];
 extern header *hdr;
-extern char full_path_file_name[150];
 
 //1)CHECK IF DIRECTORY EXISTS IN NARY
 //3)ADD THE FILE TO BST & HASH TABLE
@@ -47,7 +46,7 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     }
 
     //if file already exists
-    char temp[150];
+    char temp[FULLPATH_MAX_SIZE];
     strcpy(temp, dest_dir_path);
     strcat(temp, file_name);
     if(is_file(temp))

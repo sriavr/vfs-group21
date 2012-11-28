@@ -20,13 +20,12 @@ int make_dir(char *parent_path, char *dir_name)
         return 1;
     }
 
-    nNode * dir_exists;
-
     if(!is_valid_name(dir_name))
     {
         printf("\nmakedir_FAILURE "ERR_VFS_MAKEDIR_02);
         return 1;
     }
+    //nNode * dir_exists;
     //dir_exists = find(nAry_tree,parent_path);
     int fullpath_length = strlen(parent_path);
     int filename_length = strlen(dir_name);
@@ -87,9 +86,15 @@ int delete_dir(char *dir_path)
         return 1;
     }
 
-    nNode * dir_exists;
-    int is_exists = node_exists(nAry_tree, dir_path);
+    if(!is_dir(dir_path))
+    {
+        printf("\ndeletedir_FAILURE "ERR_VFS_DELETEDIR_01);
+        //PRINT ERROR FOR DELETE NOT ALLOWED
+        return 1;
+    }
 
+    //    int is_exists = node_exists(nAry_tree, dir_path);
+    nNode * dir_exists;
     dir_exists = find(nAry_tree,dir_path);
 
     if(dir_exists->child != NULL)
@@ -98,18 +103,11 @@ int delete_dir(char *dir_path)
         return 1;
     }
 
-    if(is_exists ==1)
-    {
-        delete_dir_nary(nAry_tree, dir_path);
-        delete_bst(bst_tree, dir_path);
-        printf("deletedir_SUCCESS\n");
-    }
-    else
-    {
-        printf("\ndeletedir_FAILURE "ERR_VFS_DELETEDIR_01);
-        //PRINT ERROR FOR DELETE NOT ALLOWED
-        return 1;
-    }
+    delete_dir_nary(nAry_tree, dir_path);
+    delete_bst(bst_tree, dir_path);
+    //TODO GET DIRECTORY NAME AND DELETE FROM HASHTABLE
+    //delete_hashtable(hashtable, dir_path);
+
     return 0;
 }
 
@@ -128,11 +126,22 @@ int move_dir(char * src_path, char * dest_path)
         return 1;
     }
 
-    nNode * dir_exists , * dest_dir;
+    if(is_file(src_path))
+    {
+        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_04);
+        return 1;
+    }
 
+    if(is_file(dest_path) == 1)
+    {
+        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_07);
+        return 1;
+    }
+
+    //nNode * dir_exists , * dest_dir;
     //dir_exists = find(nAry_tree,src_path);
 
-    if(!node_exists(nAry_tree, src_path))
+    if(!is_dir(src_path))
     {
         printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_01);
         return 1;
@@ -140,18 +149,14 @@ int move_dir(char * src_path, char * dest_path)
 
     //dir_exists = find(nAry_tree,dest_path);
 
-    if(!node_exists(nAry_tree, dest_path))
+    if(!is_dir(dest_path))
     {
         printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_02);
         return 1;
     }
 
-    if(is_file(src_path))
-    {
-        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_04);
-        return 1;
-    }
-// TODO DESTINATION_ALREADY_HAVE_SOURCE_DIR
+
+// TODO DESTINATION_ALREADY_HAVE_SOURCE_DIR, CANNOT_MOVE_PARENT_TO_CHILD_DIR
 //    dir_exists = find(nAry_tree,src_path);
 //    dest_dir   = find(nAry_tree,dest_path);
 //
@@ -160,11 +165,6 @@ int move_dir(char * src_path, char * dest_path)
 //        printf(ERR_VFS_MOVEDIR_05);
 //    }
 //
-    if(is_file(dest_path) == 1)
-    {
-        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_07);
-        return 1;
-    }
 
     if(strncmp(src_path,dest_path,strlen(src_path))!=0)
     {
@@ -174,7 +174,7 @@ int move_dir(char * src_path, char * dest_path)
 
     move_dir_nary(nAry_tree, src_path, dest_path);
 
-    //TODO UPDATE DATA STRUCTURES
+    //UPDATE HASHTABLE AFTER BST IS CHANGED
     //printf("\nmovedir_SUCCESS");
     return 0;
 }
@@ -187,14 +187,25 @@ int list_dir(char *dir_path, int flag, char * txt_file_path)
         return 1;
     }
 
-    FILE *fp;
-    fp = fopen(txt_file_path,"w+");
+    if(!is_dir(dir_path))
+    {
+        printf("\nlistdir_FAILURE "ERR_VFS_LISTDIR_01);
+        return 1;
+    }
+
+    if(!physical_file_canwrite(txt_file_path))
+    {
+        printf("\nlistdir_FAILURE "ERR_VFS_LISTDIR_04);
+        return 1;
+    }
 
     if(flag == 0 || flag == 1)
     {
+        FILE *fp;
+        fp = fopen(txt_file_path,"w+");
         listall_nary(nAry_tree, dir_path, flag, fp);
         fclose(fp);
-        printf("listdir_SUCCESS\n");
+        return 0;
     }
     else
     {
@@ -202,20 +213,5 @@ int list_dir(char *dir_path, int flag, char * txt_file_path)
         return 1;
     }
     return 0;
-//    printf("listdir_FAILURE\n");
-//    node_list nlist = listall_nary(nAry_tree, dir_path, flag);
-//
-//    FILE *fp;
-//    fp = fopen(txt_file_path,"w+");
-//
-//    int i;
-//    for(i=0; i<nlist.size; i++)
-//    {
-//        fprintf(fp, "Output of list directory\n");
-//        fprintf(fp, "list_dir %s %d %s\n", dir_path, flag, txt_file_path);
-//        fprintf(fp, "%s\n", nlist.dirnames[i]);
-//    }
-//    fclose(fp);
-//    printf("listdir_SUCCESS\n");
 }
 
