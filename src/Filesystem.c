@@ -1,6 +1,6 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -22,50 +22,9 @@ meta_header *mh =NULL;
 nNode * nAry_tree = NULL;
 bst * bst_tree = NULL;
 struct node * hashtable[HASHSIZE];
-char full_path_file_name[150];
+char vfs_label_global[FILE_SYSTEM_LABEL_MAX_SIZE];
 
-void fsystem_ui()
-{
-    char full_path_file_name[150];
-    int file_length,ret=0;
-
-    printf("\nEnter the file name with full path: ");
-    scanf("%s",full_path_file_name);
-
-    printf("\nEnter size of file in Bytes: ");
-    scanf("%d",&file_length);
-
-    //create a virtual file system
-    ret=create_vfs(full_path_file_name,file_length);
-
-    if(ret==0)
-    {
-        printf("\nSuccessfully created the file system\n");
-    }
-    else
-    {
-        printf("\nError while creating the file system\n");
-    }
-
-    //test the newly created file system
-    test_vfs(full_path_file_name);
-
-    //test case for read_meta_header() function
-    test_read_meta_header(full_path_file_name);
-
-    //test case for read_header() function
-    test_read_header(full_path_file_name);
-
-    //test case for read_block_array
-    //test_read_block_array(full_path_file_name);
-
-    //check if mount is working
-    mount_vfs(full_path_file_name);
-
-    unmount_vfs(full_path_file_name);
-}
-
-int create_vfs(char fullpath[150], int size)
+int create_vfs(char vfs_label[150], int size)
 {
     FILE *fp;
 
@@ -78,32 +37,32 @@ int create_vfs(char fullpath[150], int size)
 
     size  = size * 1024;
 
-    int no_of_characters = strlen(fullpath);
+    int no_of_characters = strlen(vfs_label);
     if(no_of_characters > 30)
     {
         printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_05);
         return 1;
     }
 
-    if(!is_valid_name(fullpath))
+    if(!is_valid_name(vfs_label))
     {
         printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_03);
         return 1;
     }
 
-    if(physical_file_exists(fullpath))
+    if(physical_file_exists(vfs_label))
     {
         printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_01);
         return 1;
     }
 
-    if(!physical_file_canwrite(fullpath))
+    if(!physical_file_canwrite(vfs_label))
     {
         printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_02 );
         return 1;
     }
 
-    fp=fopen(fullpath,"w+b");
+    fp=fopen(vfs_label,"w+b");
     //allocates memory for the file system
     char *memory=(char*) malloc(size + sizeof(header) + sizeof(meta_header));
 
@@ -116,13 +75,13 @@ int create_vfs(char fullpath[150], int size)
 
     fclose(fp);
 
-    fp=fopen(fullpath,"r+b");
+    fp=fopen(vfs_label,"r+b");
 
     //allocate memory for meta header
     mh=(meta_header*) malloc(sizeof(meta_header));
 
     //copy filesystem label with full path to the meta header field
-    strcpy(mh->file_system_label, fullpath);
+    strcpy(mh->file_system_label, vfs_label);
 
     mh->file_descriptors_used = 0;
 
@@ -177,12 +136,12 @@ int create_vfs(char fullpath[150], int size)
     // ~~~ NOT NEEDED 3) Linkedlist storing list of the free blocks into which new files can be written
     4) BST storing all the file names with absolute path of file (for search based on absolute path of file)
 */
-int mount_vfs(char fullpath[150])
+int mount_vfs(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
 {
     file_descriptor *file_descriptor_list;
     long int file_descriptor_used;
 
-    strcpy(full_path_file_name, fullpath);
+    strcpy(vfs_label_global, vfs_label);
 
     if(is_mounted())
     {
@@ -193,14 +152,14 @@ int mount_vfs(char fullpath[150])
     //read meta header, header
     if(!is_mounted())
     {
-        if(!physical_file_exists(fullpath))
+        if(!physical_file_exists(vfs_label))
         {
             printf("\nmountvfs_FAILURE "ERR_VFS_MOUNT_01);
             return 1;
         }
 
-        mh = read_meta_header(fullpath);
-        hdr = read_header(fullpath);
+        mh = read_meta_header(vfs_label);
+        hdr = read_header(vfs_label);
 
         if(mh == NULL || hdr == NULL)
         {
@@ -225,7 +184,7 @@ int mount_vfs(char fullpath[150])
     return 0;
 }
 
-int unmount_vfs(char filepath[150])
+int unmount_vfs(char filepath[FILE_SYSTEM_LABEL_MAX_SIZE])
 {
     //if vfs is not mounted
     if(!is_mounted())
@@ -252,7 +211,7 @@ int unmount_vfs(char filepath[150])
     }
 
     FILE *fp;
-    fp=fopen(full_path_file_name, "r+b");
+    fp=fopen(vfs_label_global, "r+b");
 
     if((fwrite(mh,sizeof(meta_header),1,fp))!=1)
     {
@@ -277,6 +236,7 @@ int unmount_vfs(char filepath[150])
     nAry_tree = NULL;
     free(bst_tree);
     bst_tree = NULL;
+    strcpy(vfs_label_global, "");
     //clear hash table
     //hashtable
     //printf("unmountvfs_SUCCESS\n");
@@ -287,7 +247,7 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
 {
     FILE *fp;
     //fp is file pointer to VFS
-    fp = fopen(full_path_file_name,"r+b");
+    fp = fopen(vfs_label_global,"r+b");
 
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
     if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num), SEEK_SET) != 0)
@@ -301,10 +261,6 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     newfile_block = (block *)malloc(sizeof(block));
     newfile_block->next_block_num = 0;
 
-    //check the size of the file, if it is more than size of block
-    //print error and return 1
-//    if(size <= sizeof(block))
-//    {
     //copy the contents of file into block structure
     FILE *newfile;
     newfile = fopen(filename_with_path, "rb");
@@ -324,11 +280,6 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     {
         return 1;
     }
-//    }
-//    else
-//    {
-//        return 1;
-//    }
 
     fclose(fp);
     return 1;
@@ -341,11 +292,11 @@ block* read_from_block(long int block_num, int size , int flag)
     //fp is file pointer to VFS
     if(flag==1)
     {
-        fp = fopen(full_path_file_name,"r");
+        fp = fopen(vfs_label_global,"r");
     }
     else if(flag==0)
     {
-        fp = fopen(full_path_file_name,"rb");
+        fp = fopen(vfs_label_global,"rb");
     }
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
     if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num), SEEK_SET) != 0)
@@ -369,50 +320,19 @@ block* read_from_block(long int block_num, int size , int flag)
     return newfile_block;
 }
 
-void test_vfs(char fullpath[150])
-{
-    /*  FILE *fp;
-      meta_header *mh;
-      header *hdr;*/
-    FILE *fp;
-    //allocate memory for meta header
-    mh=(meta_header*) malloc(sizeof(meta_header));
-
-    fp = fopen(fullpath,"r+b");
-    //read and copy the meta header to mh
-    if(fread(mh, sizeof(meta_header), 1, fp) != 1)
-    {
-        printf("Failed to read meta header");
-        fclose(fp);
-        return;
-    }
-
-    print_meta_header_info(mh);
-
-    //allocate memory for header
-    hdr=(header*) malloc(sizeof(header));
-    //read and copy the header to hdr
-    if(fread(hdr, sizeof(header), 1, fp) != 1)
-    {
-        printf("\nFailed to read header");
-        fclose(fp);
-        return;
-    }
-}
-
-meta_header * read_meta_header(char fullpath[150])
+meta_header * read_meta_header(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
 {
     FILE *fp;
     //allocate memory for meta header
     mh=(meta_header*) malloc(sizeof(meta_header));
 
-    if(!physical_file_exists(fullpath))
+    if(!physical_file_exists(vfs_label))
     {
         //printf(ERR_VFS_MOUNT_01);
         return NULL;
     }
 
-    fp = fopen(fullpath, "rb");
+    fp = fopen(vfs_label, "rb");
     //read and copy the meta header to mh
     if(fread(mh, sizeof(meta_header), 1, fp) != 1)
     {
@@ -425,20 +345,20 @@ meta_header * read_meta_header(char fullpath[150])
     return mh;
 }
 
-header * read_header(char fullpath[150])
+header * read_header(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
 {
     FILE *fp;
 
     //allocate memory for header
     hdr=(header*) malloc(sizeof(header));
 
-    if(!physical_file_exists(fullpath))
+    if(!physical_file_exists(vfs_label))
     {
         //printf(ERR_VFS_MOUNT_01);
         return NULL;
     }
 
-    fp = fopen(fullpath, "rb");
+    fp = fopen(vfs_label, "rb");
     //Set the position indicator of file pointer to the header by offsetting sizeof(meta_header) bytes
     if(fseek(fp, sizeof(meta_header), SEEK_SET) != 0)
     {
@@ -459,7 +379,7 @@ header * read_header(char fullpath[150])
     return hdr;
 }
 
-block *read_block_array(char fullpath[150])
+block *read_block_array(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
 {
     FILE *fp;
     block *block_array;
@@ -467,7 +387,7 @@ block *read_block_array(char fullpath[150])
     //allocate memory for header
     block_array = calloc(MAX_NUM_OF_BLOCKS, sizeof(block));
 
-    fp = fopen(fullpath,"r+b");
+    fp = fopen(vfs_label,"r+b");
     if(fp ==NULL)
         printf("\nmountvfs_FAILURE "ERR_VFS_MOUNT_01);
 
@@ -489,123 +409,6 @@ block *read_block_array(char fullpath[150])
 
     fclose(fp);
     return block_array;
-}
-
-void test_read_meta_header(char fullpath[150])
-{
-    mh =  read_meta_header(fullpath);
-    if(mh!=NULL)
-    {
-        print_meta_header_info(mh);
-    }
-    else
-    {
-        printf("\n read_meta_header() function failed");
-    }
-}
-
-void test_read_header(char fullpath[150])
-{
-    hdr = read_header(fullpath);
-    if(hdr!=NULL)
-    {
-        print_header_info(hdr);
-    }
-    else
-    {
-        printf("\n read_header() function failed");
-    }
-}
-
-void test_read_block_array(char fullpath[150])
-{
-    block *block_array;
-    block_array = read_block_array(fullpath);
-    int i;
-    if(block_array !=NULL)
-    {
-        for(i=0; i< MAX_NUM_OF_BLOCKS; i++)
-        {
-            print_block(block_array[i]);
-        }
-        printf("\n number of blocks printed: %d", MAX_NUM_OF_BLOCKS);
-    }
-    else
-    {
-        printf("\n read_block_array() function failed");
-    }
-
-}
-
-void print_block(block blk)
-{
-    int i;
-    printf("\nStart of block\n");
-    for(i=0; i< BLOCK_SIZE; i++)
-    {
-        printf("%d",blk.data[i]);
-    }
-    printf("\nEnd of block\n");
-}
-
-
-void print_meta_header_info(meta_header * mh)
-{
-    printf("\ninformation in meta header:");
-    printf("\nfile_system_label: %s", mh -> file_system_label);
-    //printf("\nmax_num_file_descriptors: %ld", mh -> max_num_file_descriptors);
-    printf("\nfile_descriptors_used: %ld", mh -> file_descriptors_used);
-}
-
-void print_header_info(header * hdr)
-{
-    printf("\ninformation in header:");
-    //printf("\nHEADER_TEST_FIELD: %s", hdr -> HEADER_TEST_FIELD);
-}
-
-file_descriptor * create_test_fd_data(file_descriptor * fd_array, long int size)
-{
-    if(fd_array == NULL)
-    {
-        fd_array = calloc(size, sizeof(file_descriptor));
-    }
-    char *temp_file_path;
-    temp_file_path = calloc(150, sizeof(char));
-
-    char * file_type[2] = {"file","dir"};
-    long int i;
-    for(i =0; i < size; i++)
-    {
-        temp_file_path = calloc(150, sizeof(char));
-
-        strcpy(fd_array[i].file_name, generate_rand_string());
-
-        strcat(temp_file_path, "/");
-        strcat(temp_file_path, generate_rand_string());
-        strcat(temp_file_path, "/");
-        strcat(temp_file_path, generate_rand_string());
-        strcat(temp_file_path, "/");
-        strcat(temp_file_path, generate_rand_string());
-        strcpy(fd_array[i].location_full_path, temp_file_path);
-
-        strcpy(fd_array[i].file_type, file_type[rand()%2]);
-        fd_array[i].file_size = rand();
-        fd_array[i].location_block_num = rand();
-    }
-
-    return fd_array;
-}
-
-
-void display_file_descriptor(file_descriptor output)
-{
-
-    printf("Filename: %s\n" , output.file_name);
-    printf("Location: %s\n" , output.location_full_path);
-    printf("Filetype: %s\n" , output.file_type);
-    printf("Block Num: %d\n" , output.location_block_num);
-    printf("Size: %ld\n" , output.file_size);
-
 }
 
 //returns 1 if mounted else returns 0

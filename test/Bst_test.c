@@ -4,6 +4,7 @@
 #include "../include/Filesystem.h"
 #include "../include/Commons.h"
 #include "../include/Bst.h"
+#include "../include/Bst_test.h"
 
 void test_simple_bst()
 {
