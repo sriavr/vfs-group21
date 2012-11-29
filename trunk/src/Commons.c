@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "../include/Filesystem.h"
+
 const char * generate_rand_string()
 {
     int length = rand()%10 + 6;
@@ -86,6 +89,49 @@ void split_name_path(char * name_with_path, char * path, char * name)
     free(temp);
 }
 
+void correct_dir_path(char dir_path[FULLPATH_MAX_SIZE])
+{
+    if(dir_path == NULL || (strcmp(dir_path, "/") == 0))
+        return;
+
+    char temp_path[FULLPATH_MAX_SIZE];
+    if(dir_path[0] != '/')
+    {
+        strcpy(temp_path, "/");
+        strcat(temp_path, dir_path);
+    }
+    else
+    {
+        strcpy(temp_path, dir_path);
+    }
+
+    int length = strlen(temp_path);
+    if(temp_path[length - 1] != '/')
+    {
+        strcat(temp_path, "/");
+    }
+
+    strcpy(dir_path, temp_path);
+}
+
+void correct_file_path(char file_path[FULLPATH_MAX_SIZE])
+{
+    if(file_path == NULL || (strcmp(file_path, "/") == 0))
+        return;
+
+    char temp_path[FULLPATH_MAX_SIZE];
+    if(file_path[0] != '/')
+    {
+        strcpy(temp_path, "/");
+        strcat(temp_path, file_path);
+    }
+    else
+    {
+        strcpy(temp_path, file_path);
+    }
+
+    strcpy(file_path, temp_path);
+}
 
 //int main()
 //{

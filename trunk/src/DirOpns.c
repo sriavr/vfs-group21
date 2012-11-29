@@ -28,7 +28,7 @@ int make_dir(char *parent_path, char *dir_name)
         return 1;
     }
 
-    correct_path(parent_path);
+    correct_dir_path(parent_path);
 
     //nNode * dir_exists;
     //dir_exists = find(nAry_tree,parent_path);
@@ -112,12 +112,11 @@ int delete_dir(char *dir_path)
         return 1;
     }
 
+    correct_dir_path(dir_path);
     delete_dir_nary(nAry_tree, dir_path);
     delete_bst(bst_tree, dir_path);
     //UPDATE HASHTABLE AFTER BST IS CHANGED
     bst_to_hashtable_update();
-
-    //TODO GET DIRECTORY NAME AND DELETE FROM HASHTABLE
     //delete_hashtable(hashtable, dir_path);
 
     return 0;
@@ -138,7 +137,7 @@ int move_dir(char * src_path, char * dest_path)
         return 1;
     }
 
-    if(is_file(src_path))
+    if(is_file(src_path) == 1)
     {
         printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_04);
         return 1;
@@ -166,6 +165,9 @@ int move_dir(char * src_path, char * dest_path)
         printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_02);
         return 1;
     }
+
+    correct_dir_path(src_path);
+    correct_dir_path(dest_path);
 
     // /a/b/c/d/  /a/b/c/d/e/f
     int k;
@@ -208,12 +210,11 @@ int move_dir(char * src_path, char * dest_path)
 //        printf(ERR_VFS_MOVEDIR_05);
 //    }
 //
-
-    if(strncmp(src_path,dest_path,strlen(src_path))!=0)
-    {
-        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_07);
-        return 1;
-    }
+//    if(strncmp(src_path,dest_path,strlen(src_path))!=0)
+//    {
+//        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_06);
+//        return 1;
+//    }
 
     move_dir_nary(nAry_tree, src_path, dest_path);
 
@@ -247,6 +248,7 @@ int list_dir(char *dir_path, int flag, char * txt_file_path)
     {
         FILE *fp;
         fp = fopen(txt_file_path,"w+");
+        correct_dir_path(dir_path);
         listall_nary(nAry_tree, dir_path, flag, fp);
         fclose(fp);
         return 0;
@@ -259,27 +261,3 @@ int list_dir(char *dir_path, int flag, char * txt_file_path)
     return 0;
 }
 
-void correct_path(char path[FULLPATH_MAX_SIZE])
-{
-    if(path == NULL || (strcmp(path, "/") == 0))
-        return;
-
-    char temp_path[FULLPATH_MAX_SIZE];
-    if(path[0] != '/')
-    {
-        strcpy(temp_path, "/");
-        strcat(temp_path, path);
-    }
-    else
-    {
-        strcpy(temp_path, path);
-    }
-
-    int length = strlen(temp_path);
-    if(temp_path[length - 1] != '/')
-    {
-        strcat(temp_path, "/");
-    }
-
-    strcpy(path, temp_path);
-}

@@ -8,4 +8,8 @@ void split_name_path(char * name_with_path, char * path, char * name);
 
 char* join_name_path(char * name_with_path, char * path, char * name);
 
+void correct_dir_path(char path[]);
+
+void correct_file_path(char path[]);
+
 #endif

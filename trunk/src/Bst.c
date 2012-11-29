@@ -301,9 +301,10 @@ void displaybst(bst *bst_node)
 {
     if(bst_node -> is_deleted != 1)
     {
-        printf("Key: %s\t Filetype: %s\t Block No: %d\t Filepath:%s\n", generate_key(bst_node),
+        printf("Key: %s\t Filetype: %s\t File size: %ld\t  Filename:%s\t Filepath:%s\n", generate_key(bst_node),
                bst_node -> filedescriptor.file_type,
-               bst_node -> filedescriptor.location_block_num,
+               bst_node -> filedescriptor.file_size,
+               bst_node -> filedescriptor.file_name,
                bst_node -> filedescriptor.location_full_path);
     }
 }
