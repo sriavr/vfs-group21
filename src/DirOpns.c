@@ -6,6 +6,7 @@
 #include "../include/Bst.h"
 #include "../include/nAry.h"
 #include "../include/freelist.h"
+#include "../include/dsCreator.h"
 #include "../include/vfs_errorcodes.h"
 
 extern nNode * nAry_tree;
@@ -25,25 +26,37 @@ int make_dir(char *parent_path, char *dir_name)
         printf("\nmakedir_FAILURE "ERR_VFS_MAKEDIR_02);
         return 1;
     }
+
+    char temp_path[FULLPATH_MAX_SIZE];
+    if(parent_path[0] != '/')
+    {
+        strcpy(temp_path, "/");
+        strcat(temp_path, parent_path);
+    }
+    else
+    {
+        strcpy(temp_path, parent_path);
+    }
+
     //nNode * dir_exists;
     //dir_exists = find(nAry_tree,parent_path);
-    int fullpath_length = strlen(parent_path);
+    int fullpath_length = strlen(temp_path);
     int filename_length = strlen(dir_name);
     int length = 0;
     char * key = NULL;
 
-    if(parent_path[fullpath_length - 1] == '/')
+    if(temp_path[fullpath_length - 1] == '/')
     {
         length = fullpath_length + filename_length;
         key = calloc((length+1),sizeof(char));
-        strcat(key, parent_path);
+        strcat(key, temp_path);
         strcat(key, dir_name);
     }
     else
     {
         length = fullpath_length + filename_length;
         key = calloc((length+2),sizeof(char));
-        strcat(key, parent_path);
+        strcat(key, temp_path);
         strcat(key, "/");
         strcat(key, dir_name);
     }
@@ -61,7 +74,9 @@ int make_dir(char *parent_path, char *dir_name)
         return 1;
     }
 
-    nAry_tree = insertNode(nAry_tree, parent_path, dir_name);
+    nAry_tree = insertNode(nAry_tree, temp_path, dir_name);
+    //UPDATE HASHTABLE AFTER BST IS CHANGED
+    bst_to_hashtable_update();
 
 //    file_descriptor filedescriptor;
 //    filedescriptor.file_size = 0;
@@ -97,7 +112,7 @@ int delete_dir(char *dir_path)
     nNode * dir_exists;
     dir_exists = find(nAry_tree,dir_path);
 
-    if(dir_exists->child != NULL)
+    if((dir_exists != NULL) && (dir_exists->child != NULL))
     {
         printf("\ndeletedir_FAILURE "ERR_VFS_DELETEDIR_02);
         return 1;
@@ -105,6 +120,9 @@ int delete_dir(char *dir_path)
 
     delete_dir_nary(nAry_tree, dir_path);
     delete_bst(bst_tree, dir_path);
+    //UPDATE HASHTABLE AFTER BST IS CHANGED
+    bst_to_hashtable_update();
+
     //TODO GET DIRECTORY NAME AND DELETE FROM HASHTABLE
     //delete_hashtable(hashtable, dir_path);
 
@@ -175,6 +193,7 @@ int move_dir(char * src_path, char * dest_path)
     move_dir_nary(nAry_tree, src_path, dest_path);
 
     //UPDATE HASHTABLE AFTER BST IS CHANGED
+    bst_to_hashtable_update();
     //printf("\nmovedir_SUCCESS");
     return 0;
 }

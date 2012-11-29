@@ -12,6 +12,7 @@ extern header *hdr;
 extern meta_header *mh;
 extern nNode * nAry_tree;
 extern bst   * bst_tree;
+extern struct node * hashtable[HASHSIZE];
 
 int arr_index = 0;
 file_descriptor *file_descriptor_list;
@@ -118,9 +119,17 @@ nNode * create_nAry_tree()
     //if(file_descriptor_list_size <=0)
     nAryTree = insertNode(nAryTree,"","/");
 
+    char node_with_path[FULLPATH_MAX_SIZE];
+
     long int i;
     for(i=0; i < file_descriptor_list_size; i ++)
     {
+//        join_name_path(node_with_path, file_descriptor_list[i].location_full_path, file_descriptor_list[i].file_name);
+//        if(is_vfs_node(node_with_path))
+//        {
+//           continue;
+//        }
+
         if(strcmp(file_descriptor_list[i].file_type, "file") == 0)
         {
             nAryTree = insertNode_filedesc(nAryTree, file_descriptor_list[i]);
@@ -129,10 +138,12 @@ nNode * create_nAry_tree()
         }
         else if(strcmp(file_descriptor_list[i].file_type, "dir") == 0)
         {
+            join_name_path(node_with_path, file_descriptor_list[i].location_full_path, file_descriptor_list[i].file_name);
+
             if(strcmp(file_descriptor_list[i].location_full_path, "/") !=0)
             {
                 nAryTree = add_dir_nary(nAryTree,
-                                        file_descriptor_list[i].location_full_path);
+                                        node_with_path);
             }
         }
 
@@ -196,4 +207,18 @@ void print_ds()
 {
     display_nary(nAry_tree, 1);
     inorder_traversal(bst_tree, displaybst);
+}
+
+void bst_to_hashtable_update()
+{
+    init_hashtable(hashtable);
+    inorder_traversal(bst_tree, update_fd_hashtable);
+}
+
+void update_fd_hashtable(bst *bst_node)
+{
+    if(bst_node -> is_deleted != 1)
+    {
+        insert_hashtable(hashtable, bst_node -> filedescriptor);
+    }
 }

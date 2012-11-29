@@ -123,6 +123,8 @@ int write_to_block(long int block_num, char * filename_with_path, int size);
 //read the file from vfs block and return a new block
 block* read_from_block(long int block_num, int size , int flag);
 
+int copy_block_to_block(long int dest_block_num, long int src_block_num, int size);
+
 void display_file_descriptor(file_descriptor output);
 
 //returns 1 if mounted, else returns 0
@@ -137,6 +139,8 @@ int physical_file_canwrite(const char *fname);
 int is_dir(char * dir_path);
 
 int is_file(char * file_path);
+
+int is_vfs_node(char * file_path);
 
 int is_valid_name( char * file_name );
 #endif

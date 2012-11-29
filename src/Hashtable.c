@@ -62,7 +62,7 @@ struct node * delete_hashtable(
 //    index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
     struct node *temp = NULL;
     temp = hashtable[hash_code];
-    while(temp!= NULL)
+    while((temp != NULL) || (temp -> filedescriptor.file_name != NULL))
     {
         if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code
                 && (strcmp(temp -> filedescriptor.location_full_path , filedescriptor.location_full_path)==0))
