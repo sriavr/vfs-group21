@@ -70,7 +70,7 @@ int main( int argc, char *argv[] )
 
     while( fgets(linebuffer, sizeof(linebuffer), scriptfp) != NULL )
     {
-        printf("\nProcessing: %s", linebuffer);
+        //printf("\nProcessing: %s", linebuffer);
         /* This output is for debugging... do not uncomment in final version */
         /*
         		printf("==================================================\n");
