@@ -6,7 +6,6 @@
 #include "../include/Commons.h"
 #include "../include/Bst.h"
 #include "../include/nAry.h"
-#include "../include/Commons.h"
 
 #define MAX_LEVELS 20
 #define MAX_LENGTH 50
@@ -370,7 +369,15 @@ nNode* insertNode_filedesc(nNode * root , file_descriptor filedescriptor)
     //matchedNode->child = insertAtEnd( matchedNode->child , name );
 
     file_descriptor filedescriptor1;
-    filedescriptor1.file_size = BLOCK_SIZE;
+    if(strcmp(filedescriptor.file_type, "dir") == 0)
+    {
+        filedescriptor1.file_size = BLOCK_SIZE;
+    }
+    else
+    {
+        filedescriptor1.file_size = filedescriptor.file_size;
+    }
+
     strcpy(filedescriptor1.file_type, filedescriptor.file_type);
     strcpy(filedescriptor1.location_full_path, path );
     //strcat(filedescriptor.location_full_path, "/");

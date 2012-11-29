@@ -9,7 +9,5 @@ int move_dir(char * src_path, char * dest_path);
 
 int list_dir(char *dir_path, int flag, char * txt_file_path);
 
-void correct_path(char path[]);
-
 int displaynary();
 #endif

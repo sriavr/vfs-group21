@@ -22,6 +22,7 @@
 #include "../include/Filesystem.h"
 #include "../include/vfs_errorcodes.h"
 #include "../include/Bst_test.h"
+#include "../include/Commons.h"
 
 #define BUFSIZE 200
 #define CMDSIZE 30
@@ -54,7 +55,7 @@ int main( int argc, char *argv[] )
     char *token;
     //HARDCODING
 //    argc = 2;
-//    argv[1] = "./test/vfstestdata2/group20_06.in";
+//    argv[1] = "./test/vfstestdata2/group20_03.in";
     if( argc != 2 )
     {
         printf("%d",argc);
@@ -346,6 +347,7 @@ void listdir ( char *P1, int P2, char *P3 )
 
 void addfile ( char *P1, char *P2, char *P3 )
 {
+    //correct_dir_path(P1);
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     if (add_file(P1, P2, P3) == 0)
     {
@@ -355,6 +357,7 @@ void addfile ( char *P1, char *P2, char *P3 )
 
 void listfile ( char *P1, char *P2 )
 {
+    //correct_file_path(P1);
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     if (list_file(P1, P2) == 0)
     {
