@@ -143,6 +143,7 @@ nNode * insertAtEnd( nNode * t , char name[] )
 *  Usecase 3 :-   root = insertNode( root , "/home/Desktop", "c" );  --> nNames count = 2 i.e. "home","Desktop"
 *
 */
+/*
 nNode* insertNode( nNode * root , char nPath[] , char name[] )
 {
     int length = strlen(nPath);
@@ -169,7 +170,7 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
         ins = createNode( name ); // expecting root node name is "/"
 
         file_descriptor filedescriptor;
-        filedescriptor.file_size = 0;
+        filedescriptor.file_size = BLOCK_SIZE;
         strcpy(filedescriptor.file_type,"dir");
         strcpy(filedescriptor.location_full_path, "/");
         strcpy(filedescriptor.file_name, "maaroot");
@@ -189,7 +190,7 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
         root->child = insertAtEnd( root->child , name );
 
         file_descriptor filedescriptor;
-        filedescriptor.file_size = 0;
+        filedescriptor.file_size = BLOCK_SIZE;
         strcpy(filedescriptor.file_type,"dir");
         if(nPath[length - 1] == '\0')
         {
@@ -222,11 +223,11 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
         if( matchedNode == NULL )
         {
             t->child = insertAtEnd( t->child , nName[i] );
-            filedescriptors[i].file_size = 0;
+            filedescriptors[i].file_size = BLOCK_SIZE;
             strcpy(filedescriptors[i].file_type,"dir");
             strcpy(filedescriptors[i].location_full_path, path);
             strcpy(filedescriptors[i].file_name, nName[i]);
-            filedescriptors[i].location_block_num = 0;
+            filedescriptors[i].location_block_num = -3;
             //add this newly created node to bst
             bst_tree = insert_bst(bst_tree, filedescriptors[i]);
             //Point to the newly created filedescriptor
@@ -243,7 +244,7 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
     matchedNode->child = insertAtEnd( matchedNode->child , name );
 
     file_descriptor filedescriptor;
-    filedescriptor.file_size = 0;
+    filedescriptor.file_size = BLOCK_SIZE;
     strcpy(filedescriptor.file_type,"dir");
     strcpy(filedescriptor.location_full_path, path );
     //strcat(filedescriptor.location_full_path, "/");
@@ -257,9 +258,16 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
     return root;
 
 }
+*/
+
 //nNode* insertNode( nNode * root , char nPath[] , char name[] )
 nNode* insertNode_filedesc(nNode * root , file_descriptor filedescriptor)
 {
+//    if(is_vfs_node(filedescriptor.location_full_path))
+//    {
+//        return NULL;
+//    }
+
     char nPath[FULLPATH_MAX_SIZE];
     char name[FILENAME_MAX_SIZE];
     strcpy(nPath, filedescriptor.location_full_path);
@@ -287,11 +295,11 @@ nNode* insertNode_filedesc(nNode * root , file_descriptor filedescriptor)
     if( count == 0 && root == NULL )
     {
         ins = createNode( name ); // expecting root node name is "/"
-        filedescriptor.file_size = 0;
+        filedescriptor.file_size = BLOCK_SIZE;
         strcpy(filedescriptor.file_type,"dir");
         strcpy(filedescriptor.location_full_path, "/");
         strcpy(filedescriptor.file_name, "maaroot");
-        filedescriptor.location_block_num = 0;
+        filedescriptor.location_block_num = -1;
         //add this newly created node to bst
         bst_tree = insert_bst(bst_tree, filedescriptor);
         //Point to the newly created filedescriptor
@@ -328,52 +336,72 @@ nNode* insertNode_filedesc(nNode * root , file_descriptor filedescriptor)
 
     // Must be inserted in the given path.
     t = root;
-    char path[FULLPATH_MAX_SIZE] = "";
+    char path[FULLPATH_MAX_SIZE] = "/";
+    file_descriptor filedescriptors[count];
     for( i = 0; i < count ; i++ )
     {
-        file_descriptor filedescriptor[count];
         // Identify the matching node in all the siblings
         matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
-        strcat(path,"/"); // / is not coming in the first
-        strcat(path,nName[i]);
+
         if( matchedNode == NULL )
         {
-            t-> child = insertAtEnd( t -> child , nName[i] );
-
-            filedescriptor[i].file_size = 0;
-            strcpy(filedescriptor[i].file_type,"dir");
-            strcpy(filedescriptor[i].location_full_path, path );
-            strcat(filedescriptor[i].location_full_path,"/");
-            strcpy(filedescriptor[i].file_name, nName[i]);
-            filedescriptor[i].location_block_num = 0;
+            t->child = insertAtEnd( t->child , nName[i] );
+            filedescriptors[i].file_size = BLOCK_SIZE;
+            strcpy(filedescriptors[i].file_type,"dir");
+            strcpy(filedescriptors[i].location_full_path, path);
+            strcpy(filedescriptors[i].file_name, nName[i]);
+            filedescriptors[i].location_block_num = -2;
             //add this newly created node to bst
-            bst_tree = insert_bst(bst_tree, filedescriptor[i]);
+            bst_tree = insert_bst(bst_tree, filedescriptors[i]);
             //Point to the newly created filedescriptor
-            t -> child -> fd = &filedescriptor[i];
-
+            t -> child -> fd = &filedescriptors[i];
             matchedNode = searchForNodeInAllSiblings( t->child , nName[i] ); // efficient sol required.
         }
 
+        strcat(path,nName[i]);
+        strcat(path, "/");
 
         t = matchedNode;
     }
 
-    matchedNode->child = insertAtEnd( matchedNode->child , name );
+    matchedNode = searchForNodeInAllSiblings( t->child , name);
 
-    //file_descriptor filedescriptor;
-    //filedescriptor.file_size = 0;
-    //strcpy(filedescriptor.file_type,"dir");
-    strcpy(filedescriptor.location_full_path, nPath );
-    strcat(filedescriptor.location_full_path, "/");
-    strcpy(filedescriptor.file_name, name);
-    //filedescriptor.location_block_num = 0;
+    t->child = insertAtEnd( t->child , name );
+    //matchedNode->child = insertAtEnd( matchedNode->child , name );
+
+    file_descriptor filedescriptor1;
+    filedescriptor1.file_size = BLOCK_SIZE;
+    strcpy(filedescriptor1.file_type, filedescriptor.file_type);
+    strcpy(filedescriptor1.location_full_path, path );
+    //strcat(filedescriptor.location_full_path, "/");
+    strcpy(filedescriptor1.file_name, name);
+    filedescriptor1.location_block_num = filedescriptor.location_block_num;
     //add this newly created node to bst
-    bst_tree = insert_bst(bst_tree, filedescriptor);
+    bst_tree = insert_bst(bst_tree, filedescriptor1);
     //Point to the newly created filedescriptor
-    matchedNode -> child -> fd = &filedescriptor;
+    t -> child -> fd = &filedescriptor1;
 
     return root;
 
+}
+
+
+nNode* insertNode( nNode * root , char nPath[] , char name[] )
+{
+    int nPath_len = strlen(nPath);
+
+    file_descriptor filedescriptor;
+    filedescriptor.file_size = BLOCK_SIZE;
+    strcpy(filedescriptor.file_type,"dir");
+    strcpy(filedescriptor.location_full_path, nPath );
+    if(nPath[nPath_len - 1] != '/')
+    {
+        strcat(filedescriptor.location_full_path,"/");
+    }
+    strcpy(filedescriptor.file_name, name);
+    filedescriptor.location_block_num = -1;
+
+    insertNode_filedesc(root, filedescriptor);
 }
 
 
@@ -689,6 +717,11 @@ nNode * find( nNode * root , char nPath[] )//, char name[] )
     }
 
     t = root;
+    if( strcmp(nPath, "/") == 0 )
+    {
+         matchedNode = searchForNodeInAllSiblings( t , nPath );
+    }
+
     for( i = 0; i < count ; i++ )
     {
         matchedNode = searchForNodeInAllSiblings( t->child , nName[i] );
@@ -829,6 +862,7 @@ nNode* add_file_nary(nNode * root, char * filename , char * filepath)
 {
     return insertNode( root , filepath , filename );
 }
+
 nNode* add_dir_nary(nNode * root, char * dir_path)
 {
 //    char nName[MAX_LEVELS][MAX_LENGTH],dirname[MAX_LENGTH],*dirpath_insert;

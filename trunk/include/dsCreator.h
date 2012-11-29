@@ -19,4 +19,8 @@ nNode * create_nAry_tree();
 
 //used by filesystem to create an empty hash table and fill it with directory info
 struct node* fill_hashtable(struct node * hashtable[]);
+
+void update_fd_hashtable(bst *bst_node);
+
+void bst_to_hashtable_update();
 #endif

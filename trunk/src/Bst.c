@@ -202,50 +202,60 @@ file_descriptor search_bst(bst* bst_node, char* file_name,
 file_descriptor search_bst_full(bst* bst_node,
                                 char* filename_with_full_path)
 {
-    char nName[MAX_LEVELS][MAX_LENGTH],
-    dirname[MAX_LENGTH],
-    *dirpath_insert;
-    int count = splitPath(filename_with_full_path, nName),
-                length,
-                length_name,
-                i;
-    strcpy(dirname,nName[count-1]);
-    length_name = strlen(nName[count-1]);
-    length = strlen(filename_with_full_path);
-    length = length - length_name;
-    dirpath_insert = malloc(sizeof(char)*(length+1));
-    for(i=0; i<length; i++)
-    {
-        dirpath_insert[i] = filename_with_full_path[i];
-    }
-    dirpath_insert[i] = '\0';
+//    char nName[MAX_LEVELS][MAX_LENGTH],
+//    dirname[MAX_LENGTH],
+//    *dirpath_insert;
+//    int count = splitPath(filename_with_full_path, nName),
+//                length,
+//                length_name,
+//                i;
+//    strcpy(dirname,nName[count-1]);
+//    length_name = strlen(nName[count-1]);
+//    length = strlen(filename_with_full_path);
+//    length = length - length_name;
+//    dirpath_insert = malloc(sizeof(char)*(length+1));
+//    for(i=0; i<length; i++)
+//    {
+//        dirpath_insert[i] = filename_with_full_path[i];
+//    }
+//    dirpath_insert[i] = '\0';
     //printf("dirname:%s, dirpath_insert:%s",dirname, dirpath_insert);
-    file_descriptor fd = search_bst(bst_node, dirname, dirpath_insert);
+    char parent_path[FULLPATH_MAX_SIZE],name[FILENAME_MAX_SIZE];
+    split_name_path(filename_with_full_path, parent_path, name);
+    if(strcmp(filename_with_full_path, "/") == 0)
+    {
+        strcpy(name, "maaroot");
+        strcpy(parent_path, "/");
+    }
+    file_descriptor fd = search_bst(bst_node, name, parent_path);
     return fd;
 }
 
 bst * search_bst_full_node(bst* bst_node,
                            char* filename_with_full_path)
 {
-    char nName[MAX_LEVELS][MAX_LENGTH],
-    dirname[MAX_LENGTH],
-    *dirpath_insert;
-    int count = splitPath(filename_with_full_path, nName),
-                length,
-                length_name,
-                i;
-    strcpy(dirname,nName[count-1]);
-    length_name = strlen(nName[count-1]);
-    length = strlen(filename_with_full_path);
-    length = length - length_name;
-    dirpath_insert = malloc(sizeof(char)*(length+1));
-    for(i=0; i<length; i++)
-    {
-        dirpath_insert[i] = filename_with_full_path[i];
-    }
-    dirpath_insert[i] = '\0';
+//    char nName[MAX_LEVELS][MAX_LENGTH],
+//    dirname[MAX_LENGTH],
+//    *dirpath_insert;
+//    int count = splitPath(filename_with_full_path, nName),
+//                length,
+//                length_name,
+//                i;
+//    strcpy(dirname,nName[count-1]);
+//    length_name = strlen(nName[count-1]);
+//    length = strlen(filename_with_full_path);
+//    length = length - length_name;
+//    dirpath_insert = malloc(sizeof(char)*(length+1));
+//    for(i=0; i<length; i++)
+//    {
+//        dirpath_insert[i] = filename_with_full_path[i];
+//    }
+//    dirpath_insert[i] = '\0';
     //printf("dirname:%s, dirpath_insert:%s",dirname, dirpath_insert);
-    bst * matched_node = search_bst_node(bst_node, dirname, dirpath_insert);
+
+    char parent_path[FULLPATH_MAX_SIZE],name[FILENAME_MAX_SIZE];
+    split_name_path(filename_with_full_path, parent_path, name);
+    bst * matched_node = search_bst_node(bst_node, name, parent_path);
     return matched_node;
 }
 

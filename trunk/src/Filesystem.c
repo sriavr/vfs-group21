@@ -171,15 +171,15 @@ int mount_vfs(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
         file_descriptor_used = mh -> file_descriptors_used;
 
         //BST storing all the file names with absolute path of file (for search based on absolute path of file)
-        bst_tree = create_bst(file_descriptor_list, file_descriptor_used);
+        bst_tree = create_bst();
 
         //Create nAry Tree representing directory structure
-        nAry_tree = (nNode *) create_nAry_tree(file_descriptor_list, file_descriptor_used);
+        nAry_tree = (nNode *) create_nAry_tree();
 
         //Create Hashtable storing all the file names without path (for search based on file name without path)
-        init_hashtable(hashtable);
-        fill_hashtable(hashtable);
-
+        //init_hashtable(hashtable);
+        //fill_hashtable(hashtable);
+        bst_to_hashtable_update();
     }
     return 0;
 }
@@ -190,6 +190,12 @@ int unmount_vfs(char filepath[FILE_SYSTEM_LABEL_MAX_SIZE])
     if(!is_mounted())
     {
         printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_03);
+        return 1;
+    }
+
+    if(strcmp(filepath, vfs_label_global) != 0)
+    {
+        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_01);
         return 1;
     }
 
@@ -318,6 +324,32 @@ block* read_from_block(long int block_num, int size , int flag)
     }
     fclose(fp);
     return newfile_block;
+}
+
+int copy_block_to_block(long int dest_block_num, long int src_block_num, int size)
+{
+    block * src_block;
+    src_block = read_from_block(src_block_num, size, 0);
+
+    FILE *fp;
+    //fp is file pointer to VFS
+    fp = fopen(vfs_label_global,"r+b");
+
+    //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
+    if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (dest_block_num), SEEK_SET) != 0)
+    {
+        fclose(fp);
+        return 1;
+    }
+
+    //write the new block into the vfs (hard disk)
+    if(fwrite(src_block, size, 1, fp)!=1)
+    {
+        return 1;
+    }
+
+    fclose(fp);
+    return 1;
 }
 
 meta_header * read_meta_header(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
@@ -467,6 +499,20 @@ int is_file(char * file_path)
 {
     file_descriptor filedescriptor = search_bst_full(bst_tree, file_path);
     if(strcmp(filedescriptor.file_type, "file") == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+//returns 1 if vfs file_path is a node, else 0
+int is_vfs_node(char * file_path)
+{
+    file_descriptor filedescriptor = search_bst_full(bst_tree, file_path);
+    if((strcmp(filedescriptor.file_type, "file") == 0) || (strcmp(filedescriptor.file_type, "dir") == 0))
     {
         return 1;
     }
