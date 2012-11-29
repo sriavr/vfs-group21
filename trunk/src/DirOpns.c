@@ -6,6 +6,7 @@
 #include "../include/Bst.h"
 #include "../include/nAry.h"
 #include "../include/freelist.h"
+#include "../include/Commons.h"
 #include "../include/dsCreator.h"
 #include "../include/vfs_errorcodes.h"
 
@@ -27,39 +28,32 @@ int make_dir(char *parent_path, char *dir_name)
         return 1;
     }
 
-    char temp_path[FULLPATH_MAX_SIZE];
-    if(parent_path[0] != '/')
-    {
-        strcpy(temp_path, "/");
-        strcat(temp_path, parent_path);
-    }
-    else
-    {
-        strcpy(temp_path, parent_path);
-    }
+    correct_path(parent_path);
 
     //nNode * dir_exists;
     //dir_exists = find(nAry_tree,parent_path);
-    int fullpath_length = strlen(temp_path);
-    int filename_length = strlen(dir_name);
-    int length = 0;
-    char * key = NULL;
-
-    if(temp_path[fullpath_length - 1] == '/')
-    {
-        length = fullpath_length + filename_length;
-        key = calloc((length+1),sizeof(char));
-        strcat(key, temp_path);
-        strcat(key, dir_name);
-    }
-    else
-    {
-        length = fullpath_length + filename_length;
-        key = calloc((length+2),sizeof(char));
-        strcat(key, temp_path);
-        strcat(key, "/");
-        strcat(key, dir_name);
-    }
+//    int fullpath_length = strlen(temp_path);
+//    int filename_length = strlen(dir_name);
+//    int length = 0;
+//    char * key = NULL;
+//
+//    if(temp_path[fullpath_length - 1] == '/')
+//    {
+//        length = fullpath_length + filename_length;
+//        key = calloc((length+1),sizeof(char));
+//        strcat(key, temp_path);
+//        strcat(key, dir_name);
+//    }
+//    else
+//    {
+//        length = fullpath_length + filename_length;
+//        key = calloc((length+2),sizeof(char));
+//        strcat(key, temp_path);
+//        strcat(key, "/");
+//        strcat(key, dir_name);
+//    }
+    char key[FULLPATH_MAX_SIZE];
+    join_name_path(key, parent_path, dir_name);
 
     if(is_dir(key))
     {
@@ -74,7 +68,7 @@ int make_dir(char *parent_path, char *dir_name)
         return 1;
     }
 
-    nAry_tree = insertNode(nAry_tree, temp_path, dir_name);
+    nAry_tree = insertNode(nAry_tree, parent_path, dir_name);
     //UPDATE HASHTABLE AFTER BST IS CHANGED
     bst_to_hashtable_update();
 
@@ -173,6 +167,37 @@ int move_dir(char * src_path, char * dest_path)
         return 1;
     }
 
+    // /a/b/c/d/  /a/b/c/d/e/f
+    int k;
+    int length, tmp_flag = 0;
+    if(strlen(dest_path) < strlen(src_path))
+    {
+        length = strlen(dest_path);
+    }
+    else
+    {
+        length = strlen(src_path);
+    }
+
+    for(k = 0; k < length; k++)
+    {
+        if(dest_path[k] != src_path[k])
+        {
+            tmp_flag = 1;
+            break;
+        }
+        else
+        {
+            tmp_flag = 0;
+        }
+    }
+
+    if(tmp_flag == 0)
+    {
+        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_06);
+        return 1;
+    }
+
 
 // TODO DESTINATION_ALREADY_HAVE_SOURCE_DIR, CANNOT_MOVE_PARENT_TO_CHILD_DIR
 //    dir_exists = find(nAry_tree,src_path);
@@ -234,3 +259,27 @@ int list_dir(char *dir_path, int flag, char * txt_file_path)
     return 0;
 }
 
+void correct_path(char path[FULLPATH_MAX_SIZE])
+{
+    if(path == NULL || (strcmp(path, "/") == 0))
+        return;
+
+    char temp_path[FULLPATH_MAX_SIZE];
+    if(path[0] != '/')
+    {
+        strcpy(temp_path, "/");
+        strcat(temp_path, path);
+    }
+    else
+    {
+        strcpy(temp_path, path);
+    }
+
+    int length = strlen(temp_path);
+    if(temp_path[length - 1] != '/')
+    {
+        strcat(temp_path, "/");
+    }
+
+    strcpy(path, temp_path);
+}
