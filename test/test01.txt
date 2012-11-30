@@ -1,3 +1,0 @@
-mountvfs vfs_group06
-printds
-unmountvfs vfs_group06
