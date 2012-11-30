@@ -31,7 +31,7 @@ int create_vfs(char vfs_label[150], int size)
     //will find whether size is less then required size
     if(size < 0 || size > 1024)
     {
-        printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_04);
+        printf("createvfs_FAILURE "ERR_VFS_CREATE_04"\n");
         return 1;
     }
 
@@ -40,25 +40,25 @@ int create_vfs(char vfs_label[150], int size)
     int no_of_characters = strlen(vfs_label);
     if(no_of_characters > FILE_SYSTEM_LABEL_MAX_SIZE)
     {
-        printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_05);
+        printf("createvfs_FAILURE "ERR_VFS_CREATE_05"\n");
         return 1;
     }
 
     if(!is_valid_name(vfs_label))
     {
-        printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_03);
+        printf("createvfs_FAILURE "ERR_VFS_CREATE_03"\n");
         return 1;
     }
 
     if(physical_file_exists(vfs_label))
     {
-        printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_01);
+        printf("createvfs_FAILURE "ERR_VFS_CREATE_01"\n");
         return 1;
     }
 
     if(!physical_file_canwrite(vfs_label))
     {
-        printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_02 );
+        printf("createvfs_FAILURE "ERR_VFS_CREATE_02"\n");
         return 1;
     }
 
@@ -69,7 +69,7 @@ int create_vfs(char vfs_label[150], int size)
     //save the created memory to disk
     if(fwrite(memory,size,1,fp) != 1)
     {
-        printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_02 );
+        printf("createvfs_FAILURE "ERR_VFS_CREATE_02"\n");
         return 1;
     }
 
@@ -88,7 +88,7 @@ int create_vfs(char vfs_label[150], int size)
     //write meta header to the file
     if(fwrite(mh,sizeof(meta_header),1,fp) != 1)
     {
-        printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_02 );
+        printf("createvfs_FAILURE "ERR_VFS_CREATE_02"\n");
         return 1;
     }
 
@@ -104,7 +104,7 @@ int create_vfs(char vfs_label[150], int size)
     //write header to the files
     if(fwrite(hdr,sizeof(header),1,fp) != 1)
     {
-        printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_02 );
+        printf("createvfs_FAILURE "ERR_VFS_CREATE_02"\n");
         return 1;
     }
 
@@ -116,7 +116,7 @@ int create_vfs(char vfs_label[150], int size)
     //write the block_array into disk
     if(fwrite(block_array,size,1,fp) != 1)
     {
-        printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_02 );
+        printf("createvfs_FAILURE "ERR_VFS_CREATE_02"\n");
         return 1;
     }
 
@@ -138,14 +138,14 @@ int create_vfs(char vfs_label[150], int size)
 */
 int mount_vfs(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
 {
-    file_descriptor *file_descriptor_list;
-    long int file_descriptor_used;
+//    file_descriptor *file_descriptor_list;
+//    long int file_descriptor_used;
 
     strcpy(vfs_label_global, vfs_label);
 
     if(is_mounted())
     {
-        printf("\nmountvfs_FAILURE "ERR_VFS_MOUNT_03);
+        printf("mountvfs_FAILURE "ERR_VFS_MOUNT_03"\n");
         return 1;
     }
 
@@ -154,7 +154,7 @@ int mount_vfs(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
     {
         if(!physical_file_exists(vfs_label))
         {
-            printf("\nmountvfs_FAILURE "ERR_VFS_MOUNT_01);
+            printf("mountvfs_FAILURE "ERR_VFS_MOUNT_01"\n");
             return 1;
         }
 
@@ -163,12 +163,12 @@ int mount_vfs(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
 
         if(mh == NULL || hdr == NULL)
         {
-            printf("\nmountvfs_FAILURE "ERR_VFS_MOUNT_02);
+            printf("mountvfs_FAILURE "ERR_VFS_MOUNT_02"\n");
             return 1;
         }
 
-        file_descriptor_list = hdr -> fd_array;
-        file_descriptor_used = mh -> file_descriptors_used;
+//        file_descriptor_list = hdr -> fd_array;
+//        file_descriptor_used = mh -> file_descriptors_used;
 
         //BST storing all the file names with absolute path of file (for search based on absolute path of file)
         bst_tree = create_bst();
@@ -189,13 +189,13 @@ int unmount_vfs(char filepath[FILE_SYSTEM_LABEL_MAX_SIZE])
     //if vfs is not mounted
     if(!is_mounted())
     {
-        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_03);
+        printf("unmountvfs_FAILURE "ERR_VFS_UNMOUNT_03"\n");
         return 1;
     }
 
     if(strcmp(filepath, vfs_label_global) != 0)
     {
-        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_01);
+        printf("unmountvfs_FAILURE "ERR_VFS_UNMOUNT_01"\n");
         return 1;
     }
 
@@ -205,14 +205,14 @@ int unmount_vfs(char filepath[FILE_SYSTEM_LABEL_MAX_SIZE])
     //if vfs file is not found
     if(!physical_file_exists(filepath))
     {
-        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_01);
+        printf("unmountvfs_FAILURE "ERR_VFS_UNMOUNT_01"\n");
         return 1;
     }
 
     //if vfs file can't be written to
     if(!physical_file_canwrite(filepath))
     {
-        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_02);
+        printf("unmountvfs_FAILURE "ERR_VFS_UNMOUNT_02"\n");
         return 1;
     }
 
@@ -221,14 +221,14 @@ int unmount_vfs(char filepath[FILE_SYSTEM_LABEL_MAX_SIZE])
 
     if((fwrite(mh,sizeof(meta_header),1,fp))!=1)
     {
-        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_02 );
+        printf("unmountvfs_FAILURE "ERR_VFS_UNMOUNT_02"\n");
         return 1;
     }
     //printf("successfully unmount meta_header");
 
     if((fwrite(hdr,sizeof(header),1,fp))!=1)
     {
-        printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_02 );
+        printf("unmountvfs_FAILURE "ERR_VFS_UNMOUNT_02"\n");
         return 1;
     }
 
@@ -307,7 +307,7 @@ block* read_from_block(long int block_num, int size , int flag)
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
     if(fseek(fp, sizeof(meta_header) + sizeof(header) + sizeof(block) * (block_num), SEEK_SET) != 0)
     {
-        //printf("\nFailed to read block array");
+        //printf("Failed to read block array");
         fclose(fp);
         return NULL;
     }
@@ -360,7 +360,7 @@ meta_header * read_meta_header(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
 
     if(!physical_file_exists(vfs_label))
     {
-        //printf(ERR_VFS_MOUNT_01);
+        //printfprintf(ERR_VFS_MOUNT_01);
         return NULL;
     }
 
@@ -411,6 +411,7 @@ header * read_header(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
     return hdr;
 }
 
+/*
 block *read_block_array(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
 {
     FILE *fp;
@@ -421,7 +422,7 @@ block *read_block_array(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
 
     fp = fopen(vfs_label,"r+b");
     if(fp ==NULL)
-        printf("\nmountvfs_FAILURE "ERR_VFS_MOUNT_01);
+        printf("mountvfs_FAILURE "ERR_VFS_MOUNT_01);
 
     //Set the position indicator of file pointer to the end of header by offsetting sizeof(meta_header) + sizeof(header) bytes
     if(fseek(fp, (sizeof(meta_header) + sizeof(header)), SEEK_SET) != 0)
@@ -434,14 +435,14 @@ block *read_block_array(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
     //read and copy the block_array to array
     if(fread(block_array, sizeof(MAX_NUM_OF_BLOCKS), 1, fp) != 1)
     {
-        printf("\nmountvfs_FAILURE "ERR_VFS_MOUNT_02);
+        printf("mountvfs_FAILURE "ERR_VFS_MOUNT_02);
         fclose(fp);
         return NULL;
     }
 
     fclose(fp);
     return block_array;
-}
+} */
 
 //returns 1 if mounted else returns 0
 int is_mounted()
