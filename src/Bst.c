@@ -120,25 +120,28 @@ bst * insert_bst(bst* bst_root, file_descriptor filedescriptor)
 bst* search_bst_node(bst* bst_node, char* file_name,
                      char* location_full_path)
 {
-    int fullpath_length = strlen(location_full_path);
-    int filename_length = strlen(file_name);
-    int length = 0;
-    char * key = NULL;
-    if(location_full_path[fullpath_length - 1] == '/')
-    {
-        length = fullpath_length + filename_length;
-        key = calloc((length+1),sizeof(char));
-        strcat(key, location_full_path);
-        strcat(key, file_name);
-    }
-    else
-    {
-        length = fullpath_length + filename_length;
-        key = calloc((length+2),sizeof(char));
-        strcat(key, location_full_path);
-        strcat(key, "/");
-        strcat(key, file_name);
-    }
+    //int fullpath_length = strlen(location_full_path);
+    //int filename_length = strlen(file_name);
+    //int length = 0;
+
+    char key[FULLPATH_MAX_SIZE];
+    join_name_path(key, location_full_path, file_name);
+    //char * key = NULL;
+//    if(location_full_path[fullpath_length - 1] == '/')
+//    {
+//        length = fullpath_length + filename_length;
+//        key = calloc((length+1),sizeof(char));
+//        strcat(key, location_full_path);
+//        strcat(key, file_name);
+//    }
+//    else
+//    {
+//        length = fullpath_length + filename_length;
+//        key = calloc((length+2),sizeof(char));
+//        strcat(key, location_full_path);
+//        strcat(key, "/");
+//        strcat(key, file_name);
+//    }
 
     while(1)
     {

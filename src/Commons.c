@@ -64,14 +64,17 @@ void split_name_path(char * name_with_path, char * path, char * name)
 
     char * pch, * last_token, *temp;
     int len = strlen(name_with_path);
-    if((len > 1) && (name_with_path[len - 1] == '/'))
-    {
-        name_with_path[len - 1] = '\0';
-    }
-    len = strlen(name_with_path);
-    //printf("modified strin: %s ", name_with_path );
+
     temp = malloc(sizeof(char) * (len + 1));
     strcpy(temp, name_with_path);
+
+    if((len > 1) && (temp[len - 1] == '/'))
+    {
+        temp[len - 1] = '\0';
+    }
+    len = strlen(temp);
+    //printf("modified strin: %s ", name_with_path );
+
 
     pch = strtok (temp, "/");
 
@@ -81,7 +84,7 @@ void split_name_path(char * name_with_path, char * path, char * name)
         //printf ("%s\n",pch);
         pch = strtok (NULL, "/");
     }
-    int temp_len = strlen(name_with_path) - strlen(last_token);
+    int temp_len = len - strlen(last_token);
     strncpy(path ,name_with_path, temp_len);
     path[temp_len] = '\0';
     strcpy(name, last_token);
@@ -175,10 +178,26 @@ void correct_file_path(char file_path[FULLPATH_MAX_SIZE])
 //
 //    strcpy(name, "");
 //    strcpy(path, "");
-//    strcpy(name_with_path, "/home/sridhar/");
+//    strcpy(name_with_path, "/home/sridhar/hello");
 //    split_name_path(name_with_path, path, name);
 //    printf ("name_with_path: %s\n", name_with_path);
 //    printf ("name: %s\n", name);
 //    printf ("path: %s\n\n", path);
 //
+//    strcpy(name, "");
+//    strcpy(path, "");
+//    strcpy(name_with_path, "/home/sridhar/crazy/example/");
+//    split_name_path(name_with_path, path, name);
+//    printf ("name_with_path: %s\n", name_with_path);
+//    printf ("name: %s\n", name);
+//    printf ("path: %s\n\n", path);
+//
+//    strcpy(name, "");
+//    strcpy(path, "");
+//    strcpy(name_with_path, "/this/works/like/a/miracle/incredible");
+//    split_name_path(name_with_path, path, name);
+//    printf ("name_with_path: %s\n", name_with_path);
+//    printf ("name: %s\n", name);
+//    printf ("path: %s\n\n", path);
 //}
+

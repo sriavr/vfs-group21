@@ -6,6 +6,7 @@
 #include "../include/LinkedList.h"
 #include "../include/Hashtable.h"
 #include "../include/dsCreator.h"
+#include "../include/Commons.h"
 
 void update_filedes(bst *bst_node);
 extern header *hdr;
@@ -18,7 +19,7 @@ int arr_index = 0;
 file_descriptor *file_descriptor_list;
 long int file_descriptor_list_size;
 file_descriptor empty_file_desc;
-int i = 0;
+int fd_count = 0;
 
 //THIS FUNCTION MAY BE SOON DROPPED
 struct node * create_linkedlist()
@@ -49,7 +50,7 @@ bst* create_bst()
     file_descriptor *file_descriptor_list;
     long int file_descriptor_list_size;
     file_descriptor_list = hdr -> fd_array;
-    file_descriptor_list_size = mh -> file_descriptors_used;
+    file_descriptor_list_size = mh -> VFS_FILE_SIZE;
 
     if(file_descriptor_list_size <=0)
         return NULL;
@@ -95,7 +96,7 @@ struct node* fill_hashtable(struct node * hashtable[])
     file_descriptor *file_descriptor_list;
     long int file_descriptor_list_size;
     file_descriptor_list = hdr -> fd_array;
-    file_descriptor_list_size = mh -> file_descriptors_used;
+    file_descriptor_list_size = mh -> VFS_FILE_SIZE;
 
     struct node * test=NULL;
     int i=0;
@@ -114,7 +115,7 @@ nNode * create_nAry_tree()
     file_descriptor *file_descriptor_list;
     long int file_descriptor_list_size;
     file_descriptor_list = hdr -> fd_array;
-    file_descriptor_list_size = mh -> file_descriptors_used;
+    file_descriptor_list_size = mh -> VFS_FILE_SIZE;
 
     //if(file_descriptor_list_size <=0)
     nAryTree = insertNode(nAryTree,"","/");
@@ -155,7 +156,7 @@ nNode * create_nAry_tree()
 void update_fd_list(bst* bst_root)
 {
     file_descriptor_list = hdr -> fd_array;
-    file_descriptor_list_size = mh -> file_descriptors_used;
+    file_descriptor_list_size = mh -> VFS_FILE_SIZE;
 
     //create an empty file descriptor
     strcpy(empty_file_desc.file_name, "0");
@@ -184,11 +185,11 @@ void update_filedes(bst *bst_node)
 {
     if (bst_node -> is_deleted != 1)
     {
-        if(i < MAX_NUM_OF_BLOCKS)
+        if(fd_count < (mh->VFS_FILE_SIZE))
         {
-            file_descriptor_list[i] = bst_node -> filedescriptor;
-            i++;
-            mh -> file_descriptors_used  = i;
+            file_descriptor_list[fd_count] = bst_node -> filedescriptor;
+            fd_count++;
+            mh -> file_descriptors_used  = fd_count;
         }
     }
 }
@@ -196,7 +197,7 @@ void update_filedes(bst *bst_node)
 void clear_file_desc_list()
 {
     int j;
-    for(j = 0; j < MAX_NUM_OF_BLOCKS; j++)
+    for(j = 0; j < (mh->VFS_FILE_SIZE); j++)
     {
         file_descriptor_list[j] = empty_file_desc;
     }

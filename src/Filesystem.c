@@ -17,6 +17,7 @@
 
 header *hdr =NULL;
 meta_header *mh =NULL;
+extern int fd_count;
 //block *block_array; //NO NEED TO READ BLOCK ARRAY
 
 nNode * nAry_tree = NULL;
@@ -35,7 +36,10 @@ int create_vfs(char vfs_label[150], int size)
         return 1;
     }
 
-    size  = size * 1024;
+    size  = size * 1000;
+    int vfs_file_size = size / BLOCK_SIZE;
+    vfs_file_size  = vfs_file_size + 1;
+    size = vfs_file_size * BLOCK_SIZE;
 
     int no_of_characters = strlen(vfs_label);
     if(no_of_characters > FILE_SYSTEM_LABEL_MAX_SIZE)
@@ -84,6 +88,7 @@ int create_vfs(char vfs_label[150], int size)
     strcpy(mh->file_system_label, vfs_label);
 
     mh->file_descriptors_used = 0;
+    mh->VFS_FILE_SIZE = vfs_file_size;
 
     //write meta header to the file
     if(fwrite(mh,sizeof(meta_header),1,fp) != 1)
@@ -123,9 +128,10 @@ int create_vfs(char vfs_label[150], int size)
     fclose(fp);
     free(hdr);
     free(mh);
+    free(block_array);
+    free(memory);
     hdr = NULL;
     mh = NULL;
-
     return 0;
 }
 
@@ -199,6 +205,7 @@ int unmount_vfs(char filepath[FILE_SYSTEM_LABEL_MAX_SIZE])
         return 1;
     }
 
+    fd_count = 0;
     //update the fd_list using the nary tree
     update_fd_list(bst_tree);
 
@@ -288,7 +295,8 @@ int write_to_block(long int block_num, char * filename_with_path, int size)
     }
 
     fclose(fp);
-    return 1;
+    free(newfile_block);
+    return 0;
 }
 
 //if flag is 1 it is text file, else if flag is 0, it is binary file
