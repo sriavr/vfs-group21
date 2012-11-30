@@ -1,6 +1,6 @@
-finalout: FileOpns.o DirOpns.o Filesystem.o LinkedList.o Hashtable.o nAry.o Bst.o dsCreator.o Commons.o freelist.o vfsdriver.o Bst_test.o
-	gcc FileOpns.o DirOpns.o Filesystem.o LinkedList.o Hashtable.o nAry.o Bst.o dsCreator.o Commons.o freelist.o vfsdriver.o Bst_test.o -o vfs-group21.o
-FileOpns.o: ../src/FileOpns.c ../include/FileOpns.h ../include/Filesystem.h ../include/LinkedList.h ../include/Hashtable.h ../include/Bst.h ../include/nAry.h ../include/freelist.h ../include/DirOpns.h ../include/vfs_errorcodes.h
+vfs_group21: FileOpns.o DirOpns.o Filesystem.o LinkedList.o Hashtable.o nAry.o Bst.o dsCreator.o Commons.o freelist.o vfsdriver.o Bst_test.o 
+	gcc FileOpns.o DirOpns.o Filesystem.o LinkedList.o Hashtable.o nAry.o Bst.o dsCreator.o Commons.o freelist.o vfsdriver.o Bst_test.o -o vfs_group21
+FileOpns.o: ../src/FileOpns.c ../include/FileOpns.h ../include/Filesystem.h ../include/LinkedList.h ../include/Hashtable.h ../include/Bst.h ../include/nAry.h ../include/freelist.h ../include/Commons.h ../include/dsCreator.h ../include/DirOpns.h ../include/vfs_errorcodes.h
 	gcc -c ../src/FileOpns.c
 DirOpns.o: ../src/DirOpns.c ../include/DirOpns.h ../include/Filesystem.h ../include/Bst.h ../include/nAry.h ../include/freelist.h ../include/Commons.h ../include/dsCreator.h ../include/vfs_errorcodes.h
 	gcc -c ../src/DirOpns.c
@@ -20,10 +20,14 @@ Commons.o: ../src/Commons.c ../include/Commons.h
 	gcc -c ../src/Commons.c
 freelist.o: ../src/freelist.c ../include/freelist.h ../include/Filesystem.h
 	gcc -c ../src/freelist.c
-Bst_test.o: ../test/Bst_test.c ../include/Filesystem.h ../include/Commons.h ../include/Bst.h ../include/Bst_test.h
-	gcc -c ../test/Bst_test.c
-vfsdriver.o: ../test/vfsdriver.c ../include/FileOpns.h ../include/DirOpns.h ../include/Filesystem.h ../include/vfs_errorcodes.h ../include/Bst_test.h
+Bst_test.o: ../src/Bst_test.c ../include/Filesystem.h ../include/Commons.h ../include/Bst.h ../include/Bst_test.h
+	gcc -c ../src/Bst_test.c
+vfsdriver.o: ../test/vfsdriver.c ../include/FileOpns.h ../include/DirOpns.h ../include/Filesystem.h ../include/vfs_errorcodes.h ../include/Bst_test.h 
 	gcc -c ../test/vfsdriver.c
-	make finalout
+	make vfs_group21
+	cp vfs_group21 ../bin/
+	rm vfs_group21
+	chmod 777 ../bin/vfs_group21
 clean:
-	rm -f FileOpns.o DirOpns.o Filesystem.o LinkedList.o Hashtable.o nAry.o Bst.o dsCreator.o Commons.o freelist.o vfsdriver.o Bst_test.o
+	rm -f FileOpns.o DirOpns.o Filesystem.o LinkedList.o Hashtable.o nAry.o Bst.o dsCreator.o Commons.o freelist.o vfsdriver.o Bst_test.o ../bin/vfs_group21
+	rm -f ../bin/vfs_group21
