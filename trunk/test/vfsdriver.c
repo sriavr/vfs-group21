@@ -55,7 +55,7 @@ int main( int argc, char *argv[] )
     char *token;
     //HARDCODING
 //    argc = 2;
-//    argv[1] = "./test/vfstestdata2/group20_03.in";
+//    argv[1] = "/home/sridhar/vfstestdata2/group18_10.in";
     if( argc != 2 )
     {
         printf("%d",argc);
