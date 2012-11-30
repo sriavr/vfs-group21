@@ -117,11 +117,23 @@ int get_hash_code(const char *str)
 
 struct node * search_hashtable(struct node * hashtable[], char *filename )          //pass filedescriptor file_name in this
 {
-    int hash_code = get_hash_code(filename);
 //    int index = (hash_code & 0x7FFFFFFF) % HASHSIZE;
+    file_descriptor root_fd;
+    strcpy(root_fd.file_name, "/");
+    strcpy(root_fd.location_full_path, "/");
+    root_fd.file_size = BLOCK_SIZE;
+    strcpy(root_fd.file_type, "dir");
     struct node *start = NULL;
     struct node *temp = NULL;
+    if(strcmp(filename, "/") == 0)
+    {
+        start = insert_linkedlist(start, root_fd);
+        return start;
+    }
+
+    int hash_code = get_hash_code(filename);
     temp = hashtable[hash_code];
+
     while(temp!= NULL)
     {
         if((get_hash_code(temp -> filedescriptor.file_name)) == hash_code
