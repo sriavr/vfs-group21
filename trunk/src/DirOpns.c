@@ -95,6 +95,12 @@ int delete_dir(char *dir_path)
         return 1;
     }
 
+    if(strcmp(dir_path,"/") == 0)
+    {
+        printf("deletedir_FAILURE "ERR_VFS_DELETEDIR_01"\n");
+        return 1;
+    }
+
     if(!is_dir(dir_path))
     {
         printf("deletedir_FAILURE "ERR_VFS_DELETEDIR_01"\n");
