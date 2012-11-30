@@ -48,10 +48,13 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     }
 
     //if file already exists
-    char temp[FULLPATH_MAX_SIZE];
-    strcpy(temp, dest_dir_path);
-    strcat(temp, file_name);
-    if(is_file(temp))
+    //char temp[FULLPATH_MAX_SIZE];
+//    strcpy(temp, dest_dir_path);
+//    strcat(temp, file_name);
+    char full_path[FULLPATH_MAX_SIZE];
+    join_name_path(full_path, dest_dir_path, file_name);
+
+    if(is_file(full_path))
     {
         printf("addfile_FAILURE "ERR_VFS_ADDFILE_03"\n");
         return 1;
@@ -84,7 +87,7 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 
     if(size > BLOCK_SIZE)
     {
-        printf("addfile_FAILURE"ERR_VFS_ADDFILE_06"\n");
+        printf("addfile_FAILURE "ERR_VFS_ADDFILE_06"\n");
         return 1;
     }
 
@@ -106,8 +109,8 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 
     //create a directory if doesn't exist and modify data structures
     //add_file_nary(nAry_tree, filedescriptor.file_name, filedescriptor.location_full_path);
-    insertNode_filedesc(nAry_tree, filedescriptor);
     bst_tree = insert_bst(bst_tree, filedescriptor);
+    insertNode_filedesc(nAry_tree, filedescriptor);
     //search_hashtable(hashtable, file_name )  ;        //pass filedescriptor file_name in this
     insert_hashtable(hashtable, filedescriptor);
     //UPDATE HASHTABLE AFTER BST IS CHANGED
@@ -486,7 +489,7 @@ int move_file(char *source_file_with_path , char *destination_with_path )
 
     if(!is_mounted())
     {
-        printf("movefile_FAILURE"ERR_VFS_MOVEFILE_06"\n");
+        printf("movefile_FAILURE "ERR_VFS_MOVEFILE_06"\n");
         return 1;
     }
 
@@ -593,7 +596,7 @@ int update_file( char *source_file_with_path, char *data_file)
     FILE *fp_data_file = fopen(data_file, "rb");
     if(!physical_file_exists(data_file))
     {
-        printf("updatefile_FAILURE "ERR_VFS_UPDATEFILE_02);
+        printf("updatefile_FAILURE "ERR_VFS_UPDATEFILE_02"\n");
         return 1;
     }
     /*

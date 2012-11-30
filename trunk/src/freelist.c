@@ -12,7 +12,7 @@ void init_free_list()
     //initialize the next_block_num to -1 for all free list items
     mh  -> file_descriptors_used = 0;
     long int i;
-    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
+    for(i=0; i<(mh->VFS_FILE_SIZE); i++)
     {
         hdr -> list[i].allocated = 0;
     }
@@ -23,7 +23,7 @@ void init_free_list()
 int update_flist_allocate(long int block_num)
 {
     mh  -> file_descriptors_used = mh  -> file_descriptors_used + 1;
-    if(block_num >=0 && block_num < MAX_NUM_OF_BLOCKS)
+    if(block_num >=0 && block_num < (mh->VFS_FILE_SIZE))
     {
         hdr->list[block_num].allocated = 1;
         return 0;
@@ -36,7 +36,7 @@ int update_flist_allocate(long int block_num)
 int update_flist_deallocate(long int block_num)
 {
     mh  -> file_descriptors_used = mh  -> file_descriptors_used - 1;
-    if(block_num >=0 && block_num < MAX_NUM_OF_BLOCKS)
+    if(block_num >=0 && block_num < (mh->VFS_FILE_SIZE))
     {
         hdr->list[block_num].allocated = 0;
         return 0;
@@ -48,7 +48,7 @@ int update_flist_deallocate(long int block_num)
 long int next_free_block()
 {
     long int i=0;
-    for(i =0 ; i<MAX_NUM_OF_BLOCKS; i++)
+    for(i =0 ; i < (mh->VFS_FILE_SIZE); i++)
     {
         if(hdr->list[i].allocated == 0)
         {

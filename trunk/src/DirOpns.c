@@ -231,7 +231,7 @@ int move_dir(char * src_path, char * dest_path)
 //    }
 
     move_dir_nary(nAry_tree, src_path, dest_path);
-
+    delete_bst(bst_tree, src_path);
     //UPDATE HASHTABLE AFTER BST IS CHANGED
     bst_to_hashtable_update();
     //printf("movedir_SUCCESS");

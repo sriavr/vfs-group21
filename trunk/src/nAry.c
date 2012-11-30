@@ -408,7 +408,7 @@ nNode* insertNode( nNode * root , char nPath[] , char name[] )
     strcpy(filedescriptor.file_name, name);
     filedescriptor.location_block_num = -1;
 
-    insertNode_filedesc(root, filedescriptor);
+    return insertNode_filedesc(root, filedescriptor);
 }
 
 
@@ -460,10 +460,18 @@ void display_nary( nNode * root , int level )
 void listall_nary_child(nNode * root , int level , FILE * fp)
 {
     nNode * t;
-    t = root;
-    fprintf(fp,"%s\n",t->name);
-    for(t = t->child; t != NULL; t = t->sibling)
-        fprintf(fp,"%s\t\t",t->name);
+
+    if( root == NULL )
+    {
+        return;
+    }
+    if( root->child != NULL )   // condition not required.
+    {
+        t = root;
+        fprintf(fp,"%s\n",t->name);
+        for(t = t->child; t != NULL; t = t->sibling)
+            fprintf(fp,"%s\t\t",t->name);
+    }
 }
 void listall_nary_recur(nNode * root,int level, FILE * fp)
 {
@@ -584,19 +592,19 @@ void change_path_fd(nNode * root, nNode * src, char src_path[], char * dest_path
 {
     dest_path_temp = dest_path;
     src_path_temp = src_path;
-    nNode *src_node,*t;
-    file_descriptor fd;
-    int count,i,length_dest;
-    char src_npath[30];
-    file_descriptor temp;
+   // nNode *src_node,*t;
+    //file_descriptor fd;
+    //int count,i,length_dest;
+    //char src_npath[30];
+//    file_descriptor temp;
     //src = find(root,src_path);
 
     if( root == NULL  || src == NULL)
     {
         return;
     }
-    length_src = strlen(src_path);
-    length_dest = strlen(dest_path);
+//    length_src = strlen(src_path);
+//    length_dest = strlen(dest_path);
 //    printf("%p fd->",hdr);
 //    for(i=0; i<MAX_NUM_OF_BLOCKS; i++)
 //    {
@@ -726,7 +734,7 @@ nNode * find( nNode * root , char nPath[] )//, char name[] )
     t = root;
     if( strcmp(nPath, "/") == 0 )
     {
-         matchedNode = searchForNodeInAllSiblings( t , nPath );
+        matchedNode = searchForNodeInAllSiblings( t , nPath );
     }
 
     for( i = 0; i < count ; i++ )
