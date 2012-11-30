@@ -101,7 +101,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
         {
-            printf("\ncreatevfs_FAILURE "ERR_VFS_CREATE_00);
+            printf("createvfs_FAILURE "ERR_VFS_CREATE_00"\n");
         }
         else
         {
@@ -113,7 +113,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if(strcmp(P1,"")==0)
         {
-            printf("\nmountvfs_FAILURE "ERR_VFS_MOUNT_00);
+            printf("mountvfs_FAILURE "ERR_VFS_MOUNT_00"\n");
         }
         else
         {
@@ -124,7 +124,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if(strcmp(P1,"")==0)
         {
-            printf("\nunmountvfs_FAILURE "ERR_VFS_UNMOUNT_00);
+            printf("unmountvfs_FAILURE "ERR_VFS_UNMOUNT_00"\n");
         }
         else
         {
@@ -135,7 +135,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
         {
-            printf("\nmakedir_FAILURE "ERR_VFS_MAKEDIR_00);
+            printf("makedir_FAILURE "ERR_VFS_MAKEDIR_00"\n");
         }
         else
         {
@@ -147,7 +147,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if(strcmp(P1,"")==0)
         {
-            printf("\ndeletedir_FAILURE "ERR_VFS_DELETEDIR_00);
+            printf("deletedir_FAILURE "ERR_VFS_DELETEDIR_00"\n");
         }
         else
         {
@@ -159,7 +159,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
         {
-            printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_00);
+            printf("movedir_FAILURE "ERR_VFS_MOVEDIR_00"\n");
         }
         else
         {
@@ -171,7 +171,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
         int flag = atoi(P2);
         if(strcmp(P1,"")==0 || strcmp(P3 , "")==0 || strcmp(P2,"")==0)
         {
-            printf("\nlistdir_FAILURE "ERR_VFS_MOVEDIR_00);
+            printf("listdir_FAILURE "ERR_VFS_MOVEDIR_00"\n");
         }
         else
         {
@@ -182,7 +182,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0) || (strcmp(P3, "") == 0))
         {
-            printf("\naddfile_FAILURE "ERR_VFS_ADDFILE_00);
+            printf("addfile_FAILURE "ERR_VFS_ADDFILE_00"\n");
         }
         else
         {
@@ -193,7 +193,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if(strcmp(P1,"")==0 || strcmp(P2 , "")==0)
         {
-            printf("\nlistfile_FAILURE "ERR_VFS_LISTFILE_00);
+            printf("listfile_FAILURE "ERR_VFS_LISTFILE_00"\n");
         }
         else
         {
@@ -204,7 +204,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
         {
-            printf("\nupdatefile_FAILURE "ERR_VFS_UPDATEFILE_00);
+            printf("updatefile_FAILURE "ERR_VFS_UPDATEFILE_00"\n");
         }
         else
         {
@@ -214,7 +214,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     else if( strcmp(command, "removefile") == 0 )
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") != 0))
         {
-            printf("\nremovefile_FAILURE "ERR_VFS_REMOVEFILE_00);
+            printf("removefile_FAILURE "ERR_VFS_REMOVEFILE_00"\n");
         }
         else
         {
@@ -224,7 +224,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
         {
-            printf("\nmovefile_FAILURE "ERR_VFS_MOVEFILE_00);
+            printf("movefile_FAILURE "ERR_VFS_MOVEFILE_00"\n");
         }
         else
         {
@@ -234,7 +234,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     else if( strcmp(command, "copyfile") == 0 )
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
         {
-            printf("\ncopyfile_FAILURE "ERR_VFS_COPYFILE_00);
+            printf("copyfile_FAILURE "ERR_VFS_COPYFILE_00"\n");
         }
         else
         {
@@ -244,7 +244,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if(strcmp(P1, "")==0 || strcmp(P2, "")==0)
         {
-            printf("\nexportfile_FAILURE "ERR_VFS_EXPORTFILE_00);
+            printf("exportfile_FAILURE "ERR_VFS_EXPORTFILE_00"\n");
         }
         else
         {
@@ -255,7 +255,7 @@ void processcommand( char *command, char *P1, char *P2, char *P3 )
     {
         if((strcmp(P1, "") == 0 )|| (strcmp(P2, "") == 0))
         {
-            printf("\nsearchfile_FAILURE "ERR_VFS_SEARCHFILE_00);
+            printf("searchfile_FAILURE "ERR_VFS_SEARCHFILE_00"\n");
         }
         else
         {
@@ -280,7 +280,7 @@ void createvfs ( char *P1, int P2 )
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     if (create_vfs(P1, P2) == 0)
     {
-        printf("\ncreatevfs_SUCCESS");
+        printf("createvfs_SUCCESS\n");
     }
 }
 
@@ -290,7 +290,7 @@ void mountvfs ( char *P1 )
 //	printf("mountvfs_TO_BE_DONE\n");
     if (mount_vfs(P1) == 0)
     {
-        printf("\nmountvfs_SUCCESS");
+        printf("mountvfs_SUCCESS\n");
     }
 
 }
@@ -301,7 +301,7 @@ void unmountvfs ( char *P1 )
 //	printf("unmountvfs_TO_BE_DONE\n");
     if (unmount_vfs(P1) == 0)
     {
-        printf("\nunmountvfs_SUCCESS");
+        printf("unmountvfs_SUCCESS\n");
     }
 }
 
@@ -311,7 +311,7 @@ void makedir ( char *P1, char *P2 )
     //printf("makedir_TO_BE_DONE\n");
     if (make_dir(P1, P2) == 0)
     {
-        printf("\nmakedir_SUCCESS");
+        printf("makedir_SUCCESS\n");
     }
 }
 
@@ -321,7 +321,7 @@ void deletedir ( char *P1 )
     //printf("deletedir_TO_BE_DONE\n");
     if (delete_dir(P1) == 0)
     {
-        printf("\ndeletedir_SUCCESS");
+        printf("deletedir_SUCCESS\n");
     }
 }
 
@@ -331,7 +331,7 @@ void movedir ( char *P1, char *P2 )
     //printf("movedir_TO_BE_DONE\n");
     if (move_dir(P1, P2) == 0)
     {
-        printf("\nmovedir_SUCCESS");
+        printf("movedir_SUCCESS\n");
     }
 }
 
@@ -341,7 +341,7 @@ void listdir ( char *P1, int P2, char *P3 )
     //printf("listdir_TO_BE_DONE\n");
     if (list_dir(P1, P2, P3) == 0)
     {
-        printf("\nlistdir_SUCCESS");
+        printf("listdir_SUCCESS\n");
     }
 }
 
@@ -351,7 +351,7 @@ void addfile ( char *P1, char *P2, char *P3 )
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     if (add_file(P1, P2, P3) == 0)
     {
-        printf("\naddfile_SUCCESS");
+        printf("addfile_SUCCESS\n");
     }
 }
 
@@ -361,7 +361,7 @@ void listfile ( char *P1, char *P2 )
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     if (list_file(P1, P2) == 0)
     {
-        printf("\nlistfile_SUCCESS");
+        printf("listfile_SUCCESS\n");
     }
 }
 
@@ -370,7 +370,7 @@ void updatefile ( char *P1, char *P2 )
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     if (update_file(P1, P2) == 0)
     {
-        printf("\nupdatefile_SUCCESS");
+        printf("updatefile_SUCCESS\n");
     }
 }
 
@@ -380,7 +380,7 @@ void removefile ( char *P1 )
     //printf("removefile_TO_BE_DONE\n");
     if (remove_file(P1) == 0)
     {
-        printf("\nremovefile_SUCCESS");
+        printf("removefile_SUCCESS\n");
     }
 }
 
@@ -390,7 +390,7 @@ void movefile ( char *P1, char *P2 )
     //move_file(P1,P2);
     if (move_file(P1, P2) == 0)
     {
-        printf("\nmovefile_SUCCESS");
+        printf("movefile_SUCCESS\n");
     }
 }
 
@@ -399,7 +399,7 @@ void copyfile ( char *P1, char *P2 )
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
    if (copy_file(P1, P2) == 0)
     {
-        printf("\ncopyfile_SUCCESS");
+        printf("copyfile_SUCCESS\n");
     }
 }
 
@@ -408,7 +408,7 @@ void exportfile ( char *P1, char *P2 )
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     if (export_file(P1, P2) == 0)
     {
-        printf("\nexportfile_SUCCESS");
+        printf("exportfile_SUCCESS\n");
     }
 }
 
@@ -417,7 +417,7 @@ void searchfile ( char *P1, char *P2 )
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
     if (search_file(P1, P2) == 0)
     {
-        printf("\nsearchfile_SUCCESS");
+        printf("searchfile_SUCCESS\n");
     }
 }
 

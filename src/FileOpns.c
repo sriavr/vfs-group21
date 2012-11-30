@@ -30,20 +30,20 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 {
     if(!is_mounted())
     {
-        printf("\naddfile_FAILURE "ERR_VFS_ADDFILE_07);
+        printf("addfile_FAILURE "ERR_VFS_ADDFILE_07"\n");
         return 1;
     }
 
     if(!physical_file_exists(data_file_path))
     {
-        printf("\naddfile_FAILURE "ERR_VFS_LISTFILE_01);
+        printf("addfile_FAILURE "ERR_VFS_LISTFILE_01"\n");
         return 1;
     }
 
     //if filename is not a valid name
     if(!is_valid_name(file_name))
     {
-        printf("\naddfile_FAILURE "ERR_VFS_ADDFILE_02);
+        printf("addfile_FAILURE "ERR_VFS_ADDFILE_02"\n");
         return 1;
     }
 
@@ -53,7 +53,7 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     strcat(temp, file_name);
     if(is_file(temp))
     {
-        printf("\naddfile_FAILURE "ERR_VFS_ADDFILE_03);
+        printf("addfile_FAILURE "ERR_VFS_ADDFILE_03"\n");
         return 1;
     }
 
@@ -61,13 +61,13 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     long int block_num = next_free_block();
     if(block_num == -1)
     {
-        printf("\naddfile_FAILURE "ERR_VFS_ADDFILE_04);
+        printf("addfile_FAILURE "ERR_VFS_ADDFILE_04"\n");
         return 1;
     }
 
     if(!is_dir(dest_dir_path))
     {
-        printf("\naddfile_FAILURE ");
+        printf("addfile_FAILURE\n");
         return 1;
     }
 
@@ -84,7 +84,7 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
 
     if(size > BLOCK_SIZE)
     {
-        printf("\naddfile_FAILURE "ERR_VFS_ADDFILE_06);
+        printf("addfile_FAILURE"ERR_VFS_ADDFILE_06"\n");
         return 1;
     }
 
@@ -93,7 +93,7 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
     //update_flist_deallocate(long int block_num);
     if(write_to_block(block_num, data_file_path, size) < 0)
     {
-        printf("\naddfile_FAILURE "ERR_VFS_ADDFILE_05);
+        printf("addfile_FAILURE "ERR_VFS_ADDFILE_05"\n");
         return 1;
     }
 
@@ -123,7 +123,7 @@ int list_file(char * file_path , char* output_file)
 {
     if(!is_mounted())
     {
-        printf("\nlistfile_FAILURE "ERR_VFS_LISTFILE_04);
+        printf("listfile_FAILURE "ERR_VFS_LISTFILE_04"\n");
         return 1;
     }
 
@@ -133,20 +133,20 @@ int list_file(char * file_path , char* output_file)
 
     if(!is_file(file_path))
     {
-        printf("\nlistfile_FAILURE "ERR_VFS_LISTFILE_01);
+        printf("listfile_FAILURE "ERR_VFS_LISTFILE_01"\n");
         return 1;
     }
 
     char * found = strstr(file_path , ".txt");
     if(found == NULL)
     {
-        printf("\nlistfile_FAILURE "ERR_VFS_LISTFILE_02);
+        printf("listfile_FAILURE "ERR_VFS_LISTFILE_02"\n");
         return 1;
     }
 
     if(!physical_file_canwrite(output_file))
     {
-        printf("\nlistfile_FAILURE "ERR_VFS_LISTFILE_03);
+        printf("listfile_FAILURE "ERR_VFS_LISTFILE_03"\n");
         return 1;
     }
 
@@ -226,7 +226,7 @@ int search_file(char *filename, char *outputfile)
 {
     if(!is_mounted())
     {
-        printf("\nsearchfile_FAILURE "ERR_VFS_SEARCHFILE_02);
+        printf("searchfile_FAILURE "ERR_VFS_SEARCHFILE_02"\n");
         return 1;
     }
 
@@ -237,7 +237,7 @@ int search_file(char *filename, char *outputfile)
     fp = fopen(outputfile,"w+");
     if(fp == NULL)
     {
-        // printf(ERR_VFS_LISTDIR_04);
+        printf("searchfile_FAILURE\n");
         return 1;
     }
 
@@ -258,7 +258,7 @@ int remove_file(char *file_path)
 {
     if(!is_mounted())
     {
-        printf("\nremovefile_FAILURE "ERR_VFS_REMOVEFILE_02);
+        printf("removefile_FAILURE "ERR_VFS_REMOVEFILE_02"\n");
         return 1;
     }
 
@@ -267,7 +267,7 @@ int remove_file(char *file_path)
 
     if(is_file(file_path))
     {
-        printf("\nremovefile_FAILURE "ERR_VFS_REMOVEFILE_01);
+        printf("removefile_FAILURE "ERR_VFS_REMOVEFILE_01"\n");
         return 1;
     }
 
@@ -312,28 +312,28 @@ int export_file(char *source_file_path, char *destination_file_path)
     //vfs is not mounted
     if(!is_mounted())
     {
-        printf("\nexportfile_FAILURE "ERR_VFS_EXPORTFILE_04);
+        printf("exportfile_FAILURE "ERR_VFS_EXPORTFILE_04"\n");
         return 1;
     }
 
     //can't export directory
     if(is_dir(source_file_path))
     {
-        printf("\nexportfile_FAILURE "ERR_VFS_EXPORTFILE_03);
+        printf("exportfile_FAILURE "ERR_VFS_EXPORTFILE_03"\n");
         return 1;
     }
 
     //source file not found
     if(!is_file(source_file_path))
     {
-        printf("\nexportfile_FAILURE "ERR_VFS_EXPORTFILE_01);
+        printf("exportfile_FAILURE "ERR_VFS_EXPORTFILE_01"\n");
         return 1;
     }
 
     //can't create output file
     if(!physical_file_canwrite(destination_file_path))
     {
-        printf("\nexportfile_FAILURE "ERR_VFS_EXPORTFILE_02);
+        printf("exportfile_FAILURE "ERR_VFS_EXPORTFILE_02"\n");
         return 1;
     }
 
@@ -361,13 +361,13 @@ int copy_file(char *source_file_with_path , char *destination_file_path)
 {
 //    if(strcmp(filedescriptor.location_full_path ,"0")==0 || strcmp(filedescriptor.file_type,"file")!=0)
 //    {
-//        printf("\ncopyfile_FAILURE "ERR_VFS_COPYFILE_01);
+//        printf("copyfile_FAILURE "ERR_VFS_COPYFILE_01);
 //        return 1;
 //    }
 
 //    if(strcmp(filedescriptor.file_type,"dir")==0)
 //    {
-//        printf("\ncopyfile_FAILURE "ERR_VFS_COPYFILE_03);
+//        printf("copyfile_FAILURE "ERR_VFS_COPYFILE_03);
 //        return 1;
 //    }
 //    char nName[MAX_LEVELS][MAX_LENGTH],
@@ -382,7 +382,7 @@ int copy_file(char *source_file_with_path , char *destination_file_path)
 
 //    if(!node_exists(nAry_tree, filedescriptor.location_full_path))
 //    {
-//        printf("\ncopyfile_FAILURE "ERR_VFS_COPYFILE_02);
+//        printf("copyfile_FAILURE "ERR_VFS_COPYFILE_02);
 //        return 1;
 //    }
     //adding to datastructures except nAry
@@ -391,19 +391,19 @@ int copy_file(char *source_file_with_path , char *destination_file_path)
 
     if(!is_mounted())
     {
-        printf("\ncopyfile_FAILURE "ERR_VFS_COPYFILE_05);
+        printf("copyfile_FAILURE "ERR_VFS_COPYFILE_05"\n");
         return 1;
     }
 
     if(is_dir(source_file_with_path))
     {
-        printf("\ncopyfile_FAILURE "ERR_VFS_COPYFILE_03);
+        printf("copyfile_FAILURE "ERR_VFS_COPYFILE_03"\n");
         return 1;
     }
 
     if(!is_file(source_file_with_path))
     {
-        printf("\ncopyfile_FAILURE "ERR_VFS_COPYFILE_01);
+        printf("copyfile_FAILURE "ERR_VFS_COPYFILE_01"\n");
         return 1;
     }
 
@@ -412,7 +412,7 @@ int copy_file(char *source_file_with_path , char *destination_file_path)
 
     if(!is_dir(dest_parent_path))
     {
-        printf("\ncopyfile_FAILURE "ERR_VFS_COPYFILE_02);
+        printf("copyfile_FAILURE "ERR_VFS_COPYFILE_02"\n");
         return 1;
     }
 
@@ -420,7 +420,7 @@ int copy_file(char *source_file_with_path , char *destination_file_path)
     dest_block_num = next_free_block();
     if(dest_block_num == -1)
     {
-        printf("\ncopyfile_FAILURE "ERR_VFS_COPYFILE_04);
+        printf("copyfile_FAILURE "ERR_VFS_COPYFILE_04"\n");
         return 1;
     }
 
@@ -437,7 +437,7 @@ int copy_file(char *source_file_with_path , char *destination_file_path)
                            src_filedescriptor.location_block_num,
                            src_filedescriptor.file_size) < 0)
     {
-        printf("\ncopyfile_FAILURE ");
+        printf("copyfile_FAILURE\n");
         return 1;
     }
 
@@ -464,7 +464,7 @@ int move_file(char *source_file_with_path , char *destination_with_path )
 //    }
 //    if(!node_exists(nAry_tree, filedescriptor.location_full_path))
 //    {
-//        printf("\nmovefile_FAILURE "ERR_VFS_MOVEFILE_02);
+//        printf("movefile_FAILURE "ERR_VFS_MOVEFILE_02);
 //        return 1;
 //    }
 //    full_path_length = strlen(filedescriptor.location_full_path);
@@ -486,13 +486,13 @@ int move_file(char *source_file_with_path , char *destination_with_path )
 
     if(!is_mounted())
     {
-        printf("\nmovefile_FAILURE "ERR_VFS_MOVEFILE_06);
+        printf("movefile_FAILURE"ERR_VFS_MOVEFILE_06"\n");
         return 1;
     }
 
     if(!is_file(source_file_with_path))
     {
-        printf("\nmovefile_FAILURE "ERR_VFS_MOVEFILE_01);
+        printf("movefile_FAILURE "ERR_VFS_MOVEFILE_01"\n");
         return 1;
     }
 
@@ -501,7 +501,7 @@ int move_file(char *source_file_with_path , char *destination_with_path )
 
     if(!is_dir(dest_parent_path))
     {
-        printf("\nmovefile_FAILURE "ERR_VFS_MOVEFILE_02);
+        printf("movefile_FAILURE "ERR_VFS_MOVEFILE_02"\n");
         return 1;
     }
 
@@ -578,7 +578,7 @@ int update_file( char *source_file_with_path, char *data_file)
 {
     if(!is_mounted())
     {
-        printf("\nupdatefile_FAILURE "ERR_VFS_UPDATEFILE_04);
+        printf("updatefile_FAILURE "ERR_VFS_UPDATEFILE_04"\n");
         return 1;
     }
 
@@ -586,14 +586,14 @@ int update_file( char *source_file_with_path, char *data_file)
     filedescriptor = search_bst_full(bst_tree,source_file_with_path);
     if(strcmp(filedescriptor.file_type ,"file")!=0)
     {
-        printf("\nupdatefile_FAILURE "ERR_VFS_UPDATEFILE_01);
+        printf("updatefile_FAILURE "ERR_VFS_UPDATEFILE_01"\n");
         return 1;
     }
 
     FILE *fp_data_file = fopen(data_file, "rb");
     if(!physical_file_exists(data_file))
     {
-        printf("\nupdatefile_FAILURE "ERR_VFS_UPDATEFILE_02);
+        printf("updatefile_FAILURE "ERR_VFS_UPDATEFILE_02);
         return 1;
     }
     /*
@@ -607,7 +607,7 @@ int update_file( char *source_file_with_path, char *data_file)
 
     if(size > BLOCK_SIZE)
     {
-        printf("\nupdatefile_FAILURE "ERR_VFS_UPDATEFILE_03);
+        printf("updatefile_FAILURE "ERR_VFS_UPDATEFILE_03"\n");
         return 1;
     }
 
