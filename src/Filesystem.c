@@ -30,7 +30,7 @@ int create_vfs(char vfs_label[150], int size)
     FILE *fp;
 
     //will find whether size is less then required size
-    if(size < 0 || size > 1024)
+    if(size <= 0 || size > 1024)
     {
         printf("createvfs_FAILURE "ERR_VFS_CREATE_04"\n");
         return 1;
@@ -147,8 +147,6 @@ int mount_vfs(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
 //    file_descriptor *file_descriptor_list;
 //    long int file_descriptor_used;
 
-    strcpy(vfs_label_global, vfs_label);
-
     if(is_mounted())
     {
         printf("mountvfs_FAILURE "ERR_VFS_MOUNT_03"\n");
@@ -186,6 +184,7 @@ int mount_vfs(char vfs_label[FILE_SYSTEM_LABEL_MAX_SIZE])
         //init_hashtable(hashtable);
         //fill_hashtable(hashtable);
         bst_to_hashtable_update();
+        strcpy(vfs_label_global, vfs_label);
     }
     return 0;
 }

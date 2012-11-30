@@ -109,6 +109,25 @@ void correct_dir_path(char dir_path[FULLPATH_MAX_SIZE])
     }
 
     int length = strlen(temp_path);
+    int i, flag = 0;
+    for(i = 0; i < length; i++)
+    {
+        if(temp_path[i] != '/')
+        {
+            flag = 1;
+            break;
+        }
+        else
+        {
+            flag = 0;
+        }
+    }
+    if(flag == 0)
+    {
+        strcpy(temp_path, "/");
+    }
+
+    length = strlen(temp_path);
     if(temp_path[length - 1] != '/')
     {
         strcat(temp_path, "/");
