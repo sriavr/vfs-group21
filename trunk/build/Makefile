@@ -2,7 +2,7 @@ finalout: FileOpns.o DirOpns.o Filesystem.o LinkedList.o Hashtable.o nAry.o Bst.
 	gcc FileOpns.o DirOpns.o Filesystem.o LinkedList.o Hashtable.o nAry.o Bst.o dsCreator.o Commons.o freelist.o vfsdriver.o Bst_test.o -o vfs-group21.o
 FileOpns.o: ../src/FileOpns.c ../include/FileOpns.h ../include/Filesystem.h ../include/LinkedList.h ../include/Hashtable.h ../include/Bst.h ../include/nAry.h ../include/freelist.h ../include/DirOpns.h ../include/vfs_errorcodes.h
 	gcc -c ../src/FileOpns.c
-DirOpns.o: ../src/DirOpns.c ../include/DirOpns.h ../include/Filesystem.h ../include/Bst.h ../include/nAry.h ../include/vfs_errorcodes.h
+DirOpns.o: ../src/DirOpns.c ../include/DirOpns.h ../include/Filesystem.h ../include/Bst.h ../include/nAry.h ../include/freelist.h ../include/Commons.h ../include/dsCreator.h ../include/vfs_errorcodes.h
 	gcc -c ../src/DirOpns.c
 Filesystem.o: ../src/Filesystem.c ../include/Filesystem.h ../include/LinkedList.h ../include/Hashtable.h ../include/Bst.h ../include/nAry.h ../include/dsCreator.h ../include/Commons.h ../include/freelist.h ../include/vfs_errorcodes.h
 	gcc -c ../src/Filesystem.c
