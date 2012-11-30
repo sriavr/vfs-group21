@@ -172,34 +172,48 @@ int move_dir(char * src_path, char * dest_path)
     // /a/b/c/d/  /a/b/c/d/e/f
     int k;
     int length, tmp_flag = 0;
-    if(strlen(dest_path) < strlen(src_path))
-    {
-        length = strlen(dest_path);
-    }
-    else
+    if(strlen(dest_path) > strlen(src_path))
     {
         length = strlen(src_path);
-    }
-
-    for(k = 0; k < length; k++)
-    {
-        if(dest_path[k] != src_path[k])
+        for(k = 0; k < length; k++)
         {
-            tmp_flag = 1;
-            break;
+            if(dest_path[k] != src_path[k])
+            {
+                tmp_flag = 1;
+                break;
+            }
+            else
+            {
+                tmp_flag = 0;
+            }
         }
-        else
+
+        if(tmp_flag == 0)
         {
-            tmp_flag = 0;
+            printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_06);
+            return 1;
+        }
+
+
+    }
+
+
+
+    char src_parent_dir[FULLPATH_MAX_SIZE];
+    char src_last_node[FILENAME_MAX_SIZE];
+    split_name_path( src_path, src_parent_dir, src_last_node );
+
+    nNode *dest_node =  find(nAry_tree, dest_path);
+    nNode * matched_node = NULL;
+    if((dest_node!= NULL) && (dest_node -> child != NULL))
+    {
+        matched_node = searchForNodeInAllSiblings(dest_node -> child, src_last_node);
+        if(matched_node != NULL)
+        {
+            printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_05);
+            return 1;
         }
     }
-
-    if(tmp_flag == 0)
-    {
-        printf("\nmovedir_FAILURE "ERR_VFS_MOVEDIR_06);
-        return 1;
-    }
-
 
 // TODO DESTINATION_ALREADY_HAVE_SOURCE_DIR, CANNOT_MOVE_PARENT_TO_CHILD_DIR
 //    dir_exists = find(nAry_tree,src_path);
