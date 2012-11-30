@@ -65,6 +65,12 @@ int add_file(char *dest_dir_path , char* file_name , char* data_file_path)
         return 1;
     }
 
+    if(!is_dir(dest_dir_path))
+    {
+        printf("\naddfile_FAILURE ");
+        return 1;
+    }
+
 //    if(physical_file_canwrite(data_file_path))
 //    {
 //        printf(ERR_VFS_ADDFILE_05);
