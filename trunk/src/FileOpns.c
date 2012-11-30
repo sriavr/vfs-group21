@@ -245,15 +245,17 @@ int search_file(char *filename, char *outputfile)
     }
 
     fprintf(fp, "%s %s %s %s\n", "Filename", "Filetype", "Filepath", "Filesize");
+    int x = 0;
     while(match!=NULL)
     {
+        x ++;
         fprintf(fp, "%s %s %s %ld\n", match->filedescriptor.file_name, match->filedescriptor.file_type, match->filedescriptor.location_full_path, match->filedescriptor.file_size);
         match =  match->next;
     }
 
     fclose(fp);
     //printf("searchfile_SUCCESS\n");
-    return 0;
+    return x;
 }
 
 

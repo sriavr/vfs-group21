@@ -415,10 +415,8 @@ void exportfile ( char *P1, char *P2 )
 void searchfile ( char *P1, char *P2 )
 {
     /* Call the appropriate function with given arguments and display appropriate output on the screen */
-    if (search_file(P1, P2) == 0)
-    {
-        printf("searchfile_SUCCESS\n");
-    }
+    int count = search_file(P1, P2);
+    printf("searchfile_SUCCESS %d\n", count);
 }
 
 void printds()
