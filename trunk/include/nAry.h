@@ -11,7 +11,7 @@ typedef struct nAryTree
 {
     struct nAryTree * child;
     struct nAryTree * sibling;
-    char name[10];
+    char name[FILENAME_MAX_SIZE];
     file_descriptor *fd;
 }nNode;
 

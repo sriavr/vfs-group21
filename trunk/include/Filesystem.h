@@ -38,7 +38,7 @@ typedef struct fLst
 {
     //int block_num;
     //if allocated store 1, not allocated store 0
-    int allocated:1;
+    unsigned int allocated:1;
 } free_list;
 
 /*
@@ -50,6 +50,7 @@ typedef struct mHdr
 {
     char file_system_label[FILE_SYSTEM_LABEL_MAX_SIZE];
     long unsigned int file_descriptors_used;
+    int VFS_FILE_SIZE;
 } meta_header;
 
 /*
